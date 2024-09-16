@@ -21,7 +21,6 @@ const char *getPlatform() {
 
 int main() {
 
-
     auto videoMode = sf::VideoMode::getDesktopMode();
 
     sf::RenderWindow window(videoMode, "Gameless");
