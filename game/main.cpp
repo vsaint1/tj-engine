@@ -1,4 +1,5 @@
 #include <SFML/Graphics.hpp>
+#include <glm/glm.hpp>
 
 #if __ANDROID__ || __IPHONEOS__
 #define ASSETS_FOLDER ""
@@ -19,6 +20,8 @@ const char *getPlatform() {
 }
 
 int main() {
+
+
     auto videoMode = sf::VideoMode::getDesktopMode();
 
     sf::RenderWindow window(videoMode, "Gameless");
@@ -32,13 +35,15 @@ int main() {
         return -1;
     }
 
+    auto textPos = glm::vec2(200.f, 300.f);
+
     sf::Text text;
     text.setFont(font);
     text.setString("Hello SFML from " + std::string(getPlatform()));
     text.setCharacterSize(100);
     text.setStyle(sf::Text::Bold);
     text.setColor(sf::Color::White);
-    text.setPosition(200, 300);
+    text.setPosition(textPos.x, textPos.y);
 
     while (window.isOpen()) {
         sf::Event event{};

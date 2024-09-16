@@ -56,7 +56,7 @@ android {
     }
     buildToolsVersion '33.0.0'
     ndkVersion NDK_VERSION
-    compileSdk 34
+    compileSdk 33
     namespace APP_ID_NAME
     sourceSets {
         main {
