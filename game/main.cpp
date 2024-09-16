@@ -35,7 +35,7 @@ int main() {
         return -1;
     }
 
-    auto textPos = glm::vec2(200.f, 300.f);
+    auto textPos = glm::vec2(200.f, 500.f);
 
     sf::Text text;
     text.setFont(font);

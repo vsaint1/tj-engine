@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.22.1)
 project(client)
 
-set(EXPORT_COMPILE_COMMANDS ON)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 add_subdirectory(dependencies/SFML)
 add_subdirectory(dependencies/glm)
@@ -45,6 +45,7 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
 endif() 
 
 if (CMAKE_SYSTEM_NAME STREQUAL "Android")
+
     include(AndroidNdkModules)
     android_ndk_import_module_cpufeatures()
     set(OPENAL_LIB_PATH ${CMAKE_SOURCE_DIR}/dependencies/SFML/extlibs/libs-android/${ANDROID_ABI}/libopenal.so)
@@ -63,3 +64,5 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Android")
           android log GLESv1_CM EGL ${LIBS} openal)
 
 endif()
+
+

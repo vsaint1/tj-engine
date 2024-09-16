@@ -2,3 +2,4 @@ dependencies/
 dist/
 build/
 test/
+.vscode/
