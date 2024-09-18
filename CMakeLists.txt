@@ -41,6 +41,10 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
         ${ASSETS_FOLDER} ${OUTPUT_DIR}/assets
         COMMENT "Copying assets to executable directory")
 
+    add_custom_command(TARGET ${CMAKE_PROJECT_NAME} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        ${CMAKE_SOURCE_DIR}/dependencies/SFML/extlibs/bin/x64/openal32.dll ${OUTPUT_DIR}
+        COMMENT "Copying OpenAL32.dll to executable directory")
 
 endif() 
 
