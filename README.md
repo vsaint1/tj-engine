@@ -1,8 +1,21 @@
-# TapJoy - framework :dash:
+# TapJoy :dash:
 
 ## Description
 
-TapJoy is a `CMAKE` and `SFML` template to create games for iOS, Android, and Windows.
+TapJoy is a `CMAKE` and `SFML` project "framework" used to help create games for Windows and Mobile. 
+
+> The goals are supporting only the following platforms: Windows, Android and iOS.
+
+
+## Overview
+
+Windows distributables are built with `Visual Studio 2022 (MSVC)`, 
+`Android Studio` (Android) and iOS `Xcode`.
+
+> Current supported platforms are:
+- [x] Windows
+- [x] Android
+- [ ] iOS 
 
 
 ## Dependencies
