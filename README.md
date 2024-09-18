@@ -30,6 +30,7 @@ TapJoy is a `CMAKE` and `SFML` template to create games for iOS, Android, and Wi
     - Android NDK [25.x](https://developer.android.com/ndk/downloads/)
 
 ### iOS 
+- Xcode [14.x](https://developer.apple.com/xcode/)
     - TODO
 
 ### General
