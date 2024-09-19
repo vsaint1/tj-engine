@@ -2,7 +2,7 @@
 #define GAME_OBJECT_HPP
 
 #include "../utils/platform_utils.hpp"
-#include "../window/window_manager.hpp"
+#include "../window/window_manager.h"
 
 class GameObject {
 
