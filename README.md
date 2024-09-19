@@ -38,6 +38,8 @@ Windows distributables are built with `Visual Studio 2022 (MSVC)`,
 
 ### Android 
 
+> Tested on Android emulator used Pixel 8 API 30.
+
 - Android Studio [4.1.x](https://developer.android.com/studio/)
     - Androi SDK [30.x](https://developer.android.com/studio/)
     - Android NDK [25.x](https://developer.android.com/ndk/downloads/)
@@ -52,6 +54,8 @@ Windows distributables are built with `Visual Studio 2022 (MSVC)`,
     - Git [x](https://git-scm.com/)
     - CMake [3.21.x](https://cmake.org/)
 
+# Code Style
 
+This project follows [UnrealEngine Coding Guidelines](https://dev.epicgames.com/documentation/en-us/unreal-engine/epic-cplusplus-coding-standard-for-unreal-engine) even though `SFML` uses camelCase for naming conventions.
 
 > Project Under-development :warning:

@@ -61,6 +61,7 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Android")
 
     set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -u ANativeActivity_onCreate")
 
+    message("SOURCE_FILES: ${SOURCES_FILE}")
     add_library(${CMAKE_PROJECT_NAME} SHARED ${SOURCES_FILE})
   
     target_link_libraries(${CMAKE_PROJECT_NAME} 
