@@ -33,10 +33,10 @@ class PlatformUtility {
 #endif
     }
 
-    static bool IsMobile() { return platform() == EPlatform::EPLAT_IOS || platform() == EPlatform::EPLAT_ANDROID; }
+    static bool isMobile() { return platform() == EPlatform::EPLAT_IOS || platform() == EPlatform::EPLAT_ANDROID; }
 
-    static std::string GetAssetsFolder() {
-        return IsMobile() ? "" : "assets/";
+    static std::string getAssetsFolder() {
+        return isMobile() ? "" : "assets/";
     }
 
     static std::string plaftorm() {
@@ -52,8 +52,8 @@ class PlatformUtility {
         }
     }
 
-    static sf::FloatRect GetSafeAreaView(const glm::vec2 &windowSize) {
-        float MOBILE_PADDING = IsMobile() ? 20.0f : 0.0f; 
+    static sf::FloatRect getSafeAreaView(const glm::vec2 &windowSize) {
+        float MOBILE_PADDING = isMobile() ? 20.0f : 0.0f; 
         float left = MOBILE_PADDING;
         float top = MOBILE_PADDING;
         float width = windowSize.x - 2 * MOBILE_PADDING;

@@ -1,6 +1,6 @@
 #include "window_manager.h"
 
-bool tj::WindowManager::CreateWindow(const std::string &_title, unsigned int _framerate) {
+bool tj::WindowManager::createWindow(const std::string &_title, unsigned int _framerate) {
     window.create(sf::VideoMode::getDesktopMode(), _title);
 
     if (!window.isOpen())
@@ -12,7 +12,7 @@ bool tj::WindowManager::CreateWindow(const std::string &_title, unsigned int _fr
     return true;
 }
 
-void tj::WindowManager::Draw() {
+void tj::WindowManager::draw() {
     window.clear();
     for (auto &callback : drawCallbacks) {
         callback();
@@ -20,7 +20,7 @@ void tj::WindowManager::Draw() {
     window.display();
 }
 
-void tj::WindowManager::Events() {
+void tj::WindowManager::events() {
     sf::Event event;
     while (window.pollEvent(event)) {
         if (event.type == sf::Event::Closed) {
@@ -38,21 +38,21 @@ void tj::WindowManager::Events() {
     }
 }
 
-void tj::WindowManager::Update(float deltaTime) {
+void tj::WindowManager::update(float deltaTime) {
 
     for (auto &callback : updateCallbacks) {
         callback(deltaTime);
     }
 }
 
-void tj::WindowManager::Run() {
+void tj::WindowManager::run() {
     sf::Clock clock;
 
     while (window.isOpen()) {
         float deltaTime = clock.restart().asSeconds();
 
-        Events();
-        Update(deltaTime);
-        Draw();
+        events();
+        update(deltaTime);
+        draw();
     }
 }

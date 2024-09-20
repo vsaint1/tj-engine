@@ -29,20 +29,22 @@ Windows distributables are built with `Visual Studio 2022 (MSVC)`,
 
 ## Development and build
 
-- Required tools and toolchains for each platform.
+- Required tools and toolchains for each platform:
 
 ### Windows
 
 - Visual Studio [2022](https://visualstudio.microsoft.com/)
     - C++ [C++ 20](https://en.cppreference.com/w/cpp)
+    - MSVC [17.11.0](https://en.wikipedia.org/wiki/MSVC)
 
 ### Android 
 
-> Tested on Android emulator used Pixel 8 API 30.
+> Tested on Android emulator used Pixel 8 API 30 and Samsung Galaxy A15
 
 - Android Studio [4.1.x](https://developer.android.com/studio/)
-    - Androi SDK [30.x](https://developer.android.com/studio/)
+    - Androi SDK [34.x](https://developer.android.com/studio/)
     - Android NDK [25.x](https://developer.android.com/ndk/downloads/)
+    - Android Command-Line Tools [16.x](https://developer.android.com/studio/command-line)
 
 ### iOS 
 - Xcode [14.x](https://developer.apple.com/xcode/)
@@ -51,11 +53,12 @@ Windows distributables are built with `Visual Studio 2022 (MSVC)`,
 ### General
 
 - Tooling
-    - Git [x](https://git-scm.com/)
+    - Git [2.45.2](https://git-scm.com/)
     - CMake [3.21.x](https://cmake.org/)
+    - Vscode [1.93](https://code.visualstudio.com/)
 
 # Code Style
 
-This project follows [UnrealEngine Coding Guidelines](https://dev.epicgames.com/documentation/en-us/unreal-engine/epic-cplusplus-coding-standard-for-unreal-engine) even though `SFML` uses camelCase for naming conventions.
+This project follows [UE Coding Guidelines](https://dev.epicgames.com/documentation/en-us/unreal-engine/epic-cplusplus-coding-standard-for-unreal-engine) even though `SFML` uses camelCase for naming conventions.
 
 > Project Under-development :warning:

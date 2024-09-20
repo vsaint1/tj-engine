@@ -21,24 +21,24 @@ class WindowManager {
         return instance;
     }
 
-    bool CreateWindow(const std::string &_title, unsigned int _framerate);
+    bool createWindow(const std::string &_title, unsigned int _framerate);
 
-    sf::RenderWindow &GetWindow() { return window; }
+    sf::RenderWindow &getWindow() { return window; }
 
-    void RegisterUpdateCallback(std::function<void(float)> updateCallback) { updateCallbacks.push_back(updateCallback); }
+    void registerUpdateCallback(std::function<void(float)> updateCallback) { updateCallbacks.push_back(updateCallback); }
 
-    void RegisterDrawCallback(std::function<void()> drawCallback) { drawCallbacks.push_back(drawCallback); }
+    void registerDrawCallback(std::function<void()> drawCallback) { drawCallbacks.push_back(drawCallback); }
 
-    void RegisterEventCallback(std::function<void(sf::Event &)> eventCallback) { eventCallbacks.push_back(eventCallback); }
+    void registerEventCallback(std::function<void(sf::Event &)> eventCallback) { eventCallbacks.push_back(eventCallback); }
 
 
-    void Events();
+    void events();
 
-    void Update(float deltaTime);
+    void update(float deltaTime);
 
-    void Draw();
+    void draw();
 
-    void Run();
+    void run();
 };
 } // namespace tj
 

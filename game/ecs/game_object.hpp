@@ -11,12 +11,12 @@ class GameObject {
     sf::RenderWindow& target; 
 
   public:
-    GameObject() : target(tj::WindowManager::GetInstance().GetWindow()) {}    
+    GameObject() : target(tj::WindowManager::GetInstance().getWindow()) {}    
     virtual ~GameObject() = default;
 
-    virtual void Draw(sf::RenderStates _states = sf::RenderStates::Default) = 0;
+    virtual void draw(sf::RenderStates _states = sf::RenderStates::Default) = 0;
 
-    virtual void Update(float _deltaTime) = 0;
+    virtual void update(float _deltaTime) = 0;
 
       sf::RenderWindow& GetWindow() {
         return target;

@@ -7,7 +7,7 @@
 #endif
 
 int main() {
-    if (!tj::WindowManager::GetInstance().CreateWindow("Gameless - 0.0.1", 60)) {
+    if (!tj::WindowManager::GetInstance().createWindow("Gameless - 0.0.1", 60)) {
         std::cerr << "Failed to create window" << std::endl;
 #if __ANDROID__
         __android_log_print(ANDROID_LOG_INFO, "TJLog", "Failed to create window");
@@ -15,10 +15,15 @@ int main() {
         return -1;
     }
 
-    sf::RenderWindow &window = tj::WindowManager::GetInstance().GetWindow();
+    auto test = glm::vec2(5.0f,20.0f);
+
+    const auto a = glm::dot(test, test);
+    
+
+    sf::RenderWindow &window = tj::WindowManager::GetInstance().getWindow();
 
     sf::Texture playerTexture;
-    if (!playerTexture.loadFromFile(tj::PlatformUtility::GetAssetsFolder() + "player.png")) {
+    if (!playerTexture.loadFromFile(tj::PlatformUtility::getAssetsFolder() + "player.png")) {
         return -1;
     }
 
@@ -27,7 +32,7 @@ int main() {
     playerSprite.setPosition(300, 300);
 
     sf::Font font;
-    if (!font.loadFromFile(tj::PlatformUtility::GetAssetsFolder() + "mine_font.ttf")) {
+    if (!font.loadFromFile(tj::PlatformUtility::getAssetsFolder() + "mine_font.ttf")) {
         return -1;
     }
 
@@ -46,10 +51,10 @@ int main() {
 
     const float playerSpeed = 200.0f;
 
-    tj::WindowManager::GetInstance().RegisterUpdateCallback([&](float deltaTime) {
+    tj::WindowManager::GetInstance().registerUpdateCallback([&](float deltaTime) {
         sf::Vector2f movement(0.f, 0.f);
 
-        if (!tj::PlatformUtility::IsMobile()) {
+        if (!tj::PlatformUtility::isMobile()) {
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
                 movement.y -= playerSpeed * deltaTime;
             }
@@ -64,23 +69,23 @@ int main() {
             }
 
         } else {
-            joystick.Update(deltaTime);
-            movement = joystick.GetMovement();
+            joystick.update(deltaTime);
+            movement = joystick.getMovement();
         }
 
         playerSprite.move(movement);
     });
 
-    tj::WindowManager::GetInstance().RegisterDrawCallback([&]() {
+    tj::WindowManager::GetInstance().registerDrawCallback([&]() {
         window.draw(playerSprite);
         window.draw(text);
 
-        if (tj::PlatformUtility::IsMobile()) {
-            joystick.Draw();
+        if (tj::PlatformUtility::isMobile()) {
+            joystick.draw();
         }
     });
 
-    tj::WindowManager::GetInstance().RegisterEventCallback([&](sf::Event &event) {
+    tj::WindowManager::GetInstance().registerEventCallback([&](sf::Event &event) {
         if (event.type == sf::Event::Resized) {
             sf::View view = window.getDefaultView();
             view.setSize(static_cast<float>(event.size.width), static_cast<float>(event.size.height));
@@ -88,7 +93,7 @@ int main() {
         }
     });
 
-    tj::WindowManager::GetInstance().Run();
+    tj::WindowManager::GetInstance().run();
 
     return 0;
 }

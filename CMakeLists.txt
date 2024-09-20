@@ -1,7 +1,11 @@
 cmake_minimum_required(VERSION 3.22.1)
-project(client)
+set(APP_NAME "SuperGame")
+set(APP_VERSION "0.1.0")
+set(APP_IDENTIFIER "com.vsantos1.game")
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
+project (${APP_NAME} VERSION ${APP_VERSION} LANGUAGES CXX)
 
 add_subdirectory(dependencies/SFML)
 add_subdirectory(dependencies/glm)
@@ -22,7 +26,8 @@ set(DIST_DIR ${CMAKE_SOURCE_DIR}/dist)
 
 if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
 
-    add_executable(${CMAKE_PROJECT_NAME} ${SOURCES_FILE})
+     add_executable(${CMAKE_PROJECT_NAME} ${SOURCES_FILE})
+
     target_link_libraries(${CMAKE_PROJECT_NAME} ${LIBS})
 
      set(OUTPUT_DIR ${DIST_DIR}/windows/$<CONFIG>)
@@ -46,10 +51,15 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
         ${CMAKE_SOURCE_DIR}/dependencies/SFML/extlibs/bin/x64/openal32.dll ${OUTPUT_DIR}
         COMMENT "Copying OpenAL32.dll to executable directory")
 
+    add_custom_command(TARGET ${CMAKE_PROJECT_NAME} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E make_directory ${OUTPUT_DIR}
+        COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_BINARY_DIR}/android/app/build/outputs/apk/${CMAKE_BUILD_TYPE}/app-${CMAKE_BUILD_TYPE}.apk ${OUTPUT_DIR}
+        COMMENT "Copying APK to ${OUTPUT_DIR}")
+        
 endif() 
 
 if (CMAKE_SYSTEM_NAME STREQUAL "Android")
-
+    project(client)
     include(AndroidNdkModules)
     android_ndk_import_module_cpufeatures()
     set(OPENAL_LIB_PATH ${CMAKE_SOURCE_DIR}/dependencies/SFML/extlibs/libs-android/${ANDROID_ABI}/libopenal.so)
@@ -57,7 +67,8 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Android")
     add_library(openal SHARED IMPORTED)
     
     
-    set_target_properties(openal PROPERTIES  IMPORTED_LOCATION_RELEASE ${OPENAL_LIB_PATH} IMPORTED_LOCATION_DEBUG ${OPENAL_LIB_PATH})
+    set_target_properties(openal PROPERTIES  IMPORTED_LOCATION_RELEASE ${OPENAL_LIB_PATH})
+    set_target_properties(openal PROPERTIES  IMPORTED_LOCATION_DEBUG ${OPENAL_LIB_PATH})
 
     set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -u ANativeActivity_onCreate")
 
@@ -66,7 +77,7 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Android")
   
     target_link_libraries(${CMAKE_PROJECT_NAME} 
           -Wl,--whole-archive sfml-main -Wl,--no-whole-archive
-          android log GLESv1_CM EGL ${LIBS} openal)
+          android log GLESv2 EGL ${LIBS} openal)
 
 endif()
 

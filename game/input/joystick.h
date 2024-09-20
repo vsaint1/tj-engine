@@ -14,11 +14,11 @@ class Joystick : GameObject {
   public:
     Joystick(glm::vec2 _screenPosition, float _tickness = 5.0f);
 
-    void Update(float _deltaTime);
+    void update(float _deltaTime);
 
-    void Draw(sf::RenderStates _states = sf::RenderStates::Default);
+    void draw(sf::RenderStates _states = sf::RenderStates::Default);
 
-    sf::Vector2f GetMovement();
+    sf::Vector2f getMovement();
 
 };
 } // namespace tj
