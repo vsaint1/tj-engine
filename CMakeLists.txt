@@ -69,6 +69,8 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Android")
     
     set_target_properties(openal PROPERTIES  IMPORTED_LOCATION_RELEASE ${OPENAL_LIB_PATH})
     set_target_properties(openal PROPERTIES  IMPORTED_LOCATION_DEBUG ${OPENAL_LIB_PATH})
+    set_target_properties(openal PROPERTIES  IMPORTED_LOCATION_MINSIZEREL ${OPENAL_LIB_PATH})
+    set_target_properties(openal PROPERTIES  IMPORTED_LOCATION_RELWITHDEBINFO ${OPENAL_LIB_PATH})
 
     set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -u ANativeActivity_onCreate")
 
