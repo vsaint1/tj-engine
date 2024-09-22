@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.22.1)
 set(APP_NAME "SuperGame")
 set(APP_VERSION "0.1.0")
 set(APP_IDENTIFIER "com.vsantos1.game")
+set(NDK_VERSION "25.1.8937393")
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
@@ -26,11 +27,11 @@ set(DIST_DIR ${CMAKE_SOURCE_DIR}/dist)
 
 if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
 
-     add_executable(${CMAKE_PROJECT_NAME} ${SOURCES_FILE})
+    add_executable(${CMAKE_PROJECT_NAME} ${SOURCES_FILE})
 
     target_link_libraries(${CMAKE_PROJECT_NAME} ${LIBS})
 
-     set(OUTPUT_DIR ${DIST_DIR}/windows/$<CONFIG>)
+    set(OUTPUT_DIR ${DIST_DIR}/windows/$<CONFIG>)
 
 
      add_custom_command(TARGET ${CMAKE_PROJECT_NAME} POST_BUILD
@@ -51,10 +52,7 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
         ${CMAKE_SOURCE_DIR}/dependencies/SFML/extlibs/bin/x64/openal32.dll ${OUTPUT_DIR}
         COMMENT "Copying OpenAL32.dll to executable directory")
 
-    add_custom_command(TARGET ${CMAKE_PROJECT_NAME} POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E make_directory ${OUTPUT_DIR}
-        COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_BINARY_DIR}/android/app/build/outputs/apk/${CMAKE_BUILD_TYPE}/app-${CMAKE_BUILD_TYPE}.apk ${OUTPUT_DIR}
-        COMMENT "Copying APK to ${OUTPUT_DIR}")
+   
         
 endif() 
 

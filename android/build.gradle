@@ -1,23 +1,27 @@
 plugins {
+    //noinspection AndroidGradlePluginVersion
     id 'com.android.application' version '7.3.0' apply true
 }
 
-var NDK_VERSION = "25.1.8937393"
-var APP_ID_NAME = "com.vsantos1.game"
+var NDK_VERSION = project.hasProperty("NDk_VERSION") ? NDK_VERSION : "25.1.8937393"
+var APP_IDENTIFIER_NAME = project.hasProperty("APP_IDENTIFIER") ? APP_IDENTIFIER : "com.tj.game"
+var APP_VERSION_CODE = project.hasProperty("APP_VERSION_CODE") ? APP_VERSION_CODE : 1
+var APP_VERSION_NAME = project.hasProperty("APP_VERSION") ? APP_VERSION : "0.0.1"
 
 android {
     defaultConfig {
-        applicationId APP_ID_NAME
-        versionCode 1
-        versionName "1.0"
+        applicationId APP_IDENTIFIER_NAME
+        versionCode APP_VERSION_CODE
+        versionName APP_VERSION_NAME
 
         externalNativeBuild {
             cmake {
                 cppFlags "-std=c++17"
                 arguments "-DANDROID_STL=c++_shared"
-                abiFilters ("armeabi-v7a", "arm64-v8a", "x86", "x86_64")
+                abiFilters("armeabi-v7a", "arm64-v8a", "x86", "x86_64")
             }
         }
+
         targetSdk 33
         minSdk 21
     }
@@ -57,7 +61,7 @@ android {
     buildToolsVersion '33.0.0'
     ndkVersion NDK_VERSION
     compileSdk 33
-    namespace APP_ID_NAME
+    namespace APP_IDENTIFIER_NAME
     sourceSets {
         main {
             manifest.srcFile 'AndroidManifest.xml'
