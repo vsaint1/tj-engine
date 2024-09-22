@@ -28,6 +28,7 @@
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="@string/sfml_activity_x" />
+
             <meta-data
                 android:name="sfml.app.lib_name"
                 android:value="client" />
