@@ -1,36 +1,31 @@
 #ifndef WINDOW_MANAGER_HPP
 #define WINDOW_MANAGER_HPP
 
-#include "../pch.hpp"
+#include "../ecs/game_object.hpp"
 
-// TODO: refactor and create fn definitions
+class GameObject;
+
 namespace tj {
+
 class WindowManager {
   private:
     sf::RenderWindow window;
     sf::View view;
-    std::vector<std::function<void(float)>> updateCallbacks;
-    std::vector<std::function<void()>> drawCallbacks;
-    std::vector<std::function<void(sf::Event &)>> eventCallbacks;
+    std::vector<std::shared_ptr<GameObject>> gameObjects; 
 
     WindowManager() = default;
 
   public:
-    static WindowManager &GetInstance() {
+    static WindowManager &getInstance() {
         static WindowManager instance;
         return instance;
     }
 
-    bool createWindow(const std::string &_title, unsigned int _framerate);
-
     sf::RenderWindow &getWindow() { return window; }
 
-    void registerUpdateCallback(std::function<void(float)> updateCallback) { updateCallbacks.push_back(updateCallback); }
+    bool createWindow(const std::string &_title, sf::VideoMode _videoMode = sf::VideoMode::getDesktopMode(), unsigned int _framerate = 60);
 
-    void registerDrawCallback(std::function<void()> drawCallback) { drawCallbacks.push_back(drawCallback); }
-
-    void registerEventCallback(std::function<void(sf::Event &)> eventCallback) { eventCallbacks.push_back(eventCallback); }
-
+    void registerGameObject(const std::shared_ptr<GameObject> &gameObject) { gameObjects.push_back(gameObject); }
 
     void events();
 
@@ -38,8 +33,10 @@ class WindowManager {
 
     void draw();
 
+    void unregisterPendingGameObjects();
+
     void run();
 };
-} // namespace tj
 
+} // namespace tj
 #endif // WINDOW_MANAGER_HPP

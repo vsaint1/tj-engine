@@ -18,7 +18,7 @@ tj::Joystick::Joystick(glm::vec2 _screenPosition, float _tickness) {
 
 void tj::Joystick::update(float _deltaTime) {
     if (sf::Touch::isDown(0)) {
-        sf::Vector2i touchPosition = sf::Touch::getPosition(0, target);
+        sf::Vector2i touchPosition = sf::Touch::getPosition(0, *target);
         float distance = sqrt(pow(touchPosition.x - screenPosition.x, 2) +
                               pow(touchPosition.y - screenPosition.y, 2));
 
@@ -42,6 +42,6 @@ sf::Vector2f tj::Joystick::getMovement() {
 }
 
 void tj::Joystick::draw(sf::RenderStates _states) {
-    target.draw(base);
-    target.draw(knob);
+    target->draw(base);
+    target->draw(knob);
 }

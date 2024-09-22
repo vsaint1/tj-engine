@@ -1,23 +1,9 @@
 #include "window_manager.h"
 
-bool tj::WindowManager::createWindow(const std::string &_title, unsigned int _framerate) {
-    window.create(sf::VideoMode::getDesktopMode(), _title);
-
-    if (!window.isOpen())
-        return false;
-
+bool tj::WindowManager::createWindow(const std::string &_title, sf::VideoMode _videoMode, unsigned int _framerate) {
+    window.create(_videoMode, _title);
     window.setFramerateLimit(_framerate);
-    view = window.getDefaultView();
-
-    return true;
-}
-
-void tj::WindowManager::draw() {
-    window.clear();
-    for (auto &callback : drawCallbacks) {
-        callback();
-    }
-    window.display();
+    return window.isOpen();
 }
 
 void tj::WindowManager::events() {
@@ -27,32 +13,47 @@ void tj::WindowManager::events() {
             window.close();
         }
 
-        if (event.type == sf::Event::Resized) {
-            view.setSize(static_cast<float>(event.size.width), static_cast<float>(event.size.height));
-            window.setView(view);
-        }
-
-        for (auto &callback : eventCallbacks) {
-            callback(event);
+        for (auto &gameObject : gameObjects) {
+            // TODO
         }
     }
 }
 
 void tj::WindowManager::update(float deltaTime) {
+    for (auto &gameObject : gameObjects) {
+        gameObject->update(deltaTime);
+    }
+}
 
-    for (auto &callback : updateCallbacks) {
-        callback(deltaTime);
+void tj::WindowManager::draw() {
+    window.clear(sf::Color::White);
+    for (auto &gameObject : gameObjects) {
+        gameObject->draw();
+    }
+    window.display();
+}
+
+void tj::WindowManager::unregisterPendingGameObjects() {
+    for (auto obj = gameObjects.begin(); obj != gameObjects.end();) {
+        
+        if ((*obj)->isPendingDestruction()) {
+            printf("GameObject %d being destroyed\n", (*obj)->getID());
+            obj = gameObjects.erase(obj);
+        } else {
+            obj++;
+        }
+
+
     }
 }
 
 void tj::WindowManager::run() {
     sf::Clock clock;
-
     while (window.isOpen()) {
         float deltaTime = clock.restart().asSeconds();
-
         events();
         update(deltaTime);
+        unregisterPendingGameObjects();
         draw();
     }
 }

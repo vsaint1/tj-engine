@@ -4,11 +4,6 @@
 
 #include "../pch.hpp"
 
-#if __ANDROID__ || __IPHONEOS__
-#define ASSETS_FOLDER ""
-#else
-#define ASSETS_FOLDER "assets/"
-#endif
 
 namespace tj {
 
@@ -34,10 +29,6 @@ class PlatformUtility {
     }
 
     static bool isMobile() { return platform() == EPlatform::EPLAT_IOS || platform() == EPlatform::EPLAT_ANDROID; }
-
-    static std::string getAssetsFolder() {
-        return isMobile() ? "" : "assets/";
-    }
 
     static std::string plaftorm() {
         switch (platform()) {

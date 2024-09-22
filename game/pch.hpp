@@ -6,5 +6,14 @@
 #include <iostream>
 #include <vector>
 #include <functional>
+#include <string>
+#include <unordered_map>
+#include <memory>
+#include <random>
+
+#if __ANDROID__
+#include <android/log.h>
+#endif
+
 
 #endif // PC_HPP
