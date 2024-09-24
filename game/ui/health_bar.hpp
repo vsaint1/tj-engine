@@ -1,13 +1,16 @@
 #ifndef HEALTH_BAR_HPP
 #define HEALTH_BAR_HPP
 
-#include "../ecs/game_object.hpp"
+#include "../pch.hpp"
+
+namespace tj {
 
 class HealthBar {
 
   public:
-    HealthBar(float _maxHealth, float _width, float _height, glm::vec2 _screenPosition)
-        : maxHealth(_maxHealth), currentHealth(_maxHealth), width(_width), height(_height), screenPosition(_screenPosition) {
+    HealthBar(float _maxValue, float _width, float _height, glm::vec2 _screenPosition)
+        : maxValue(_maxValue), currentValue(_maxValue), width(_width), height(_height), screenPosition(_screenPosition) {
+        
         background.setSize(sf::Vector2f(_width, _height));
         background.setFillColor(sf::Color::Red);
         background.setOutlineThickness(1.0f);
@@ -17,9 +20,9 @@ class HealthBar {
         foreground.setFillColor(sf::Color::Green);
     }
 
-    void update(float _health) {
-        currentHealth = _health;
-        float healthPercentage = currentHealth / maxHealth;
+    void update(float _value) {
+        currentValue = _value;
+        float healthPercentage = currentValue / maxValue;
         foreground.setSize(sf::Vector2f(background.getSize().x * healthPercentage, background.getSize().y));
     }
 
@@ -44,10 +47,10 @@ class HealthBar {
 
     sf::RectangleShape background;
     sf::RectangleShape foreground;
-    float maxHealth;
-    float currentHealth;
+    float maxValue;
+    float currentValue;
     float width;
     float height;
 };
-
+}; // namespace tj
 #endif // HEALTH_BAR_HPP

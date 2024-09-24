@@ -1,23 +1,24 @@
 #ifndef WINDOW_MANAGER_HPP
 #define WINDOW_MANAGER_HPP
 
-#include "../ecs/game_object.hpp"
+#include "../ecs/game_object.h"
 
 class GameObject;
 
+
 namespace tj {
 
-class WindowManager {
+class Engine {
   private:
     sf::RenderWindow window;
     sf::View view;
     std::vector<std::shared_ptr<GameObject>> gameObjects; 
 
-    WindowManager() = default;
+    Engine() = default;
 
   public:
-    static WindowManager &getInstance() {
-        static WindowManager instance;
+    static Engine &getInstance() {
+        static Engine instance;
         return instance;
     }
 

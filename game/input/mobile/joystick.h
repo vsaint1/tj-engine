@@ -1,11 +1,11 @@
 #ifndef JOYSTICK_H
 #define JOYSTICK_H
 
-#include "../ecs/game_object.hpp"
+#include "../../ecs/game_object.h"
 
 namespace tj {
 
-class Joystick : GameObject {
+class Joystick : public GameObject {
     sf::CircleShape base;
     sf::CircleShape knob;
     glm::vec2 screenPosition;

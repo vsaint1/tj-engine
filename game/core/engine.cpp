@@ -1,12 +1,12 @@
-#include "window_manager.h"
+#include "engine.h"
 
-bool tj::WindowManager::createWindow(const std::string &_title, sf::VideoMode _videoMode, unsigned int _framerate) {
+bool tj::Engine::createWindow(const std::string &_title, sf::VideoMode _videoMode, unsigned int _framerate) {
     window.create(_videoMode, _title);
     window.setFramerateLimit(_framerate);
     return window.isOpen();
 }
 
-void tj::WindowManager::events() {
+void tj::Engine::events() {
     sf::Event event;
     while (window.pollEvent(event)) {
         if (event.type == sf::Event::Closed) {
@@ -19,13 +19,13 @@ void tj::WindowManager::events() {
     }
 }
 
-void tj::WindowManager::update(float deltaTime) {
+void tj::Engine::update(float deltaTime) {
     for (auto &gameObject : gameObjects) {
         gameObject->update(deltaTime);
     }
 }
 
-void tj::WindowManager::draw() {
+void tj::Engine::draw() {
     window.clear(sf::Color::White);
     for (auto &gameObject : gameObjects) {
         gameObject->draw();
@@ -33,7 +33,7 @@ void tj::WindowManager::draw() {
     window.display();
 }
 
-void tj::WindowManager::unregisterPendingGameObjects() {
+void tj::Engine::unregisterPendingGameObjects() {
     for (auto obj = gameObjects.begin(); obj != gameObjects.end();) {
         
         if ((*obj)->isPendingDestruction()) {
@@ -47,7 +47,7 @@ void tj::WindowManager::unregisterPendingGameObjects() {
     }
 }
 
-void tj::WindowManager::run() {
+void tj::Engine::run() {
     sf::Clock clock;
     while (window.isOpen()) {
         float deltaTime = clock.restart().asSeconds();
