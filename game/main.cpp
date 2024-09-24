@@ -1,18 +1,17 @@
+#include "core/engine.h"
 #include "ecs/animation.hpp"
-#include "input/joystick.h"
+#include "input/mobile/joystick.h"
 #include "ui/health_bar.hpp"
 #include "utils/assets_mannager.hpp"
-#include "window/window_manager.h"
 
 class Enemy : public GameObject {
   public:
     Enemy(sf::RenderWindow &_window, const sf::Texture &_texture, int _initialFrame, int _spriteWidth = 64, int _spriteHeight = 64)
         : GameObject(_window), texture(_texture), spriteWidth(_spriteWidth), spriteHeight(_spriteHeight), healthBar(100.0f, 120.f, 10.0f, {0.0f, 0.0f}) {
 
-        sprite.setTexture(texture);    
-        sprite.setScale(6.0f, 6.0f);   
-        setSpriteFrame(_initialFrame); 
-        health = 100.0f;               
+        sprite.setTexture(texture);
+        sprite.setScale(6.0f, 6.0f);
+        setSpriteFrame(_initialFrame);
     }
 
     void addAnimation(const Animation &animation) { animations[animation.getAnimationName()] = animation; }
@@ -21,31 +20,37 @@ class Enemy : public GameObject {
         printf("Playing animation: %s\n", name.c_str());
 
         if (animations.find(name) != animations.end()) {
-            currentAnimation = name;
-            animations[currentAnimation].resetAnimationFrame();
+            if (currentAnimation != name) {
+                currentAnimation = name;
+                animations[currentAnimation].resetAnimationFrame();
+                animations[currentAnimation].setTimeElapsed(0.0f);
+                printf("Switched to animation: %s with frame_count: %d\n", name.c_str(), animations[currentAnimation].getTotalFrames());
+            }
         }
     }
 
-    void update(float deltaTime) override {
+    void update(float _deltaTime) override {
 
         if (!currentAnimation.empty()) {
-            animations[currentAnimation].update(deltaTime);
+            animations[currentAnimation].update(_deltaTime);
             animations[currentAnimation].setSpriteFrame(sprite, texture, spriteWidth, spriteHeight);
         }
 
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Y) || sf::Touch::isDown(0)) {
             health -= 10.0f;
 
-            printf("Removing 10 health points\n");
-            
             if (health < 0.0f) {
                 health = 0.0f;
-                playAnimation("DYING");
-                this->destroy();
+                this->playAnimation("DYING");
             }
         }
 
         healthBar.update(health);
+
+        if(health <= 0.0f && animations[currentAnimation].isLastFrame("DYING")) {
+            // TODO: "destory game_object for example"
+        }
+
     }
 
     void draw(sf::RenderStates _states = sf::RenderStates::Default) override {
@@ -63,25 +68,25 @@ class Enemy : public GameObject {
     void setPosition(float x, float y) { sprite.setPosition(x, y); }
 
   private:
-    void setSpriteFrame(int frame) {
+    void setSpriteFrame(int _frame) {
         int cols = texture.getSize().x / spriteWidth;
-        int row = frame / cols;
-        int col = frame % cols;
+        int row = _frame / cols;
+        int col = _frame % cols;
         sprite.setTextureRect(sf::IntRect(col * spriteWidth, row * spriteHeight, spriteWidth, spriteHeight));
     }
 
     int spriteWidth, spriteHeight;
     sf::Sprite sprite;
     const sf::Texture &texture;
-    HealthBar healthBar;
-    float health;
+    tj::HealthBar healthBar;
+    float health = 100.0f;
     std::unordered_map<std::string, Animation> animations;
     std::string currentAnimation;
 };
 
 int main() {
 
-    auto &windowManager = tj::WindowManager::getInstance();
+    auto &windowManager = tj::Engine::getInstance();
     auto &window = windowManager.getWindow();
     windowManager.createWindow("Game Window", sf::VideoMode(800, 600));
 
@@ -98,16 +103,18 @@ int main() {
     __android_log_print(ANDROID_LOG_INFO, "TJLog", "Loaded succesifully");
 #endif
 
-    Animation animIdle("IDLE", 4, 0.6f);
-    Animation animAttack("ATTACK", 5, 0.5f, 5);
-    Animation animDeath("DYING", 12, 0.2f, 14);
+    CAnimationData idleAnimation("IDLE", 4, 1.0f, 0);
+
+    Animation animIdle(idleAnimation);
+    Animation animAttack({"ATTACK", 5, 0.5f, 5});
+    Animation animDeath({"DYING", 12, 0.2f, 14});
 
     std::shared_ptr<Enemy> enemy = std::make_shared<Enemy>(window, enemyTexture, 2);
     enemy->addAnimation(animIdle);
     enemy->addAnimation(animAttack);
     enemy->addAnimation(animDeath);
     enemy->setPosition(100, 100);
-
+    enemy->playAnimation("IDLE");
     windowManager.registerGameObject(enemy);
 
     windowManager.run();
