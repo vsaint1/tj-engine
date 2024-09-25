@@ -10,10 +10,16 @@
 #include <unordered_map>
 #include <memory>
 #include <random>
+#include <cstdarg>
 
 #if __ANDROID__
 #include <android/log.h>
+#define LOG_TAG "TJLOG"
+#else
+#define LOG_TAG "[TJLOG]"
 #endif
+
+#include "utils/debug.hpp"
 
 
 #endif // PC_HPP

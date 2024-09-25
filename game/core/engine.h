@@ -8,6 +8,7 @@ class GameObject;
 
 namespace tj {
 
+// TODO: register objects and keep track of them
 class Engine {
   private:
     sf::RenderWindow window;

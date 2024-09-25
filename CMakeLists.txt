@@ -27,7 +27,7 @@ set(DIST_DIR ${CMAKE_SOURCE_DIR}/dist)
 
 if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
 
-    add_executable(${CMAKE_PROJECT_NAME} ${SOURCES_FILE})
+    add_executable(${CMAKE_PROJECT_NAME} ${SOURCES_FILE}  ${CMAKE_SOURCE_DIR}/settings/windows/icon.rc)
 
     target_link_libraries(${CMAKE_PROJECT_NAME} ${LIBS})
 

@@ -24,7 +24,7 @@ class Enemy : public GameObject {
                 currentAnimation = name;
                 animations[currentAnimation].resetAnimationFrame();
                 animations[currentAnimation].setTimeElapsed(0.0f);
-                printf("Switched to animation: %s with frame_count: %d\n", name.c_str(), animations[currentAnimation].getTotalFrames());
+                tj::Debug::logInfo("Switched to animation: %s with frame_count: %d\n", name.c_str(), animations[currentAnimation].getTotalFrames());
             }
         }
     }

@@ -4,7 +4,6 @@
 
 #include "../pch.hpp"
 
-
 namespace tj {
 
 enum EPlatform { EPLAT_WINDOWS, EPLAT_ANDROID, EPLAT_IOS, EPLAT_UNKNOWN };
@@ -42,9 +41,13 @@ class PlatformUtility {
             return "Unknown";
         }
     }
+    
+    static bool isAndroid() { return platform() == EPlatform::EPLAT_ANDROID ? true : false; }
+
+    static bool isIOS() { return platform() == EPlatform::EPLAT_IOS ? true : false; }
 
     static sf::FloatRect getSafeAreaView(const glm::vec2 &windowSize) {
-        float MOBILE_PADDING = isMobile() ? 20.0f : 0.0f; 
+        float MOBILE_PADDING = isMobile() ? 20.0f : 0.0f;
         float left = MOBILE_PADDING;
         float top = MOBILE_PADDING;
         float width = windowSize.x - 2 * MOBILE_PADDING;
@@ -54,6 +57,6 @@ class PlatformUtility {
     }
 };
 
-} // namespace tp
+} // namespace tj
 
 #endif // PLATFORM_UTILS_HPP
