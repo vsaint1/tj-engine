@@ -5,15 +5,17 @@
 
 namespace tj {
 
-class AssetsManager {
+    class AssetsManager {
 
-public:
-    AssetsManager() = delete;
+    public:
+        AssetsManager() = delete;
 
-    AssetsManager(const AssetsManager &) = delete;
+        AssetsManager(const AssetsManager&) = delete;
 
-    static std::string getAssetsFolder() { return tj::PlatformUtility::isMobile() ? "" : "assets/"; }
-};
+        static std::string getAssetsFolder() {
+            return tj::PlatformUtility::isMobile() ? "" : "assets/";
+        }
+    };
 
 }; // namespace tj
 
