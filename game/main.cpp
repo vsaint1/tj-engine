@@ -1,48 +1,53 @@
 #include "ecs/camera.h"
+
 #include "utils/assets_mannager.hpp"
 
-
 #ifdef SFML_SYSTEM_IOS
-    #include <SFML/Main.hpp>
+#include <SFML/Main.hpp>
 #endif
 
 int main() {
-
-#if SFML_SYSTEM_WINDOWS
-
-    sf::RenderWindow window(sf::VideoMode(800,600), "TJ - Game", sf::Style::Close);
+#if _WIN32
+    sf::RenderWindow window(sf::VideoMode(800, 600), "TJ - Game", sf::Style::Close);
 #else
     sf::RenderWindow window(sf::VideoMode::getDesktopMode(), "TJ - Game", sf::Style::Close);
-    
 #endif
-    
-    auto& debug = tj::Debug::geInstance();
 
+    // window.setFramerateLimit(60); // disabled for testing
+    // window.setVerticalSyncEnabled(true); // disabled for testing
+
+    auto& assetsManager = tj::AssetsManager::getInstance();
+    auto& debug         = tj::Debug::geInstance();
+
+    debug.setEnabled(true);
     debug.logInfo("Test log info");
     debug.logWarn("Test log warn");
     debug.logError("Test log error");
-
-    window.setFramerateLimit(60);
+    debug.setEnabled(false);
 
     Camera camera(800, 600);
     camera.setPosition(0, 0);
 
-    sf::Texture playerTexture;
- 
-    if (!playerTexture.loadFromFile(tj::AssetsManager::getAssetsFolder() + "player.png")) {
-        debug.logError("Failed to load player texture");
-    }
-    
-    sf::Sprite player(playerTexture);
+    assetsManager.loadTexture("player", "player.png");
+    assetsManager.loadFont("mine_font", "mine_font.ttf");
+
+    sf::Sprite player(assetsManager.getTexture("player"));
     sf::Vector2u windowSize = window.getSize();
     player.setPosition(
-                       windowSize.x / 2 - player.getLocalBounds().width / 2,
-                       windowSize.y / 2 - player.getLocalBounds().height / 2
-    );
-    
+        windowSize.x / 2 - player.getGlobalBounds().width / 2, windowSize.y / 2 - player.getGlobalBounds().height / 2);
     player.setScale(6.0f, 6.0f);
 
     debug.logInfo("Screen center {%d, %d}", camera.getView().getCenter().x, camera.getView().getCenter().y);
+
+    sf::Font font = assetsManager.getFont("mine_font");
+    sf::Text fpsText;
+    fpsText.setFont(font);
+    fpsText.setCharacterSize(24);
+    fpsText.setFillColor(sf::Color::White);
+    fpsText.setPosition(10.f, 10.f);
+
+    sf::Clock clock;
+    float fps = 0.0f;
 
     while (window.isOpen()) {
         sf::Event event;
@@ -53,23 +58,29 @@ int main() {
 
             if (sf::Mouse::isButtonPressed(sf::Mouse::Left) || sf::Touch::isDown(0)) {
 
-                sf::Vector2i screenPosition = sf::Touch::getPosition(0, window);
-                sf::Vector2i worldPosition = camera.screenToWorld(window,screenPosition);
+                sf::Vector2i screenPosition =
+                    tj::PlatformUtility::isMobile() ? sf::Touch::getPosition(0) : sf::Mouse::getPosition(window);
 
-                debug.logInfo("Mouse/touch at World Position: %d, %d", worldPosition.x, worldPosition.y);
+                sf::Vector2i mouseWorldPosition = camera.screenToWorld(window, screenPosition);
 
-                player.setPosition(
-                                   screenPosition.x - player.getLocalBounds().width,
-                                   screenPosition.y - player.getLocalBounds().height
-                );
+                debug.logInfo("Mouse/touch at World Position: %d, %d", mouseWorldPosition.x, mouseWorldPosition.y);
+
+                player.setPosition(screenPosition.x - player.getGlobalBounds().width / 2,
+                    screenPosition.y - player.getGlobalBounds().height / 2);
             }
         }
 
+        sf::Time elapsedTime = clock.restart();
+
+        fps = 1.0f / elapsedTime.asSeconds();
+
+        fpsText.setString("FPS: " + std::to_string(static_cast<int>(fps)));
+
         window.clear(sf::Color::Black);
-
         camera.draw(window);
-
         window.draw(player);
+
+        window.draw(fpsText);
 
         window.display();
     }
