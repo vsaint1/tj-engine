@@ -12,7 +12,9 @@ if(NOT CMAKE_SYSTEM_NAME STREQUAL "iOS")
     add_subdirectory(dependencies/SFML) # on ios we don't need this, already built SFML-IOS
 endif()
 
-file(GLOB_RECURSE SOURCES_FILE game/*.cpp)
+
+file(GLOB_RECURSE SOURCES_FILE src/*.cpp)
+include_directories(${CMAKE_SOURCE_DIR}/include)
 
 set(ASSETS_FOLDER ${CMAKE_SOURCE_DIR}/assets)
 
