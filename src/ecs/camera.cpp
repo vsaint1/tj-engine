@@ -1,4 +1,4 @@
-#include "camera.h"
+#include "ecs/camera.h"
 
 void Camera::update(float _deltaTime) {}
 

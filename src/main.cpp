@@ -1,12 +1,15 @@
 #include "ecs/camera.h"
-
-#include "utils/assets_mannager.hpp"
+#include "utils/assets_mannager.h"
+#include <ctime>
 
 #ifdef SFML_SYSTEM_IOS
 #include <SFML/Main.hpp>
 #endif
 
 int main() {
+
+    std::srand(std::time(nullptr));
+
 #if _WIN32
     sf::RenderWindow window(sf::VideoMode(800, 600), "TJ - Game", sf::Style::Close);
 #else
@@ -23,7 +26,6 @@ int main() {
     debug.logInfo("Test log info");
     debug.logWarn("Test log warn");
     debug.logError("Test log error");
-    debug.setEnabled(false);
 
     Camera camera(800, 600);
     camera.setPosition(0, 0);
@@ -38,6 +40,9 @@ int main() {
     player.setScale(6.0f, 6.0f);
 
     debug.logInfo("Screen center {%d, %d}", camera.getView().getCenter().x, camera.getView().getCenter().y);
+    int random2 = 50 + (rand() % 101);
+
+    debug.logError("value = %d", random2);
 
     sf::Font font = assetsManager.getFont("mine_font");
     sf::Text fpsText;
@@ -75,7 +80,10 @@ int main() {
         fps = 1.0f / elapsedTime.asSeconds();
 
         fpsText.setString("FPS: " + std::to_string(static_cast<int>(fps)));
+        int random = 100 + (rand() % 101);
+        debug.logWarn("Test number %d", random);
 
+        debug.logInfo("Random number %d", std::rand());
         window.clear(sf::Color::Black);
         camera.draw(window);
         window.draw(player);

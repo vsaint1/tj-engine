@@ -1,5 +1,6 @@
-#ifndef PC_HPP
-#define PC_HPP
+#ifndef PCH_H
+#define PCH_H
+
 
 // STD LIBS
 #include <cstdarg>
@@ -30,8 +31,8 @@
 
 #endif
 
-#include "utils/debug.hpp"
+#include "utils/debug.h"
 
-// GLOBAL DEBUG CLASS INSTANCE
 
-#endif // PC_HPP
+
+#endif // PCH_H

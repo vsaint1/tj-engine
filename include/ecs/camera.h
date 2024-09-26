@@ -1,7 +1,7 @@
 #ifndef CAMERA_HPP
 #define CAMERA_HPP
 
-#include "../pch.hpp"
+#include "pch.h"
 
 class Camera {
 public:
