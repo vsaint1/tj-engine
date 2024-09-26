@@ -52,7 +52,7 @@ namespace tj {
             return platform() == EPlatform::EPLAT_IOS ? true : false;
         }
 
-        static sf::FloatRect getSafeAreaView(const glm::vec2& _windowSize) {
+        static sf::FloatRect getSafeAreaView(const sf::Vector2i _windowSize) {
             float MOBILE_PADDING = isMobile() ? 20.0f : 0.0f;
             float left           = MOBILE_PADDING;
             float top            = MOBILE_PADDING;

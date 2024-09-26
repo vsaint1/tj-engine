@@ -8,8 +8,9 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 project (${APP_NAME} VERSION ${APP_VERSION} LANGUAGES CXX)
 
-add_subdirectory(dependencies/SFML)
-add_subdirectory(dependencies/glm)
+if(NOT CMAKE_SYSTEM_NAME STREQUAL "iOS")
+    add_subdirectory(dependencies/SFML) # on ios we don't need this, already built SFML-IOS
+endif()
 
 file(GLOB_RECURSE SOURCES_FILE game/*.cpp)
 
@@ -17,9 +18,11 @@ set(ASSETS_FOLDER ${CMAKE_SOURCE_DIR}/assets)
 
 
 if (CMAKE_SYSTEM_NAME STREQUAL "Android")
-    set(LIBS sfml-main sfml-graphics sfml-window sfml-system sfml-audio sfml-network sfml-activity glm)
+    set(LIBS sfml-main sfml-graphics sfml-window sfml-system sfml-audio sfml-network sfml-activity)
+elseif(CMAKE_SYSTEM_NAME STREQUAL "iOS")
+    set(LIBS sfml-main sfml-graphics sfml-window sfml-system sfml-audio sfml-network)
 else()
-    set(LIBS sfml-main sfml-graphics sfml-window sfml-system sfml-audio sfml-network glm)
+    set(LIBS sfml-main sfml-graphics sfml-window sfml-system sfml-audio sfml-network)
 endif()
 
 set(DIST_DIR ${CMAKE_SOURCE_DIR}/dist)
@@ -55,6 +58,43 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
    
         
 endif() 
+
+if(CMAKE_SYSTEM_NAME STREQUAL "iOS")
+    set(SFML_STATIC_LIBRARIES TRUE)
+
+    set(CMAKE_OSX_DEPLOYMENT_TARGET "12.0" CACHE STRING "Minimum iOS deployment version")
+
+    set(SFML_DIR "${CMAKE_SOURCE_DIR}/dependencies/SFML-IOS/lib/cmake/SFML")
+    find_package(SFML 2.6 COMPONENTS graphics audio window system network REQUIRED)
+
+    set(LAUNCH_SCREEN "${CMAKE_SOURCE_DIR}/settings/ios/LaunchScreen.storyboard")
+    set(ICON_NAME "SAppLogo.icns")
+    set(ICON_PATH "${CMAKE_SOURCE_DIR}/settings/ios/${ICON_NAME}")
+
+    add_executable(${CMAKE_PROJECT_NAME} MACOSX_BUNDLE ${SOURCES_FILE} ${ICON_PATH} ${Whereami_SOURCES} ${LAUNCH_SCREEN} ${CMAKE_SOURCE_DIR}/assets)
+    set_source_files_properties( ${ICON_PATH} PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
+    set_source_files_properties( ${LAUNCH_SCREEN} PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
+    set_source_files_properties("${CMAKE_SOURCE_DIR}/assets" PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
+
+    set(RESOURCES ${LAUNCH_SCREEN} "${CMAKE_SOURCE_DIR}/assets")
+
+    set_target_properties(${CMAKE_PROJECT_NAME} PROPERTIES
+        BUNDLE True
+        MACOSX_BUNDLE_ICON_FILE ${ICON_NAME}
+	    RESOURCE "${RESOURCES}"
+        MACOSX_BUNDLE_GUI_IDENTIFIER ${APP_IDENTIFIER}
+        MACOSX_BUNDLE_BUNDLE_NAME ${APP_NAME}
+        MACOSX_BUNDLE_BUNDLE_VERSION ${APP_VERSION}
+        MACOSX_BUNDLE_SHORT_VERSION_STRING ${APP_VERSION}
+        MACOSX_BUNDLE_INFO_PLIST ${CMAKE_SOURCE_DIR}/MacOSXBundleInfo.plist.in
+    )
+
+    set_property (TARGET ${CMAKE_PROJECT_NAME} PROPERTY XCODE_ATTRIBUTE_CLANG_CXX_LIBRARY "libc++")
+
+    target_link_libraries(${CMAKE_PROJECT_NAME} ${LIBS})
+
+endif()
+
 
 if (CMAKE_SYSTEM_NAME STREQUAL "Android")
     project(client)

@@ -2,8 +2,9 @@
 #define LOGGER_HPP
 
 #include "../pch.hpp"
+enum  ELogLevel { ELOG_INFO, ELOG_WARN, ELOG_ERROR };
+
 namespace tj {
-    enum class ELogLevel { ELOG_INFO, ELOG_WARN, ELOG_ERROR };
 
     class Debug {
     public:
@@ -64,7 +65,7 @@ namespace tj {
 #else
             const char* colorCode;
             switch (_level) {
-            case ELogLevel::ELOG_INFO:
+                case ELogLevel::ELOG_INFO:
                 colorCode = COLOR_CYAN;
                 break;
             case ELogLevel::ELOG_WARN:
@@ -75,7 +76,7 @@ namespace tj {
                 break;
             }
 
-            printf("%s%s - ", colorCode, LOG_TAG);
+            printf("%s%s - ",colorCode, LOG_TAG);
             vprintf(_format, _args);
             printf("%s\n", COLOR_RESET);
 #endif

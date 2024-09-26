@@ -23,7 +23,7 @@ public:
         return view;
     }
 
-    sf::Vector2f screenToWorld(const sf::RenderWindow& _window, const sf::Vector2i& _screenPosition);
+    sf::Vector2i screenToWorld(const sf::RenderWindow& _window, const sf::Vector2i& _screenPosition);
 
 private:
     sf::View view;

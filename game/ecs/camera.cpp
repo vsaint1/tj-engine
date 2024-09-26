@@ -12,6 +12,8 @@ void Camera::draw(sf::RenderWindow& _window) {
     _window.setView(_window.getDefaultView());
 }
 
-sf::Vector2f Camera::screenToWorld(const sf::RenderWindow& _window, const sf::Vector2i& _screenPosition) {
-    return _window.mapPixelToCoords(_screenPosition, view);
+sf::Vector2i Camera::screenToWorld(const sf::RenderWindow& _window, const sf::Vector2i& _screenPosition) {
+    sf::Vector2f worldPos = _window.mapPixelToCoords(_screenPosition);
+
+    return sf::Vector2i(static_cast<int>(worldPos.x), static_cast<int>(worldPos.y));
 }

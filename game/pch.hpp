@@ -12,7 +12,7 @@
 #include <vector>
 
 #include <SFML/Graphics.hpp>
-#include <glm/glm.hpp>
+//#include <glm/glm.hpp>
 
 // Ansi color codes
 #define COLOR_RESET  "\033[0m"
