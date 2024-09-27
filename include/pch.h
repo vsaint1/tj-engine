@@ -9,15 +9,17 @@
 #include <map>
 #include <memory>
 #include <mutex>
-#include <random>
 #include <string>
 #include <unordered_map>
 #include <vector>
 #include <stack>
 #include <ctime>
+#include <iomanip>
 
 // SFML LIBS
 #include <SFML/Graphics.hpp>
+#include <SFML/Network.hpp>
+#include <SFML/System.hpp>
 
 // ANSI COLOR CODES (https://en.wikipedia.org/wiki/ANSI_escape_code)
 #define COLOR_RESET  "\033[0m"

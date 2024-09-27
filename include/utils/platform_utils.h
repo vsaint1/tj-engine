@@ -14,9 +14,9 @@ namespace tj {
         PlatformUtility(const PlatformUtility&) = delete;
 
         static EPlatform platform();
-        
+
         static std::string plaftorm();
-        
+
         static bool isMobile() {
             return platform() == EPlatform::EPLAT_IOS || platform() == EPlatform::EPLAT_ANDROID;
         }
@@ -31,7 +31,7 @@ namespace tj {
         }
 
         static sf::FloatRect getSafeAreaView(const sf::Vector2i _windowSize);
-        
+
     };
 } // namespace tj
 

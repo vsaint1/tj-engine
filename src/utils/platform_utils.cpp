@@ -17,7 +17,7 @@ namespace tj {
         return EPlatform::EPLAT_UNKNOWN;
 #endif
     }
-    
+
     std::string PlatformUtility::plaftorm() {
         switch (platform()) {
         case EPlatform::EPLAT_WINDOWS:
@@ -42,5 +42,6 @@ namespace tj {
 
         return sf::FloatRect(left, top, width, height);
     }
+
 
 } // namespace tj
