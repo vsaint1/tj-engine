@@ -15,7 +15,7 @@ Windows distributables are built with `Visual Studio 2022 (MSVC)`,
 > Current supported platforms are:
 - [x] Windows
 - [x] Android
-- [ ] iOS 
+- [x] iOS (EXPERIMENTAL)
 
 
 ## Dependencies
@@ -23,7 +23,6 @@ Windows distributables are built with `Visual Studio 2022 (MSVC)`,
 > The rar file contains the following dependencies, extract it to `dependencies` folder.
 
 - SFML [2.6.x](https://www.sfml-dev.org/)
-- GLM [1.0.x](https://github.com/g-truc/glm)
 - JSON [3.11.x](https://github.com/nlohmann/json)
 
 
@@ -47,7 +46,7 @@ Windows distributables are built with `Visual Studio 2022 (MSVC)`,
     - Android Command-Line Tools [16.x](https://developer.android.com/studio/command-line)
 
 ### iOS 
-- Xcode [14.x](https://developer.apple.com/xcode/)
+- Xcode [16.x](https://developer.apple.com/xcode/)
     - TODO
 
 ### General
