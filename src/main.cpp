@@ -1,6 +1,5 @@
 #include "ecs/camera.h"
-#include "utils/assets_mannager.h"
-#include <ctime>
+#include "utils/assets_manager.h"
 
 #ifdef SFML_SYSTEM_IOS
 #include <SFML/Main.hpp>

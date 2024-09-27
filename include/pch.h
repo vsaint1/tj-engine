@@ -13,6 +13,8 @@
 #include <string>
 #include <unordered_map>
 #include <vector>
+#include <stack>
+#include <ctime>
 
 // SFML LIBS
 #include <SFML/Graphics.hpp>

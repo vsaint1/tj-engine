@@ -1,4 +1,4 @@
-#include "utils/assets_mannager.h"
+#include "utils/assets_manager.h"
 
 namespace tj {
 

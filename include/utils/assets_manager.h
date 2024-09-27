@@ -1,5 +1,5 @@
-#ifndef ASSET_MANNAGER_H
-#define ASSET_MANNAGER_H
+#ifndef ASSET_MANAGER_H
+#define ASSET_MANAGER_H
 
 #include "platform_utils.h"
 
@@ -51,4 +51,4 @@ namespace tj {
 
 }; // namespace tj
 
-#endif // ASSET_MANNAGER_H
+#endif // ASSET_MANAGER_H

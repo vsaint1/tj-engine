@@ -5,8 +5,13 @@
 
 class Camera {
 public:
-    Camera(float _width, float _height);
+    Camera() {
+        view.setSize(800, 600);
+        view.setCenter(400, 300);
+    }
 
+    Camera(float _width, float _height);
+    
     void setPosition(float _x, float _y) {
         view.setCenter(_x, _y);
     }
