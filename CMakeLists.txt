@@ -63,6 +63,7 @@ endif()
 
 if(CMAKE_SYSTEM_NAME STREQUAL "iOS")
 
+    file(GLOB_RECURSE OBJ_C_FILES "src/sys/ios/*.mm")
     set(SFML_STATIC_LIBRARIES TRUE)
 
     set(CMAKE_OSX_DEPLOYMENT_TARGET "12.0" CACHE STRING "Minimum iOS deployment version")
@@ -74,7 +75,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "iOS")
     set(ICON_NAME "SAppLogo.icns")
     set(ICON_PATH "${CMAKE_SOURCE_DIR}/settings/ios/${ICON_NAME}")
 
-    add_executable(${CMAKE_PROJECT_NAME} MACOSX_BUNDLE ${SOURCES_FILE} ${ICON_PATH} ${Whereami_SOURCES} ${LAUNCH_SCREEN} ${CMAKE_SOURCE_DIR}/assets)
+    add_executable(${CMAKE_PROJECT_NAME} MACOSX_BUNDLE ${OBJ_C_FILES} ${SOURCES_FILE} ${ICON_PATH} ${Whereami_SOURCES} ${LAUNCH_SCREEN} ${CMAKE_SOURCE_DIR}/assets)
     set_source_files_properties( ${ICON_PATH} PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
     set_source_files_properties( ${LAUNCH_SCREEN} PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
     set_source_files_properties("${CMAKE_SOURCE_DIR}/assets" PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
