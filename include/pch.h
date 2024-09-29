@@ -21,8 +21,8 @@
 #include <SFML/Network.hpp>
 #include <SFML/System.hpp>
 
-#if !SFML_SYSTEM_IOS
 // ANSI COLOR CODES (https://en.wikipedia.org/wiki/ANSI_escape_code)
+#if defined(_WIN32) || defined(__ANDROID__)
 #define COLOR_RESET  "\033[0m"
 #define COLOR_CYAN   "\033[36m"
 #define COLOR_YELLOW "\033[33m"

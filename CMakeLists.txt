@@ -25,13 +25,15 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Android")
 elseif(CMAKE_SYSTEM_NAME STREQUAL "iOS")
     set(LIBS sfml-main sfml-graphics sfml-window sfml-system sfml-audio sfml-network)
 else()
-    set(LIBS sfml-main sfml-graphics sfml-window sfml-system sfml-audio sfml-network)
+    set(LIBS sfml-main sfml-graphics sfml-window sfml-system sfml-audio sfml-network Advapi32)
 endif()
 
 set(DIST_DIR ${CMAKE_SOURCE_DIR}/dist)
 
 
 if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
+
+    file(GLOB_RECURSE OBJ_C_FILES "src/sys/windows/*.cpp")
 
     add_executable(${CMAKE_PROJECT_NAME} ${SOURCES_FILE}  ${CMAKE_SOURCE_DIR}/settings/windows/icon.rc)
 
