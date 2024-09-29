@@ -23,13 +23,14 @@ int main() {
 
     auto& assetsManager = tj::AssetsManager::getInstance();
 
-    auto& debug         = tj::Debug::geInstance();
+    auto& debug = tj::Debug::geInstance();
 
     debug.setEnabled(true);
     debug.logInfo("Test log info");
     debug.logWarn("Test log warn");
     debug.logError("Test log error");
 
+    auto windowSize = window.getSize();
     auto deviceName = tj::SystemInfo::getDeviceName();
 
     debug.logError("Device name %s", deviceName);
@@ -37,14 +38,13 @@ int main() {
     debug.logInfo("Device model %s", tj::SystemInfo::getDeviceModel());
     debug.logError("Device UID %s", tj::SystemInfo::getDeviceUniqueIdentifier());
 
-    Camera camera(800, 600);
+    Camera camera(windowSize.x, windowSize.y);
     camera.setPosition(0, 0);
 
     assetsManager.loadTexture("player", "player.png");
     assetsManager.loadFont("mine_font", "mine_font.ttf");
 
     sf::Sprite player(assetsManager.getTexture("player"));
-    sf::Vector2u windowSize = window.getSize();
     player.setPosition(
         windowSize.x / 2 - player.getGlobalBounds().width / 2, windowSize.y / 2 - player.getGlobalBounds().height / 2);
     player.setScale(6.0f, 6.0f);
