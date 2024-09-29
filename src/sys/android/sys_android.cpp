@@ -1,7 +1,5 @@
 #include <android/native_activity.h>
-#include <jni.h>
 #include <SFML/System/NativeActivity.hpp>
-#include <string>
 #include <sstream>
 
 #define PROP_VALUE_MAX 92
