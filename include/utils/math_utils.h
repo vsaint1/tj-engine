@@ -30,9 +30,9 @@ namespace tj {
         static T normalize(const sf::Vector2<T>& _v) {
             float mag = magnitude(_v);
             if (mag > 0) {
-                return sf::Vector2(_v.x / mag, _v.y / mag);
+                return sf::Vector2<T>(_v.x / mag, _v.y / mag);
             }
-            return sf::Vector2(0, 0);
+            return sf::Vector2<T>(0, 0);
         }
 
         static float distance(const sf::Vector2<float>& _v1, const sf::Vector2<float>& _v2) {
