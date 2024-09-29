@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.22.1)
 
 set(APP_NAME "SuperGame")
 set(APP_VERSION "0.1.0")
-set(APP_IDENTIFIER "com.vsantos1.game")
+set(APP_IDENTIFIER "com.tj.engine")
 set(NDK_VERSION "25.1.8937393")
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
@@ -15,6 +15,12 @@ endif()
 
 
 file(GLOB_RECURSE SOURCES_FILE src/*.cpp)
+
+list(FILTER SOURCES_FILE EXCLUDE REGEX "src/sys/windows/.*")
+list(FILTER SOURCES_FILE EXCLUDE REGEX "src/sys/ios/*.mm")
+list(FILTER SOURCES_FILE EXCLUDE REGEX "src/sys/android/.*")
+message(STATUS "Filtered source files: ${SOURCES_FILE}")
+
 include_directories(${CMAKE_SOURCE_DIR}/include)
 
 set(ASSETS_FOLDER ${CMAKE_SOURCE_DIR}/assets)
@@ -33,9 +39,9 @@ set(DIST_DIR ${CMAKE_SOURCE_DIR}/dist)
 
 if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
 
-    file(GLOB_RECURSE OBJ_C_FILES "src/sys/windows/*.cpp")
+    file(GLOB_RECURSE WIN_FILES "src/sys/windows/*.cpp")
 
-    add_executable(${CMAKE_PROJECT_NAME} ${SOURCES_FILE}  ${CMAKE_SOURCE_DIR}/settings/windows/icon.rc)
+    add_executable(${CMAKE_PROJECT_NAME} ${SOURCES_FILE} ${WIN_FILES}  ${CMAKE_SOURCE_DIR}/settings/windows/icon.rc)
 
     target_link_libraries(${CMAKE_PROJECT_NAME} ${LIBS})
 
@@ -104,6 +110,7 @@ endif()
 
 if (CMAKE_SYSTEM_NAME STREQUAL "Android")
 
+    file(GLOB_RECURSE ANDROID_FILES "src/sys/android/*.cpp")
     project(client)
     include(AndroidNdkModules)
     android_ndk_import_module_cpufeatures()
@@ -120,7 +127,7 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Android")
     set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -u ANativeActivity_onCreate")
 
     message("SOURCE_FILES: ${SOURCES_FILE}")
-    add_library(${CMAKE_PROJECT_NAME} SHARED ${SOURCES_FILE})
+    add_library(${CMAKE_PROJECT_NAME} SHARED ${SOURCES_FILE} ${ANDROID_FILES})
   
     target_link_libraries(${CMAKE_PROJECT_NAME} 
           -Wl,--whole-archive sfml-main -Wl,--no-whole-archive

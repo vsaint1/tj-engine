@@ -1,7 +1,7 @@
 #include "ecs/camera.h"
+#include "sys/system_info.h"
 #include "utils/assets_manager.h"
 #include "utils/math_utils.h"
-#include "sys/system_info.h"
 
 #ifdef SFML_SYSTEM_IOS
 #include <SFML/Main.hpp>
@@ -22,6 +22,7 @@ int main() {
     // window.setVerticalSyncEnabled(true); // disabled for testing
 
     auto& assetsManager = tj::AssetsManager::getInstance();
+
     auto& debug         = tj::Debug::geInstance();
 
     debug.setEnabled(true);
@@ -30,12 +31,12 @@ int main() {
     debug.logError("Test log error");
 
     auto deviceName = tj::SystemInfo::getDeviceName();
-    
-    debug.logError("Device name %s",deviceName);
-    debug.logError("Device battery %f",tj::SystemInfo::getBatteryLevel());
-    debug.logInfo("Device model %s",tj::SystemInfo::getDeviceModel());
-    debug.logError("Device UID %s",tj::SystemInfo::getDeviceUniqueIdentifier());
-    
+
+    debug.logError("Device name %s", deviceName);
+    debug.logError("Device battery %f", tj::SystemInfo::getBatteryLevel());
+    debug.logInfo("Device model %s", tj::SystemInfo::getDeviceModel());
+    debug.logError("Device UID %s", tj::SystemInfo::getDeviceUniqueIdentifier());
+
     Camera camera(800, 600);
     camera.setPosition(0, 0);
 
@@ -49,8 +50,8 @@ int main() {
     player.setScale(6.0f, 6.0f);
 
     debug.logInfo("Screen center {%d, %d}", camera.getView().getCenter().x, camera.getView().getCenter().y);
-    int random = tj::MathUtility::numberBetween(0,20);
-    
+    int random = tj::MathUtility::numberBetween(0, 20);
+
 
     debug.logError("value = %d", random);
 
@@ -89,8 +90,10 @@ int main() {
 
         fps = 1.0f / elapsedTime.asSeconds();
 
+// Fix: debug crash on android
+#if !defined(__ANDROID__)
         fpsText.setString("FPS: " + std::to_string(static_cast<int>(fps)));
-
+#endif
         window.clear(sf::Color::Black);
         camera.draw(window);
         window.draw(player);
