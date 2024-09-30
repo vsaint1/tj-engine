@@ -62,6 +62,10 @@ namespace tj {
             return _a + _t * (_b - _a);
         }
 
+        template<typename T>
+        static sf::Vector2<T> lerp(const sf::Vector2<T>& start, const sf::Vector2<T>& end, float t) {
+            return start + t * (end - start);
+        }
 
     private:
         MathUtility();
