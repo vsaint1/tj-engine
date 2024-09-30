@@ -2,36 +2,42 @@
 #define CAMERA_HPP
 
 #include "pch.h"
+#include "utils/math_utils.h"
 
-class Camera {
-public:
-    Camera() {
-        view.setSize(800, 600);
-        view.setCenter(400, 300);
-    }
+namespace tj {
 
-    Camera(float _width, float _height);
-    
-    void setPosition(float _x, float _y) {
-        view.setCenter(_x, _y);
-    }
+    class Camera {
+    public:
+        Camera() {
+            view.setSize(800, 600);
+        }
 
-    void zoom(float _factor) {
-        view.zoom(_factor);
-    }
+        Camera(float _width, float _height, sf::RenderWindow& _window);
 
-    void update(float _deltaTime);
+        void follow(const sf::Vector2f& targetPosition, float _deltaTime);
 
-    void draw(sf::RenderWindow& _window);
+        void zoom(float _factor) {
+            view.zoom(_factor);
+        }
 
-    sf::View getView() const {
-        return view;
-    }
+        void update(float _deltaTime);
 
-    sf::Vector2i screenToWorld(const sf::RenderWindow& _window, const sf::Vector2i& _screenPosition);
+        void draw(sf::RenderWindow& _window);
 
-private:
-    sf::View view;
-};
+        sf::View getView() const {
+            return view;
+        }
+
+        void setDebugCamera(bool _draw) {
+            bDrawCamera = _draw;
+        }
+
+        sf::Vector2i screenToWorld(const sf::RenderWindow& _window, const sf::Vector2i& _screenPosition);
+
+    private:
+        sf::View view;
+        bool bDrawCamera = false;
+    };
+}; // namespace tj
 
 #endif // CAMERA_HPP
