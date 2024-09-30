@@ -3,43 +3,35 @@
 #include "utils/assets_manager.h"
 #include "utils/math_utils.h"
 
+#include <SFML/Graphics.hpp>
+
 #ifdef SFML_SYSTEM_IOS
 #include <SFML/Main.hpp>
 #endif
 
+// TODO: refactor to a class EngineCore
 
 int main() {
-
     std::srand(std::time(nullptr));
 
 #if _WIN32
-    sf::RenderWindow window(sf::VideoMode(800, 600), "TJ - Game", sf::Style::Close);
+    sf::RenderWindow window(sf::VideoMode(1280, 720), "TJ - Game", sf::Style::Close);
 #else
     sf::RenderWindow window(sf::VideoMode::getDesktopMode(), "TJ - Game", sf::Style::Close);
 #endif
 
-    // window.setFramerateLimit(60); // disabled for testing
-    // window.setVerticalSyncEnabled(true); // disabled for testing
+    window.setFramerateLimit(60);
+    window.setVerticalSyncEnabled(true);
 
     auto& assetsManager = tj::AssetsManager::getInstance();
-
-    auto& debug = tj::Debug::geInstance();
+    auto& debug         = tj::Debug::geInstance();
 
     debug.setEnabled(true);
     debug.logInfo("Test log info");
-    debug.logWarn("Test log warn");
-    debug.logError("Test log error");
 
     auto windowSize = window.getSize();
-    auto deviceName = tj::SystemInfo::getDeviceName();
-
-    debug.logError("Device name %s", deviceName);
-    debug.logError("Device battery %f", tj::SystemInfo::getBatteryLevel());
-    debug.logInfo("Device model %s", tj::SystemInfo::getDeviceModel());
-    debug.logError("Device UID %s", tj::SystemInfo::getDeviceUniqueIdentifier());
-
-    Camera camera(windowSize.x, windowSize.y);
-    camera.setPosition(0, 0);
+    tj::Camera camera(windowSize.x, windowSize.y, window);
+    camera.setDebugCamera(true);
 
     assetsManager.loadTexture("player", "player.png");
     assetsManager.loadFont("mine_font", "mine_font.ttf");
@@ -48,12 +40,6 @@ int main() {
     player.setPosition(
         windowSize.x / 2 - player.getGlobalBounds().width / 2, windowSize.y / 2 - player.getGlobalBounds().height / 2);
     player.setScale(6.0f, 6.0f);
-
-    debug.logInfo("Screen center {%d, %d}", camera.getView().getCenter().x, camera.getView().getCenter().y);
-    int random = tj::MathUtility::numberBetween(0, 20);
-
-
-    debug.logError("value = %d", random);
 
     sf::Font font = assetsManager.getFont("mine_font");
     sf::Text fpsText;
@@ -65,6 +51,8 @@ int main() {
     sf::Clock clock;
     float fps = 0.0f;
 
+    const float moveSpeed = 500.0f;
+
     while (window.isOpen()) {
         sf::Event event;
         while (window.pollEvent(event)) {
@@ -73,31 +61,54 @@ int main() {
             }
 
             if (sf::Mouse::isButtonPressed(sf::Mouse::Left) || sf::Touch::isDown(0)) {
-
                 sf::Vector2i screenPosition =
                     tj::PlatformUtility::isMobile() ? sf::Touch::getPosition(0) : sf::Mouse::getPosition(window);
 
                 sf::Vector2i mouseWorldPosition = camera.screenToWorld(window, screenPosition);
-
-                debug.logInfo("Mouse/touch at World Position: %d, %d", mouseWorldPosition.x, mouseWorldPosition.y);
-
-                player.setPosition(screenPosition.x - player.getGlobalBounds().width / 2,
-                    screenPosition.y - player.getGlobalBounds().height / 2);
+                player.setPosition(mouseWorldPosition.x - player.getGlobalBounds().width / 2,
+                    mouseWorldPosition.y - player.getGlobalBounds().height / 2);
             }
         }
 
         sf::Time elapsedTime = clock.restart();
+        float deltaTime      = elapsedTime.asSeconds();
 
-        fps = 1.0f / elapsedTime.asSeconds();
+        sf::Vector2f velocity(0, 0);
 
-// Fix: debug crash on android
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
+            velocity.y -= moveSpeed * deltaTime;
+        }
+
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
+            velocity.y += moveSpeed * deltaTime;
+        }
+
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
+            velocity.x -= moveSpeed * deltaTime;
+        }
+
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+            velocity.x += moveSpeed * deltaTime;
+        }
+
+        player.move(velocity);
+
+        fps = 1.0f / deltaTime;
+
 #if !defined(__ANDROID__)
         fpsText.setString("FPS: " + std::to_string(static_cast<int>(fps)));
 #endif
+
+        // TODO: refactor draw with the camera view
         window.clear(sf::Color::Black);
+        camera.follow(player.getPosition(), deltaTime);
+        camera.update(deltaTime);
+
         camera.draw(window);
         window.draw(player);
 
+        // TODO: refactor draw without the camera view (fixed view)
+        window.setView(window.getDefaultView());
         window.draw(fpsText);
 
         window.display();
