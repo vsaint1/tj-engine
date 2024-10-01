@@ -57,10 +57,6 @@ Windows distributables are built with `Visual Studio 2022 (MSVC)`,
     - Vscode [1.93](https://code.visualstudio.com/)
 
 
-# Code Style
-
-This project follows [UE Coding Guidelines](https://dev.epicgames.com/documentation/en-us/unreal-engine/epic-cplusplus-coding-standard-for-unreal-engine) even though `SFML` uses camelCase for naming conventions.
-
 # How to build ? :construction_worker:
 
 - Windows 
@@ -107,3 +103,6 @@ open ProjectName.xcodeproj
 <img src="examples/ios_build.png" alt="iOS running">
 
 
+# Code Style
+
+This project follows [UE Coding Guidelines](https://dev.epicgames.com/documentation/en-us/unreal-engine/epic-cplusplus-coding-standard-for-unreal-engine) even though `SFML` uses camelCase for naming conventions.
