@@ -46,8 +46,8 @@ Windows distributables are built with `Visual Studio 2022 (MSVC)`,
     - Android Command-Line Tools [16.x](https://developer.android.com/studio/command-line)
 
 ### iOS 
-- Xcode [16.x](https://developer.apple.com/xcode/)
-    - TODO
+- Xcode [15.4](https://developer.apple.com/xcode/)
+    - iOS SDK [12.x](https://developer.apple.com/)
 
 ### General
 
@@ -56,8 +56,54 @@ Windows distributables are built with `Visual Studio 2022 (MSVC)`,
     - CMake [3.21.x](https://cmake.org/)
     - Vscode [1.93](https://code.visualstudio.com/)
 
+
 # Code Style
 
 This project follows [UE Coding Guidelines](https://dev.epicgames.com/documentation/en-us/unreal-engine/epic-cplusplus-coding-standard-for-unreal-engine) even though `SFML` uses camelCase for naming conventions.
 
-> Project Under-development :warning:
+# How to build ? :construction_worker:
+
+- Windows 
+
+```bat
+mkdir build && cd build
+
+cmake .. -G "Visual Studio 17 2022" -DCMAKE_SYSTEM_NAME="Windows"
+
+cmake --build .
+```
+
+
+- Android
+
+
+```sh
+cd android
+gradle assembleDebug
+```
+
+- iOS
+
+1. Generating the `*.xcodeproj`
+
+```sh
+mkdir build && cd build
+
+cmake .. -G "Xcode" -DCMAKE_SYSTEM_NAME="iOS"
+
+open ProjectName.xcodeproj
+
+```
+
+2. Linking the framework's and libraries
+
+<img src="examples/xcode_deps.png" alt="xcode dependencies">
+
+3. Signing and building
+    - Setup the Provisioning signing for iOS
+    - Choose the Device
+    - Signing and building the application
+
+<img src="examples/ios_build.png" alt="iOS running">
+
+
