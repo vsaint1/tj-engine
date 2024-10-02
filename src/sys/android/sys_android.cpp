@@ -1,6 +1,7 @@
 #include <android/native_activity.h>
-#include <SFML/System/NativeActivity.hpp>
 #include <sstream>
+
+#include <SFML/System/NativeActivity.hpp>
 
 #define PROP_VALUE_MAX 92
 
@@ -8,25 +9,25 @@
 
 extern "C" {
 
-const char *deviceName() {
+const char* deviceName() {
 
 
-    ANativeActivity *activity = sf::getNativeActivity();
-    JavaVM *vm = activity->vm;
-    JNIEnv *env = activity->env;
+    ANativeActivity* activity = sf::getNativeActivity();
+    JavaVM* vm                = activity->vm;
+    JNIEnv* env               = activity->env;
 
     JavaVMAttachArgs attachargs;
     attachargs.version = JNI_VERSION_1_6;
-    attachargs.name = "TJNativeThread";
-    attachargs.group = nullptr;
-    jint res = vm->AttachCurrentThread(&env, &attachargs);
+    attachargs.name    = "TJNativeThread";
+    attachargs.group   = nullptr;
+    jint res           = vm->AttachCurrentThread(&env, &attachargs);
 
-    if (res == JNI_ERR)
+    if (res == JNI_ERR) {
         return nullptr;
+    }
 
     jclass androidBuildClass = env->FindClass("android/os/Build");
-    jfieldID deviceFieldID = env->GetStaticFieldID(androidBuildClass, "DEVICE",
-                                                   "Ljava/lang/String;");
+    jfieldID deviceFieldID   = env->GetStaticFieldID(androidBuildClass, "DEVICE", "Ljava/lang/String;");
     if (deviceFieldID == nullptr) {
         env->DeleteLocalRef(androidBuildClass);
         return nullptr;
@@ -39,7 +40,7 @@ const char *deviceName() {
         return nullptr;
     }
 
-    const char *deviceCStr = env->GetStringUTFChars(modelString, nullptr);
+    const char* deviceCStr = env->GetStringUTFChars(modelString, nullptr);
 
     if (deviceCStr != nullptr) {
         env->ReleaseStringUTFChars(modelString, deviceCStr);
@@ -54,24 +55,24 @@ const char *deviceName() {
 }
 
 
-const char *deviceModel() {
+const char* deviceModel() {
 
-    ANativeActivity *activity = sf::getNativeActivity();
-    JavaVM *vm = activity->vm;
-    JNIEnv *env = activity->env;
+    ANativeActivity* activity = sf::getNativeActivity();
+    JavaVM* vm                = activity->vm;
+    JNIEnv* env               = activity->env;
 
     JavaVMAttachArgs attachargs;
     attachargs.version = JNI_VERSION_1_6;
-    attachargs.name = "TJNativeThread";
-    attachargs.group = nullptr;
-    jint res = vm->AttachCurrentThread(&env, &attachargs);
+    attachargs.name    = "TJNativeThread";
+    attachargs.group   = nullptr;
+    jint res           = vm->AttachCurrentThread(&env, &attachargs);
 
-    if (res == JNI_ERR)
+    if (res == JNI_ERR) {
         return nullptr;
+    }
 
     jclass androidBuildClass = env->FindClass("android/os/Build");
-    jfieldID modelFieldID = env->GetStaticFieldID(androidBuildClass, "MODEL",
-                                                  "Ljava/lang/String;");
+    jfieldID modelFieldID    = env->GetStaticFieldID(androidBuildClass, "MODEL", "Ljava/lang/String;");
     if (modelFieldID == nullptr) {
         env->DeleteLocalRef(androidBuildClass);
         return nullptr;
@@ -84,7 +85,7 @@ const char *deviceModel() {
         return nullptr;
     }
 
-    const char *modelCStr = env->GetStringUTFChars(modelString, nullptr);
+    const char* modelCStr = env->GetStringUTFChars(modelString, nullptr);
 
     if (modelCStr != nullptr) {
         env->ReleaseStringUTFChars(modelString, modelCStr);
@@ -98,34 +99,24 @@ const char *deviceModel() {
     return nullptr;
 }
 
-const char *deviceUniqueIdentifier() {
+const char* deviceUniqueIdentifier() {
     std::stringstream deviceUID;
     deviceUID << "35";
 
-    const char* properties[] = {
-            "ro.product.board",
-            "ro.product.brand",
-            "ro.product.cpu.abi",
-            "ro.product.device",
-            "ro.build.display.id",
-            "ro.build.host",
-            "ro.build.id",
-            "ro.product.manufacturer",
-            "ro.product.model",
-            "ro.product.name",
-            "ro.build.tags",
-            "ro.product.type",
-            "ro.build.user"
-    };
+    const char* properties[] = {"ro.product.board", "ro.product.brand", "ro.product.cpu.abi", "ro.product.device",
+        "ro.build.display.id", "ro.build.host", "ro.build.id", "ro.product.manufacturer", "ro.product.model",
+        "ro.product.name", "ro.build.tags", "ro.product.type", "ro.build.user"};
 
     int segmentCount = 0;
 
     for (const char* property : properties) {
         char value[PROP_VALUE_MAX];
-        __system_property_get(property, value);
-        int segment = strlen(value) % 10;
-
-        deviceUID << segment;
+        if (__system_property_get(property, value) > 0) {
+            int segment = strlen(value) % 10;
+            deviceUID << segment;
+        } else {
+            deviceUID << "000";
+        }
 
         if (++segmentCount % 3 == 0 && segmentCount < 13) {
             deviceUID << "-";
@@ -138,10 +129,6 @@ const char *deviceUniqueIdentifier() {
 float deviceBatteryLevel() {
     char batteryLevel[PROP_VALUE_MAX];
 
-    if (__system_property_get("battery.level", batteryLevel) > 0) {
-        return std::atof(batteryLevel);
-    } else {
-        return -1.0f;
-    }
+    return __system_property_get("battery.level", batteryLevel);
 }
 }
