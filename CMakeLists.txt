@@ -4,6 +4,9 @@ set(APP_NAME "SuperGame")
 set(APP_VERSION "0.1.0")
 set(APP_IDENTIFIER "com.tj.engine")
 set(NDK_VERSION "25.1.8937393")
+set(CODE_SIGN_IDENTITY "iPhone Developer")
+set(DEPLOYMENT_TARGET 13.0)
+
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
@@ -69,26 +72,51 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
         
 endif() 
 
+# TODO: fix iOS linking libraries xcode
 if(CMAKE_SYSTEM_NAME STREQUAL "iOS")
 
     file(GLOB_RECURSE OBJ_C_FILES "src/sys/ios/*.mm")
     set(SFML_STATIC_LIBRARIES TRUE)
 
-    set(CMAKE_OSX_DEPLOYMENT_TARGET "12.0" CACHE STRING "Minimum iOS deployment version")
-
     set(SFML_DIR "${CMAKE_SOURCE_DIR}/dependencies/SFML-IOS/lib/cmake/SFML")
+    set(SFML_LIB "${CMAKE_SOURCE_DIR}/dependencies/SFML-IOS/lib/")
     find_package(SFML 2.6 COMPONENTS graphics audio window system network REQUIRED)
+
+    find_library(UIKIT UIKit)
+    find_library(FOUNDATION Foundation)
+    find_library(OPENGLES OpenGLES)
+
+    message(STATUS "${SFML_INCLUDE_DIR} ${SFML_LIBRARIES} ${UIKIT} ${FOUNDATION} ${OPENGLES}")
+
 
     set(LAUNCH_SCREEN "${CMAKE_SOURCE_DIR}/settings/ios/LaunchScreen.storyboard")
     set(ICON_NAME "SAppLogo.icns")
     set(ICON_PATH "${CMAKE_SOURCE_DIR}/settings/ios/${ICON_NAME}")
 
     add_executable(${CMAKE_PROJECT_NAME} MACOSX_BUNDLE ${OBJ_C_FILES} ${SOURCES_FILE} ${ICON_PATH} ${Whereami_SOURCES} ${LAUNCH_SCREEN} ${CMAKE_SOURCE_DIR}/assets)
+   
     set_source_files_properties( ${ICON_PATH} PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
     set_source_files_properties( ${LAUNCH_SCREEN} PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
     set_source_files_properties("${CMAKE_SOURCE_DIR}/assets" PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
 
     set(RESOURCES ${LAUNCH_SCREEN} "${CMAKE_SOURCE_DIR}/assets")
+
+    set_target_properties(
+        ${CMAKE_PROJECT_NAME}
+        PROPERTIES
+        XCODE_ATTRIBUTE_LD_RUNPATH_SEARCH_PATHS
+        "@executable_path/Frameworks"
+    )
+
+    set_property(TARGET ${CMAKE_PROJECT_NAME} PROPERTY XCODE_ATTRIBUTE_CLANG_CXX_LIBRARY "libc++")
+
+    set_target_properties(${CMAKE_PROJECT_NAME} PROPERTIES
+    XCODE_ATTRIBUTE_OTHER_LDFLAGS "-framework UIKit -framework Foundation -framework OpenGLES -lobjc -lc++")
+    
+    add_custom_command(TARGET ${CMAKE_PROJECT_NAME} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E echo "Test command")
+
+    target_link_libraries(${CMAKE_PROJECT_NAME} PUBLIC ${LIBS} stdc++ -Wall ${UIKIT} ${FOUNDATION} ${OPENGLES} objc)
 
     set_target_properties(${CMAKE_PROJECT_NAME} PROPERTIES
         BUNDLE True
@@ -96,14 +124,14 @@ if(CMAKE_SYSTEM_NAME STREQUAL "iOS")
 	    RESOURCE "${RESOURCES}"
         MACOSX_BUNDLE_GUI_IDENTIFIER ${APP_IDENTIFIER}
         MACOSX_BUNDLE_BUNDLE_NAME ${APP_NAME}
+        XCODE_ATTRIBUTE_COMBINE_HIDPI_IMAGES YES
+        XCODE_ATTRIBUTE_IPHONEOS_DEPLOYMENT_TARGET ${DEPLOYMENT_TARGET}
+        XCODE_ATTRIBUTE_CODE_SIGN_IDENTITY ${CODE_SIGN_IDENTITY}
+        XCODE_ATTRIBUTE_CODE_SIGN_STYLE “Automatic”
         MACOSX_BUNDLE_BUNDLE_VERSION ${APP_VERSION}
         MACOSX_BUNDLE_SHORT_VERSION_STRING ${APP_VERSION}
         MACOSX_BUNDLE_INFO_PLIST ${CMAKE_SOURCE_DIR}/MacOSXBundleInfo.plist.in
     )
-
-    set_property (TARGET ${CMAKE_PROJECT_NAME} PROPERTY XCODE_ATTRIBUTE_CLANG_CXX_LIBRARY "libc++")
-
-    target_link_libraries(${CMAKE_PROJECT_NAME} ${LIBS})
 
 endif()
 

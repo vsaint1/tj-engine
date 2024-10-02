@@ -28,6 +28,10 @@ namespace tj {
             return view;
         }
 
+        sf::Vector2f getCenter(){
+            return view.getCenter();
+        }
+
         void setDebugCamera(bool _draw) {
             bDrawCamera = _draw;
         }

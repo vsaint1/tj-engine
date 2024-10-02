@@ -60,10 +60,18 @@ int main() {
                 window.close();
             }
 
-            if (sf::Mouse::isButtonPressed(sf::Mouse::Left) || sf::Touch::isDown(0)) {
-                sf::Vector2i screenPosition =
-                    tj::PlatformUtility::isMobile() ? sf::Touch::getPosition(0) : sf::Mouse::getPosition(window);
-
+            
+            if (event.type == sf::Event::TouchBegan || event.type == sf::Event::TouchMoved) {
+                sf::Vector2i touchPosition(event.touch.x, event.touch.y);
+                sf::Vector2i touchWorldPosition = camera.screenToWorld(window, touchPosition);
+                
+                debug.logInfo("Touch (%i,%i)",touchWorldPosition.x,touchWorldPosition.y);
+                player.setPosition(touchWorldPosition.x - player.getGlobalBounds().width / 2,
+                                   touchWorldPosition.y - player.getGlobalBounds().height / 2);
+            }
+            
+            if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+                sf::Vector2i screenPosition = sf::Mouse::getPosition(window);
                 sf::Vector2i mouseWorldPosition = camera.screenToWorld(window, screenPosition);
                 player.setPosition(mouseWorldPosition.x - player.getGlobalBounds().width / 2,
                     mouseWorldPosition.y - player.getGlobalBounds().height / 2);
