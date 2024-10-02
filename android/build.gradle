@@ -66,13 +66,13 @@ android {
     sourceSets {
         main {
             java{
-                srcDirs 'src/main/java'
+                srcDirs 'app/src/main/java'
             }
 
             manifest.srcFile 'AndroidManifest.xml'
 
             res {
-                srcDirs 'res'
+                srcDirs 'app/src/main/res'
             }
 
             assets {
@@ -86,3 +86,5 @@ android {
 dependencies {
     implementation 'androidx.appcompat:appcompat:1.5.1'
 }
+
+
