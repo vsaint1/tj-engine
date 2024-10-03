@@ -3,9 +3,10 @@ namespace tj {
 
     void Camera::follow(const sf::Vector2f& targetPosition, float _deltaTime) {
         sf::Vector2f currentPosition = view.getCenter();
-        sf::Vector2f newPosition     = tj::MathUtility::lerp(currentPosition, targetPosition, 0.1f);
+        sf::Vector2f newPosition     = tj::Mathf::lerp(currentPosition, targetPosition, 0.3f);
         view.setCenter(newPosition);
     }
+
 
     void Camera::update(float _deltaTime) {
 

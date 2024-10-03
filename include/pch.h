@@ -34,7 +34,7 @@
 #define COLOR_RED    ""
 #endif
 
-#if __ANDROID__
+#if defined(__ANDROID__)
 #include <android/log.h>
 #define LOG_TAG "TJLOG"
 #else
@@ -42,7 +42,7 @@
 
 #endif
 
-#include "utils/debug.h"
+#include "utils/Debug.h"
 
 
 

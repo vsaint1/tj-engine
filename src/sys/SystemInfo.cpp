@@ -1,4 +1,4 @@
-#include "sys/system_info.h"
+#include "sys/SystemInfo.h"
 
 // ensure this are valid at runtime.
 extern "C" {

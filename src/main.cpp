@@ -1,7 +1,7 @@
-#include "ecs/camera.h"
-#include "sys/system_info.h"
-#include "utils/assets_manager.h"
-#include "utils/math_utils.h"
+#include "ecs/Camera.h"
+#include "sys/SystemInfo.h"
+#include "utils/AssetsManager.h"
+#include "utils/Mathf.h"
 
 #include <SFML/Graphics.hpp>
 
@@ -29,6 +29,14 @@ int main() {
     debug.setEnabled(true);
     debug.logInfo("Test log info");
 
+    auto deviceModel   = tj::SystemInfo::getDeviceModel();
+    auto deviceName    = tj::SystemInfo::getDeviceName();
+    auto deviceUID     = tj::SystemInfo::getDeviceUniqueIdentifier();
+    auto deviceBattery = tj::SystemInfo::getBatteryLevel();
+
+
+    debug.logInfo("Name %s, model %s, uid %s, battery %f", deviceName, deviceModel, deviceUID, deviceBattery);
+    
     auto windowSize = window.getSize();
     tj::Camera camera(windowSize.x, windowSize.y, window);
     camera.setDebugCamera(true);
@@ -60,18 +68,18 @@ int main() {
                 window.close();
             }
 
-            
+
             if (event.type == sf::Event::TouchBegan || event.type == sf::Event::TouchMoved) {
                 sf::Vector2i touchPosition(event.touch.x, event.touch.y);
                 sf::Vector2i touchWorldPosition = camera.screenToWorld(window, touchPosition);
-                
-                debug.logInfo("Touch (%i,%i)",touchWorldPosition.x,touchWorldPosition.y);
+
+                debug.logInfo("Touch (%i,%i)", touchWorldPosition.x, touchWorldPosition.y);
                 player.setPosition(touchWorldPosition.x - player.getGlobalBounds().width / 2,
-                                   touchWorldPosition.y - player.getGlobalBounds().height / 2);
+                    touchWorldPosition.y - player.getGlobalBounds().height / 2);
             }
-            
+
             if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
-                sf::Vector2i screenPosition = sf::Mouse::getPosition(window);
+                sf::Vector2i screenPosition     = sf::Mouse::getPosition(window);
                 sf::Vector2i mouseWorldPosition = camera.screenToWorld(window, screenPosition);
                 player.setPosition(mouseWorldPosition.x - player.getGlobalBounds().width / 2,
                     mouseWorldPosition.y - player.getGlobalBounds().height / 2);

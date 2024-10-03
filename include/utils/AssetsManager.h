@@ -1,7 +1,7 @@
 #ifndef ASSET_MANAGER_H
 #define ASSET_MANAGER_H
 
-#include "platform_utils.h"
+#include "PlatformUtility.h"
 
 namespace tj {
 

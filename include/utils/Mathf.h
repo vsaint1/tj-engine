@@ -1,14 +1,14 @@
-#ifndef MATH_UTILS_H
-#define MATH_UTILS_H
+#ifndef MATHF_H
+#define MATHF_H
 
 #include "../pch.h"
 
 
 namespace tj {
 
-    class MathUtility {
+    class Mathf {
     public:
-        MathUtility(const MathUtility&) = delete;
+        Mathf(const Mathf&) = delete;
 
 
         template <typename T>
@@ -68,7 +68,7 @@ namespace tj {
         }
 
     private:
-        MathUtility();
+        Mathf();
 
         static unsigned int seed() {
             return static_cast<unsigned int>(std::chrono::system_clock::now().time_since_epoch().count());
@@ -78,4 +78,4 @@ namespace tj {
 } // namespace tj
 
 
-#endif // MATH_UTILS_H
+#endif // MATHF_H
