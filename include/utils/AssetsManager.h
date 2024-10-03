@@ -12,7 +12,7 @@ namespace tj {
         void operator=(const Debug&) = delete;
 
         static AssetsManager& getInstance();
-        
+
         void loadTexture(const std::string& _name, const std::string& _path);
 
         void loadFont(const std::string& _name, const std::string& _path);
@@ -34,12 +34,12 @@ namespace tj {
             this->fonts.erase(_name);
         }
 
-    private:
 
         std::string getAssetsFolder() {
             return tj::PlatformUtility::isMobile() ? "" : "assets/";
         }
 
+    private:
         std::map<std::string, sf::Texture> textures;
 
         std::map<std::string, sf::Font> fonts;

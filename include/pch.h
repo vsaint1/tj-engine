@@ -15,6 +15,7 @@
 #include <stack>
 #include <ctime>
 #include <iomanip>
+#include <fstream>
 
 // SFML LIBS
 #include <SFML/Graphics.hpp>
