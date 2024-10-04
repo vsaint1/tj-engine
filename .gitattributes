@@ -1,4 +1,5 @@
 *.cpp linguist-detectable=true
 *.java linguist-detectable=true
 *.mm linguist-detectable=true
+*.h linguist-detectable=true
 *.hpp linguist-vendored
