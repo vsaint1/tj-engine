@@ -22,7 +22,7 @@ file(GLOB_RECURSE SOURCES_FILE src/*.cpp)
 list(FILTER SOURCES_FILE EXCLUDE REGEX "src/sys/windows/.*")
 list(FILTER SOURCES_FILE EXCLUDE REGEX "src/sys/ios/*.mm")
 list(FILTER SOURCES_FILE EXCLUDE REGEX "src/sys/android/.*")
-message(STATUS "Filtered source files: ${SOURCES_FILE}")
+message(STATUS "Filtered source files: ${SOURCES_FILE} \n")
 
 include_directories(${CMAKE_SOURCE_DIR}/include)
 
@@ -56,17 +56,17 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
          COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:${CMAKE_PROJECT_NAME}> ${OUTPUT_DIR}
          COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_RUNTIME_DLLS:${CMAKE_PROJECT_NAME}> ${OUTPUT_DIR}
          COMMAND_EXPAND_LISTS
-         COMMENT "Building windows distributables")
+         COMMENT "Building windows distributables \n")
 
     add_custom_command(TARGET ${CMAKE_PROJECT_NAME} POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_directory
         ${ASSETS_FOLDER} ${OUTPUT_DIR}/assets
-        COMMENT "Copying assets to executable directory")
+        COMMENT "Copying assets to executable directory \n")
 
     add_custom_command(TARGET ${CMAKE_PROJECT_NAME} POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_if_different
         ${CMAKE_SOURCE_DIR}/dependencies/SFML/extlibs/bin/x64/openal32.dll ${OUTPUT_DIR}
-        COMMENT "Copying OpenAL32.dll to executable directory")
+        COMMENT "Copying OpenAL32.dll to executable directory \n")
 
    
         
@@ -86,7 +86,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "iOS")
     find_library(FOUNDATION Foundation)
     find_library(OPENGLES OpenGLES)
 
-    message(STATUS "${SFML_INCLUDE_DIR} ${SFML_LIBRARIES} ${UIKIT} ${FOUNDATION} ${OPENGLES}")
+    message(STATUS "${SFML_INCLUDE_DIR} ${SFML_LIBRARIES} ${UIKIT} ${FOUNDATION} ${OPENGLES} \n ")
 
 
     set(LAUNCH_SCREEN "${CMAKE_SOURCE_DIR}/settings/ios/LaunchScreen.storyboard")
@@ -143,7 +143,7 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Android")
     include(AndroidNdkModules)
     android_ndk_import_module_cpufeatures()
     set(OPENAL_LIB_PATH ${CMAKE_SOURCE_DIR}/dependencies/SFML/extlibs/libs-android/${ANDROID_ABI}/libopenal.so)
-    message("OPENAL_LIB_PATH: ${OPENAL_LIB_PATH}")
+    message("OPENAL_LIB_PATH: ${OPENAL_LIB_PATH} \n")
     add_library(openal SHARED IMPORTED)
     
 
@@ -154,7 +154,8 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Android")
 
     set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -u ANativeActivity_onCreate")
 
-    message("SOURCE_FILES: ${SOURCES_FILE}")
+    message("SOURCE_FILES: ${SOURCES_FILE} \n")
+
     add_library(${CMAKE_PROJECT_NAME} SHARED ${SOURCES_FILE} ${ANDROID_FILES})
   
     target_link_libraries(${CMAKE_PROJECT_NAME} 
