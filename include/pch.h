@@ -21,6 +21,7 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Network.hpp>
 #include <SFML/System.hpp>
+#include <SFML/Audio.hpp>
 
 // ANSI COLOR CODES (https://en.wikipedia.org/wiki/ANSI_escape_code)
 #if defined(_WIN32) || defined(__ANDROID__)

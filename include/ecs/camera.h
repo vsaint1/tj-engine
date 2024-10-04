@@ -2,7 +2,7 @@
 #define CAMERA_HPP
 
 #include "pch.h"
-#include "utils/Mathf.h"
+#include "math/Mathf.h"
 
 namespace tj {
 

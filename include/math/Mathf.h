@@ -9,13 +9,7 @@ namespace tj {
     class Mathf {
     public:
         Mathf(const Mathf&) = delete;
-
-
-        template <typename T>
-        static T numberBetween(T _min, T _max) {
-            return _min + rand() % ((_max - _min) + 1);
-        }
-
+        
         template <typename T>
         static T dot(const sf::Vector2<T>& _v1, const sf::Vector2<T>& _v2) {
             return _v1.x * _v2.x + _v1.y * _v2.y;
@@ -70,9 +64,7 @@ namespace tj {
     private:
         Mathf();
 
-        static unsigned int seed() {
-            return static_cast<unsigned int>(std::chrono::system_clock::now().time_since_epoch().count());
-        }
+       
     };
 
 } // namespace tj
