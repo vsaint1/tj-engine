@@ -8,37 +8,52 @@ namespace tj {
         return instance;
     }
 
-    void Debug::logInfo(const char* _format, ...) {
+    void Debug::logInfo(const char* _context, const char* _format, ...) {
+
         va_list args;
         va_start(args, _format);
-        this->log(_format, args, ELogLevel::ELOG_INFO);
+        this->log(_context, _format, args, ELogLevel::ELOG_INFO);
         va_end(args);
     }
 
-    void Debug::logWarn(const char* _format, ...) {
+    void Debug::logWarn(const char* _context, const char* _format, ...) {
+
         va_list args;
         va_start(args, _format);
-        this->log(_format, args, ELogLevel::ELOG_WARN);
+        this->log(_context, _format, args, ELogLevel::ELOG_WARN);
         va_end(args);
     }
 
-    void Debug::logError(const char* _format, ...) {
+    void Debug::logError(const char* _context, const char* _format, ...) {
+
         va_list args;
         va_start(args, _format);
-        this->log(_format, args, ELogLevel::ELOG_ERROR);
+        this->log(_context, _format, args, ELogLevel::ELOG_ERROR);
         va_end(args);
     }
 
-    void Debug::log(const char* _format, va_list _args, ELogLevel _level) {
+    // TODO: we write to disk the logs
+    void Debug::log(const char* _context, const char* _format, va_list _args, ELogLevel _level) {
 
+        
         if (!bEnabled) {
             return;
         }
 
-        std::lock_guard<std::mutex> lock(mutex);
+        sf::Lock lock(mutex);
+
+        time_t rawtime;
+        struct tm* timeinfo;
+        char timeStr[20];
+
+        time(&rawtime);
+        timeinfo = localtime(&rawtime);
+        strftime(timeStr, sizeof(timeStr), "%Y-%m-%d %H:%M:%S", timeinfo);
+
+        char formatted_message[1024];
+        snprintf(formatted_message, sizeof(formatted_message), "[%s][%s] - %s", timeStr, _context, _format);
 
 #ifdef __ANDROID__
-
         int androidLogLevel;
         switch (_level) {
         case ELogLevel::ELOG_INFO:
@@ -51,8 +66,7 @@ namespace tj {
             androidLogLevel = ANDROID_LOG_ERROR;
             break;
         }
-
-        __android_log_vprint(androidLogLevel, LOG_TAG, _format, _args);
+        __android_log_vprint(androidLogLevel, LOG_TAG, formatted_message, _args);
         __android_log_print(androidLogLevel, LOG_TAG, "\n");
 #else
         const char* colorCode;
@@ -68,9 +82,11 @@ namespace tj {
             break;
         }
 
-        printf("%s%s - ", colorCode, LOG_TAG);
-        vprintf(_format, _args);
+        printf("%s ", colorCode);
+        vprintf(formatted_message, _args);
         printf("%s\n", COLOR_RESET);
+
+        va_end(_args);
 #endif
     }
 

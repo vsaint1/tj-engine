@@ -40,8 +40,9 @@
 #define LOG_TAG "TJLOG"
 #else
 #define LOG_TAG "[TJLOG]"
-
 #endif
+
+#define LOG_CONTEXT_FILE (std::string(__FILE__) + ":" + std::to_string(__LINE__)).c_str() 
 
 #include "utils/Debug.h"
 
