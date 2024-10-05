@@ -12,7 +12,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 project (${APP_NAME} VERSION ${APP_VERSION} LANGUAGES CXX)
 
-if(NOT CMAKE_SYSTEM_NAME STREQUAL "iOS")
+if(NOT CMAKE_SYSTEM_NAME STREQUAL "iOS" AND NOT CMAKE_SYSTEM_NAME STREQUAL "Emscripten")
     add_subdirectory(dependencies/SFML) # on iOS we don't need this, already pre-compiled on SFML-IOS folder
 endif()
 
@@ -33,6 +33,8 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Android")
     set(LIBS sfml-main sfml-graphics sfml-window sfml-system sfml-audio sfml-network sfml-activity)
 elseif(CMAKE_SYSTEM_NAME STREQUAL "iOS")
     set(LIBS sfml-main sfml-graphics sfml-window sfml-system sfml-audio sfml-network)
+elseif(CMAKE_SYSTEM_NAME STREQUAL "Emscripten")
+    set(LIBS sfml-system sfml-window sfml-graphics sfml-network sfml-audio -lfreetype -logg -lvorbis -lz)
 else()
     set(LIBS sfml-main sfml-graphics sfml-window sfml-system sfml-audio sfml-network Advapi32)
 endif()
@@ -72,6 +74,90 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
         
 endif() 
 
+if(CMAKE_SYSTEM_NAME STREQUAL "Emscripten")
+
+    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/dist/webgl)
+    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG ${CMAKE_SOURCE_DIR}/dist/webgl)
+    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_SOURCE_DIR}/dist/webgl)
+
+    set(SFML_EMSCRIPTEN_TARGET_COMPILE_OPTIONS_DEBUG -g3 -gsource-map -O0)
+
+    set(SFML_EMSCRIPTEN_TARGET_COMPILE_OPTIONS_RELEASE -O3)
+
+    set(SFML_EMSCRIPTEN_TARGET_COMPILE_OPTIONS
+        $<$<CONFIG:Debug>:${SFML_EMSCRIPTEN_TARGET_COMPILE_OPTIONS_DEBUG}>
+        $<$<CONFIG:Release>:${SFML_EMSCRIPTEN_TARGET_COMPILE_OPTIONS_RELEASE}>
+        -pthread
+        --use-port=freetype
+        --use-port=ogg
+        --use-port=vorbis)
+
+    # -sEXCEPTION_STACK_TRACES=1 # Exceptions will contain stack traces and uncaught exceptions will display stack traces
+    # -sGL_ASSERTIONS=1          # Adds extra checks for error situations in the GL library
+    # -sDETERMINISTIC=1          # Force `Date.now()`, `Math.random`, etc. to return deterministic results
+    # -fwasm-exceptions          # TODO P1: -fwasm-exceptions seems to break examples
+    # -sEXCEPTION_DEBUG=1        # Print out exceptions in emscriptened code (SPEWS WARNINGS)
+    # -sGL_DEBUG=1               # Enables more verbose debug printing of WebGL related operations (SPEWS WARNINGS)
+
+    set(SFML_EMSCRIPTEN_TARGET_LINK_OPTIONS_DEBUG -g3 -gsource-map -sASSERTIONS=2 -sCHECK_NULL_WRITES=1 -sSAFE_HEAP=1 -sSTACK_OVERFLOW_CHECK=1)
+
+    set(SFML_EMSCRIPTEN_TARGET_LINK_OPTIONS_RELEASE -O3)
+
+    set(SFML_EMSCRIPTEN_TARGET_LINK_OPTIONS_ASYNCIFY -sASYNCIFY=1) #-sASYNCIFY_IGNORE_INDIRECT=1)
+
+    set(SFML_EMSCRIPTEN_TARGET_LINK_OPTIONS
+        $<$<CONFIG:Debug>:${SFML_EMSCRIPTEN_TARGET_LINK_OPTIONS_DEBUG}>
+        $<$<CONFIG:Release>:${SFML_EMSCRIPTEN_TARGET_LINK_OPTIONS_RELEASE}>
+
+        ${SFML_EMSCRIPTEN_TARGET_LINK_OPTIONS_ASYNCIFY}
+
+        #-pthread                            # Enable threading support
+
+        -Wno-limited-postlink-optimizations # warning: running limited binaryen optimizations because DWARF info requested (or indirectly required)
+        -Wno-pthreads-mem-growth            # warning: -pthread + ALLOW_MEMORY_GROWTH may run non-wasm code slowly, see https://github.com/WebAssembly/design/issues/1271
+
+        -sALLOW_MEMORY_GROWTH=1             # Grow the memory arrays at runtime
+        -sEXIT_RUNTIME=1                    # Execute cleanup (e.g. `atexit`) after `main` completes
+        -sFETCH=1                           # Enables `emscripten_fetch` API
+        -sFORCE_FILESYSTEM=1                # Makes full filesystem support be included
+        -sFULL_ES2=1                        # Forces support for all GLES2 features, not just the WebGL-friendly subset
+        -sMAX_WEBGL_VERSION=1               # Specifies the highest WebGL version to target
+        -sMIN_WEBGL_VERSION=1               # Specifies the lowest WebGL version to target
+        -sSTACK_SIZE=16mb                    # Set the total stack size
+        -sUSE_PTHREADS=1                    # Enable threading support
+        -sWASM=1                            # Compile code to WebAssembly
+
+        -sGL_EXPLICIT_UNIFORM_LOCATION=1  # TODO P0:
+        -sGL_EXPLICIT_UNIFORM_BINDING=1   # TODO P0:
+
+        --emrun                             # Add native support for `emrun` (I/O capture)
+
+        # --embed-file ${CMAKE_SOURCE_DIR}/assets/
+
+        --preload-file ${CMAKE_SOURCE_DIR}/assets/
+
+        -sTOTAL_MEMORY=1024mb
+
+        # --shell-file=${CMAKE_SOURCE_DIR}/shell.html
+    )
+
+    set(CMAKE_EXECUTABLE_SUFFIX ".html")
+    set(SFML_DIR "${CMAKE_SOURCE_DIR}/dependencies/SFML-WEB/")
+    find_package(SFML 2.6 COMPONENTS graphics window system audio network REQUIRED)
+
+    add_executable (${CMAKE_PROJECT_NAME} ${SOURCES_FILE})
+
+    target_compile_options(${CMAKE_PROJECT_NAME} PRIVATE ${SFML_EMSCRIPTEN_TARGET_COMPILE_OPTIONS})
+    target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE ${LIBS})
+    target_link_options(${CMAKE_PROJECT_NAME} PRIVATE ${SFML_EMSCRIPTEN_TARGET_LINK_OPTIONS})
+  
+    add_custom_command(TARGET ${CMAKE_PROJECT_NAME} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    ${CMAKE_SOURCE_DIR}/assets ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/assets)
+
+endif()
+
+
 # TODO: fix iOS linking libraries xcode
 if(CMAKE_SYSTEM_NAME STREQUAL "iOS")
 
@@ -93,7 +179,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "iOS")
     set(ICON_NAME "SAppLogo.icns")
     set(ICON_PATH "${CMAKE_SOURCE_DIR}/settings/ios/${ICON_NAME}")
 
-    add_executable(${CMAKE_PROJECT_NAME} MACOSX_BUNDLE ${OBJ_C_FILES} ${SOURCES_FILE} ${ICON_PATH} ${Whereami_SOURCES} ${LAUNCH_SCREEN} ${CMAKE_SOURCE_DIR}/assets)
+    add_executable(${CMAKE_PROJECT_NAME} MACOSX_BUNDLE ${OBJ_C_FILES} ${SOURCES_FILE} ${ICON_PATH}  ${LAUNCH_SCREEN} ${CMAKE_SOURCE_DIR}/assets)
    
     set_source_files_properties( ${ICON_PATH} PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
     set_source_files_properties( ${LAUNCH_SCREEN} PROPERTIES MACOSX_PACKAGE_LOCATION Resources)

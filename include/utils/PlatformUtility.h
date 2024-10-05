@@ -4,7 +4,7 @@
 #include "../pch.h"
 
 namespace tj {
-    enum EPlatform { EPLAT_WINDOWS, EPLAT_ANDROID, EPLAT_IOS, EPLAT_UNKNOWN };
+    enum EPlatform { EPLAT_WINDOWS, EPLAT_ANDROID, EPLAT_IOS, EPLAT_WEBGL, EPLAT_UNKNOWN };
 
     class PlatformUtility {
 
@@ -18,7 +18,7 @@ namespace tj {
         static std::string plaftorm();
 
         static bool isMobile() {
-            return platform() == EPlatform::EPLAT_IOS || platform() == EPlatform::EPLAT_ANDROID;
+            return platform() == EPlatform::EPLAT_IOS || platform() == EPlatform::EPLAT_ANDROID || EPlatform::EPLAT_WEBGL;
         }
 
 
