@@ -18,8 +18,8 @@ namespace tj {
             return _min + rand() % ((_max - _min) + 1);
         }
 
-        static unsigned int seed() {
-            return static_cast<unsigned int>(std::chrono::system_clock::now().time_since_epoch().count());
+        static void seed() {
+            std::srand(static_cast<unsigned int>(std::chrono::system_clock::now().time_since_epoch().count()));
         }
 
     private:
