@@ -1,0 +1,10 @@
+{
+  "test": "test",
+  "data": [1, 2, 3],
+  "sprite": [
+    {
+      "name": "test",
+      "data": [1, 2, 3]
+    }
+  ]
+}
