@@ -67,7 +67,7 @@ Windows distributables are built with `Visual Studio 2022 (MSVC)`,
 
 # How to build ? :construction_worker:
 
-- Windows <img height="32" width="32" src="examples/windows.svg" alt="windows  icon">
+<img height="32" width="32" src="examples/windows.svg" alt="windows  icon">
 
 ```bat
 mkdir build && cd build
@@ -77,7 +77,7 @@ cmake .. -G "Visual Studio 17 2022" -DCMAKE_SYSTEM_NAME="Windows" -A x64
 cmake --build .
 ```
 
-- Android <img height="32" width="32" src="examples/android.svg" alt="android  icon">
+<img height="32" width="32" src="examples/android.svg" alt="android  icon">
 
 
 ```sh
@@ -85,7 +85,7 @@ cd android
 gradle assembleDebug
 ```
 
-- iOS <img height="32" width="32" src="examples/ios.svg" alt="iOS  icon">
+<img height="32" width="32" src="examples/ios.svg" alt="iOS  icon">
   
 
 1. Generating the `*.xcodeproj`
@@ -115,6 +115,6 @@ open ProjectName.xcodeproj
 This project follows [UE Coding Guidelines](https://dev.epicgames.com/documentation/en-us/unreal-engine/epic-cplusplus-coding-standard-for-unreal-engine) even though `SFML` uses camelCase for naming conventions.
 
 
-- WebGL <img height="32" width="32" src="examples/webgl.svg" alt="WebGL  icon">
+<img height="32" width="32" src="examples/webgl.svg" alt="WebGL  icon">
 
 > Currently experimental
