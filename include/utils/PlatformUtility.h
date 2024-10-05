@@ -18,9 +18,16 @@ namespace tj {
         static std::string plaftorm();
 
         static bool isMobile() {
-            return platform() == EPlatform::EPLAT_IOS || platform() == EPlatform::EPLAT_ANDROID || EPlatform::EPLAT_WEBGL;
+            return platform() == EPlatform::EPLAT_IOS || platform() == EPlatform::EPLAT_ANDROID;
         }
 
+        static bool isDesktop() {
+            return platform() == EPlatform::EPLAT_WINDOWS;
+        }
+
+        static bool isWebGL() {
+            return platform() == EPlatform::EPLAT_WEBGL;
+        }
 
         static bool isAndroid() {
             return platform() == EPlatform::EPLAT_ANDROID ? true : false;
@@ -31,7 +38,6 @@ namespace tj {
         }
 
         static sf::FloatRect getSafeAreaView(const sf::Vector2i _windowSize);
-
     };
 } // namespace tj
 

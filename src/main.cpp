@@ -34,15 +34,15 @@ int main() {
     auto deviceUID     = tj::SystemInfo::getDeviceUniqueIdentifier();
     auto deviceBattery = tj::SystemInfo::getBatteryLevel();
 
-    debug.logInfo(LOG_CONTEXT_FILE,"Test %d",sizeof(uintptr_t));
+    debug.logInfo(LOG_CONTEXT_FILE, "Test %d", sizeof(uintptr_t));
 
     debug.logInfo(LOG_CONTEXT_FILE, "Random number %d", tj::Random::range(0, 100));
     debug.logInfo(LOG_CONTEXT_FILE, "Random number %d", tj::Random::range(12, 22));
 
     sf::FileInputStream fileStream;
     if (!fileStream.open(assetsManager.getAssetsFolder() + "test.json")) {
-        debug.logError(LOG_CONTEXT_FILE, "Failed to open file 'assets/test.json'.");
-        return -1;
+        debug.logError(
+            LOG_CONTEXT_FILE, "Failed to open file 'assets/test.json'. %s", assetsManager.getAssetsFolder().c_str());
     }
 
     sf::Int64 fileSize = fileStream.getSize();

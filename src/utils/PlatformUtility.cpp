@@ -13,6 +13,8 @@ namespace tj {
         return EPlatform::EPLAT_IOS;
 #elif __ANDROID__
         return EPlatform::EPLAT_ANDROID;
+#elif __EMSCRIPTEN__
+        return EPlatform::EPLAT_WEBGL;
 #else
         return EPlatform::EPLAT_UNKNOWN;
 #endif
@@ -26,6 +28,8 @@ namespace tj {
             return "Android";
         case EPlatform::EPLAT_IOS:
             return "iOS";
+        case EPlatform::EPLAT_WEBGL:
+            return "WebGL";
         default:
             return "Unknown";
         }
