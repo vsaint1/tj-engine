@@ -110,7 +110,7 @@ open ProjectName.xcodeproj
 
 <img height="32" width="32" src="examples/webgl.svg" alt="WebGL  icon">
 
-> `WebGL` Currently experimental
+> `WebGL` build is Currently experimental
 
 ```sh
 emcmake cmake --preset=rel-webgl
@@ -119,6 +119,4 @@ emmake cmake --build build/webgl --preset=webgl-r
 
 # Code Style
 
-This project follows [UE Coding Guidelines](https://dev.epicgames.com/documentation/en-us/unreal-engine/epic-cplusplus-coding-standard-for-unreal-engine) even though `SFML` uses camelCase for naming conventions.
-
-
+This project follows [UE Coding Guidelines](https://dev.epicgames.com/documentation/en-us/unreal-engine/epic-cplusplus-coding-standard-for-unreal-engine) even though im using camelCase naming conventions.
