@@ -106,7 +106,7 @@ open ProjectName.xcodeproj
    - Choose the Device
    - Signing and building the application
 
-<img height="32" width="32" src="examples/ios_build.png" alt="iOS running">
+<img src="examples/ios_build.png" alt="iOS running">
 
 <img height="32" width="32" src="examples/webgl.svg" alt="WebGL  icon">
 
