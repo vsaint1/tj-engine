@@ -16,7 +16,7 @@ Windows distributables are built with `Visual Studio 2022 (MSVC)`,
 - [x] Windows
 - [x] Android
 - [x] iOS 
-- [x] WebGL (experimental)
+- [x] WebGL `experimental`
 
 ## Dependencies
 
@@ -28,7 +28,7 @@ Windows distributables are built with `Visual Studio 2022 (MSVC)`,
 
 ## Development and build
 
-- Required tools and toolchains for each platform:
+- All the `requirements` for each platform are listed below with minimal version (major, minor, patch).
 
 ### Windows
 
@@ -38,7 +38,7 @@ Windows distributables are built with `Visual Studio 2022 (MSVC)`,
 
 ### Android
 
-> Tested on Android emulator used Pixel 8 API 30 and Samsung Galaxy A15
+> Tested on Android emulator, used Pixel 8 API 30 and Samsung Galaxy A15
 
 - Android Studio [4.1.x](https://developer.android.com/studio/)
   - Androi SDK [34.x](https://developer.android.com/studio/)
@@ -56,6 +56,7 @@ Windows distributables are built with `Visual Studio 2022 (MSVC)`,
 
 - Emscripten [2.0.6](https://emscripten.org/)
   - emcc [3.1.64+](https://emscripten.org/)
+  - nodejs [18.20.3](https://nodejs.org/)
 
 
 ### General
@@ -107,16 +108,17 @@ open ProjectName.xcodeproj
 
 <img height="32" width="32" src="examples/ios_build.png" alt="iOS running">
 
-# Code Style
-
-This project follows [UE Coding Guidelines](https://dev.epicgames.com/documentation/en-us/unreal-engine/epic-cplusplus-coding-standard-for-unreal-engine) even though `SFML` uses camelCase for naming conventions.
-
-
 <img height="32" width="32" src="examples/webgl.svg" alt="WebGL  icon">
 
-> Currently experimental
+> `WebGL` Currently experimental
 
 ```sh
 emcmake cmake --preset=rel-webgl
 emmake cmake --build build/webgl --preset=webgl-r
 ```
+
+# Code Style
+
+This project follows [UE Coding Guidelines](https://dev.epicgames.com/documentation/en-us/unreal-engine/epic-cplusplus-coding-standard-for-unreal-engine) even though `SFML` uses camelCase for naming conventions.
+
+
