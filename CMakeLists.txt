@@ -204,7 +204,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "iOS")
     add_custom_command(TARGET ${CMAKE_PROJECT_NAME} POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E echo "Test command")
 
-    target_link_libraries(${CMAKE_PROJECT_NAME} PUBLIC ${LIBS} stdc++ -Wall ${UIKIT} ${FOUNDATION} ${OPENGLES} objc)
+    target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE ${LIBS} stdc++ -Wall ${UIKIT} ${FOUNDATION} ${OPENGLES} objc)
 
     set_target_properties(${CMAKE_PROJECT_NAME} PROPERTIES
         BUNDLE True
@@ -221,6 +221,8 @@ if(CMAKE_SYSTEM_NAME STREQUAL "iOS")
         MACOSX_BUNDLE_INFO_PLIST ${CMAKE_SOURCE_DIR}/MacOSXBundleInfo.plist.in
     )
 
+    message(NOTICE " Open the ${CMAKE_PROJECT_NAME}.xcodeproj in Xcode to build it. \n")
+    
 endif()
 
 

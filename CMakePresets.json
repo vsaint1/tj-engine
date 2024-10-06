@@ -7,6 +7,16 @@
   },
   "configurePresets": [
     {
+      "name":"ios-xcode",
+      "displayName": "iOS",
+      "description": "iOS build with xcode",
+      "generator": "Xcode",
+      "binaryDir": "${sourceDir}/build/ios",
+      "cacheVariables": {
+        "CMAKE_SYSTEM_NAME": "iOS"
+      }
+    },
+    {
       "name": "rel-webgl",
       "displayName": "WebGL",
       "description": "WebGL build with emscripten",
@@ -34,13 +44,20 @@
   ],
   "buildPresets": [
     {
+      "name": "ios-xcode",
+      "displayName": "iOS",
+      "description": "iOS build with xcode",
+      "targets": ["SuperGame"],
+      "verbose": true,
+      "configurePreset": "ios-xcode"
+    },
+    {
       "name": "webgl-r",
       "displayName": "WebGL",
       "description": "WebGL build with emscripten",
       "targets": ["SuperGame"],
       "verbose": true,
       "configurePreset": "rel-webgl"
-
     },
     {
       "name": "windows-d",
