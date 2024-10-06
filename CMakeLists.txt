@@ -22,6 +22,7 @@ file(GLOB_RECURSE SOURCES_FILE src/*.cpp)
 list(FILTER SOURCES_FILE EXCLUDE REGEX "src/sys/windows/.*")
 list(FILTER SOURCES_FILE EXCLUDE REGEX "src/sys/ios/*.mm")
 list(FILTER SOURCES_FILE EXCLUDE REGEX "src/sys/android/.*")
+list(FILTER SOURCES_FILE EXCLUDE REGEX "src/sys/web/.*")
 message(STATUS "Filtered source files: ${SOURCES_FILE} \n")
 
 include_directories(${CMAKE_SOURCE_DIR}/include)
@@ -79,6 +80,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Emscripten")
     set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${DIST_DIR}/webgl)
     set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG ${DIST_DIR}/webgl)
     set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${DIST_DIR}/webgl)
+    file(GLOB_RECURSE WEB_FILES "src/sys/web/*.cpp")
 
     set(SFML_EMSCRIPTEN_TARGET_COMPILE_OPTIONS_DEBUG -g3 -gsource-map -O0)
 
@@ -132,9 +134,9 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Emscripten")
 
         --emrun                             # Add native support for `emrun` (I/O capture)
 
-        # --embed-file ${CMAKE_SOURCE_DIR}/assets/
+        # --embed-file ${CMAKE_SOURCE_DIR}/assets@/
 
-        --preload-file ${CMAKE_SOURCE_DIR}/assets/
+        --preload-file ${CMAKE_SOURCE_DIR}/assets@/
 
         -sTOTAL_MEMORY=1024mb
 
@@ -145,7 +147,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Emscripten")
     set(SFML_DIR "${CMAKE_SOURCE_DIR}/dependencies/SFML-WEB/")
     find_package(SFML 2.6 COMPONENTS graphics window system audio network REQUIRED)
 
-    add_executable (${CMAKE_PROJECT_NAME} ${SOURCES_FILE})
+    add_executable (${CMAKE_PROJECT_NAME} ${SOURCES_FILE} ${WEB_FILES})
 
     target_compile_options(${CMAKE_PROJECT_NAME} PRIVATE ${SFML_EMSCRIPTEN_TARGET_COMPILE_OPTIONS})
     target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE ${LIBS})

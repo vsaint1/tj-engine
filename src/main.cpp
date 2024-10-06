@@ -10,23 +10,39 @@
 #include <SFML/Main.hpp>
 #endif
 
+
 // TODO: refactor to a class EngineCore
 int main() {
     tj::Random::seed();
 
-#if _WIN32
+#if defined(_WIN32) || defined(__EMSCRIPTEN__)
     sf::RenderWindow window(sf::VideoMode(1280, 720), "TJ - Game", sf::Style::Close);
 #else
     sf::RenderWindow window(sf::VideoMode::getDesktopMode(), "TJ - Game", sf::Style::Close);
 #endif
 
-    window.setFramerateLimit(60);
-    window.setVerticalSyncEnabled(true);
+    // window.setFramerateLimit(60);
+    // window.setVerticalSyncEnabled(true);
 
     auto& assetsManager = tj::AssetsManager::getInstance();
     auto& debug         = tj::Debug::geInstance();
-
     debug.setEnabled(true);
+
+    sf::Font fontt;
+
+    if (!fontt.loadFromFile("mine_font.ttf")) {
+        debug.logError(LOG_CONTEXT_FILE, "Failed to load font");
+    }
+
+
+    sf::Text playerPos;
+
+    playerPos.setFont(fontt);
+
+    playerPos.setCharacterSize(24);
+    playerPos.setPosition(10.f, 40.f);
+    playerPos.setScale(4.0f,4.0f);
+
     debug.logInfo(LOG_CONTEXT_FILE, "Test log info");
 
     auto deviceModel   = tj::SystemInfo::getDeviceModel();
@@ -36,13 +52,12 @@ int main() {
 
     debug.logInfo(LOG_CONTEXT_FILE, "Test %d", sizeof(uintptr_t));
 
-    debug.logInfo(LOG_CONTEXT_FILE, "Random number %d", tj::Random::range(0, 100));
-    debug.logInfo(LOG_CONTEXT_FILE, "Random number %d", tj::Random::range(12, 22));
+    debug.logInfo(LOG_CONTEXT_FILE, "Random number between (0,100) %d", tj::Random::range(0, 100));
+    debug.logInfo(LOG_CONTEXT_FILE, "Random number between (12,22) %d", tj::Random::range(12, 22));
 
     sf::FileInputStream fileStream;
     if (!fileStream.open(assetsManager.getAssetsFolder() + "test.json")) {
-        debug.logError(
-            LOG_CONTEXT_FILE, "Failed to open file 'assets/test.json'. %s", assetsManager.getAssetsFolder().c_str());
+        debug.logError(LOG_CONTEXT_FILE, "Failed to open file '%s/test.json'", assetsManager.getAssetsFolder().c_str());
     }
 
     sf::Int64 fileSize = fileStream.getSize();
@@ -88,14 +103,25 @@ int main() {
     fpsText.setFont(font);
     fpsText.setCharacterSize(24);
     fpsText.setFillColor(sf::Color::White);
-    fpsText.setPosition(10.f, 10.f);
+    fpsText.setPosition(10.f, 5.f);
 
     sf::Clock clock;
     float fps = 0.0f;
 
     const float moveSpeed = 500.0f;
+    sf::Music music;
+    if (!music.openFromFile(assetsManager.getAssetsFolder() + "time_for_adventure.mp3")) {
+
+        debug.logError(LOG_CONTEXT_FILE, "Failed to open music file.");
+    }
+
+    music.setLoop(true);
+    music.play();
+    music.setVolume(20.0f);
 
     while (window.isOpen()) {
+
+
         sf::Event event;
         while (window.pollEvent(event)) {
             if (event.type == sf::Event::Closed) {
@@ -143,6 +169,9 @@ int main() {
 
         player.move(velocity);
 
+        playerPos.setString("X: " + std::to_string(static_cast<int>(player.getPosition().x))
+                            + " Y: " + std::to_string(static_cast<int>(player.getPosition().y)));
+
         fps = 1.0f / deltaTime;
 
 #if !defined(__ANDROID__)
@@ -160,6 +189,7 @@ int main() {
         // TODO: refactor draw without the camera view (fixed view)
         window.setView(window.getDefaultView());
         window.draw(fpsText);
+        window.draw(playerPos);
 
         window.display();
     }

@@ -36,7 +36,20 @@ namespace tj {
 
 
         std::string getAssetsFolder() {
-            return tj::PlatformUtility::isMobile() ? "" : "assets/";
+
+            if (tj::PlatformUtility::isMobile()) {
+                return "";
+            }
+
+            if (tj::PlatformUtility::isWebGL()) {
+                return "/";
+            }
+
+            if (tj::PlatformUtility::isDesktop()) {
+                return "assets/";
+            }
+
+            return "/assets/";
         }
 
     private:
