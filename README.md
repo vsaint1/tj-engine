@@ -70,11 +70,8 @@ Windows distributables are built with `Visual Studio 2022 (MSVC)`,
 <img height="32" width="32" src="examples/windows.svg" alt="windows  icon">
 
 ```bat
-mkdir build && cd build
-
-cmake .. -G "Visual Studio 17 2022" -DCMAKE_SYSTEM_NAME="Windows" -A x64
-
-cmake --build .
+cmake --preset=debug-windows
+cmake --build build/windows --preset=windows-d
 ```
 
 <img height="32" width="32" src="examples/android.svg" alt="android  icon">
@@ -118,3 +115,8 @@ This project follows [UE Coding Guidelines](https://dev.epicgames.com/documentat
 <img height="32" width="32" src="examples/webgl.svg" alt="WebGL  icon">
 
 > Currently experimental
+
+```sh
+emcmake cmake --preset=rel-webgl
+emmake cmake --build build/webgl --preset=webgl-r
+```

@@ -1,0 +1,54 @@
+{
+  "version": 3,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 22,
+    "patch": 1
+  },
+  "configurePresets": [
+    {
+      "name": "rel-webgl",
+      "displayName": "WebGL",
+      "description": "WebGL build with emscripten",
+      "binaryDir": "${sourceDir}/build/webgl",
+      "generator": "MinGW Makefiles",
+      "toolchainFile": "$env{EMSDK}/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake",
+      "cacheVariables": {
+        "CMAKE_SYSTEM_NAME": "Emscripten",
+        "CMAKE_BUILD_TYPE": "Release"
+      }
+   
+    },
+    {
+      "name": "debug-windows",
+      "displayName": "Windows x64",
+      "description": "Windows x64 build MSVC",
+      "generator": "Visual Studio 17 2022",
+      "binaryDir": "${sourceDir}/build/windows",
+      "architecture": "x64",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_SYSTEM_NAME": "Windows"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "webgl-r",
+      "displayName": "WebGL",
+      "description": "WebGL build with emscripten",
+      "targets": ["SuperGame"],
+      "verbose": true,
+      "configurePreset": "rel-webgl"
+
+    },
+    {
+      "name": "windows-d",
+      "displayName": "Windows x64",
+      "description": "Windows x64 build MSVC",
+      "targets": ["SuperGame"],
+      "verbose": true,
+      "configurePreset": "debug-windows"
+    }
+  ]
+}
