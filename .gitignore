@@ -2,5 +2,5 @@ dependencies/
 dist/
 build/
 test/
-.vscode/
+# .vscode/
 .DS_Store
