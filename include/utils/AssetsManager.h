@@ -17,15 +17,20 @@ namespace tj {
 
         void loadFont(const std::string& _name, const std::string& _path);
 
+        void loadMusic(const std::string& _name, const std::string& _path);
 
         sf::Texture& getTexture(const std::string& _name) {
-            return this->textures[_name];
+            return this->textures.at(_name);
         }
 
         sf::Font& getFont(const std::string& _name) {
-            return this->fonts[_name];
+            return this->fonts.at(_name);
         }
 
+        sf::Music& getMusic(const std::string& _name) {
+
+            return this->musics.at(_name);
+        }
         void removeTexture(const std::string& _name) {
             this->textures.erase(_name);
         }
@@ -34,28 +39,18 @@ namespace tj {
             this->fonts.erase(_name);
         }
 
-
-        std::string getAssetsFolder() {
-
-            if (tj::PlatformUtility::isMobile()) {
-                return "";
-            }
-
-            if (tj::PlatformUtility::isWebGL()) {
-                return "/";
-            }
-
-            if (tj::PlatformUtility::isDesktop()) {
-                return "assets/";
-            }
-
-            return "/assets/";
+        void removeMusic(const std::string& _name) {
+            this->musics.erase(_name);
         }
+
+        std::string getAssetsFolder();
 
     private:
         std::map<std::string, sf::Texture> textures;
 
         std::map<std::string, sf::Font> fonts;
+
+        std::map<std::string, sf::Music> musics;
 
         static AssetsManager* instance;
 

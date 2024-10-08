@@ -20,7 +20,23 @@ namespace tj {
             return;
         }
 
-        textures[_name] = _texture;
+        textures.emplace(_name, _texture);
+    }
+
+    void AssetsManager::loadMusic(const std::string& _name, const std::string& _path) {
+        sf::Music _music;
+
+        if (textures.find(_name) != textures.end()) {
+            LOGGER.logWarn("Sound with this name %s already loaded", _name.c_str());
+            return;
+        }
+
+        if (!_music.openFromFile(this->getAssetsFolder() + _path)) {
+            LOGGER.logError("Failed to load sound: %s", _path.c_str());
+            return;
+        }
+
+        musics.emplace(_name, _music);
     }
 
     void AssetsManager::loadFont(const std::string& _name, const std::string& _path) {
@@ -36,6 +52,24 @@ namespace tj {
             return;
         }
 
-        fonts[_name] = _font;
+        fonts.emplace(_name, _font);
     }
+
+
+    std::string getAssetsFolder() {
+        if (tj::PlatformUtility::isMobile()) {
+            return "";
+        }
+
+        if (tj::PlatformUtility::isWebGL()) {
+            return "/";
+        }
+
+        if (tj::PlatformUtility::isDesktop()) {
+            return "assets/";
+        }
+
+        return "/assets/";
+    }
+
 } // namespace tj
