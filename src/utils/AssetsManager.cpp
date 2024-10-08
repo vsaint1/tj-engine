@@ -23,6 +23,11 @@ namespace tj {
         textures.emplace(_name, _texture);
     }
 
+    /**
+     * @brief Load a music file from the assets folder
+     * @param _name The name of the music
+     * @param _path The path to the music file relative to the assets folder
+     */
     void AssetsManager::loadMusic(const std::string& _name, const std::string& _path) {
         sf::Music _music;
 
@@ -31,12 +36,15 @@ namespace tj {
             return;
         }
 
-        if (!_music.openFromFile(this->getAssetsFolder() + _path)) {
+        // COMMENT: We need to store dynamically allocated Music because sf::Music is not copiable
+        std::unique_ptr<sf::Music> music = std::make_unique<sf::Music>();
+
+        if (!music->openFromFile(this->getAssetsFolder() + _path)) {
             LOGGER.logError("Failed to load sound: %s", _path.c_str());
             return;
         }
 
-        musics.emplace(_name, _music);
+        musics.emplace(_name, std::move(music));
     }
 
     void AssetsManager::loadFont(const std::string& _name, const std::string& _path) {
@@ -56,7 +64,20 @@ namespace tj {
     }
 
 
-    std::string getAssetsFolder() {
+    
+    /**
+     * @brief Gets the assets folder path based on the current platform.
+     * 
+     * @return The assets folder path.
+     * 
+     * @details
+     * - Mobile: base path
+     * - WebGL:  /
+     * - Desktop: assets/
+     * - Other:  /assets/
+     */
+    std::string AssetsManager::getAssetsFolder() {
+
         if (tj::PlatformUtility::isMobile()) {
             return "";
         }

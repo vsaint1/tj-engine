@@ -29,8 +29,9 @@ namespace tj {
 
         sf::Music& getMusic(const std::string& _name) {
 
-            return this->musics.at(_name);
+            return *(this->musics.at(_name));
         }
+
         void removeTexture(const std::string& _name) {
             this->textures.erase(_name);
         }
@@ -50,7 +51,7 @@ namespace tj {
 
         std::map<std::string, sf::Font> fonts;
 
-        std::map<std::string, sf::Music> musics;
+        std::map<std::string, std::unique_ptr<sf::Music>> musics;
 
         static AssetsManager* instance;
 

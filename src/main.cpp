@@ -21,8 +21,8 @@ int main() {
     sf::RenderWindow window(sf::VideoMode::getDesktopMode(), "TJ - Game", sf::Style::Close);
 #endif
 
-    // window.setFramerateLimit(60);
-    // window.setVerticalSyncEnabled(true);
+    window.setFramerateLimit(60);
+    window.setVerticalSyncEnabled(true);
 
     auto& assetsManager = tj::AssetsManager::getInstance();
     auto& debug         = tj::Debug::geInstance();
@@ -92,6 +92,7 @@ int main() {
 
     assetsManager.loadTexture("player", "player.png");
     assetsManager.loadFont("mine_font", "mine_font.ttf");
+    assetsManager.loadMusic("time_for_adventure", "time_for_adventure.mp3");
 
     sf::Sprite player(assetsManager.getTexture("player"));
     player.setPosition(
@@ -109,12 +110,8 @@ int main() {
     float fps = 0.0f;
 
     const float moveSpeed = 500.0f;
-    sf::Music music;
-    if (!music.openFromFile(assetsManager.getAssetsFolder() + "time_for_adventure.mp3")) {
 
-        debug.logError(LOG_CONTEXT_FILE, "Failed to open music file.");
-    }
-
+    auto& music = assetsManager.getMusic("time_for_adventure");
     music.setLoop(true);
     music.play();
     music.setVolume(20.0f);
