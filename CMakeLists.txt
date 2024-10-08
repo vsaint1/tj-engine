@@ -12,6 +12,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 project (${APP_NAME} VERSION ${APP_VERSION} LANGUAGES CXX)
 
+
 if(NOT CMAKE_SYSTEM_NAME STREQUAL "iOS" AND NOT CMAKE_SYSTEM_NAME STREQUAL "Emscripten")
     add_subdirectory(dependencies/SFML) # on iOS we don't need this, already pre-compiled on SFML-IOS folder
 endif()
@@ -52,6 +53,7 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
     target_link_libraries(${CMAKE_PROJECT_NAME} ${LIBS})
 
     set(OUTPUT_DIR ${DIST_DIR}/windows/$<CONFIG>)
+    set_property(TARGET ${CMAKE_PROJECT_NAME} PROPERTY CXX_STANDARD 20)
 
 
      add_custom_command(TARGET ${CMAKE_PROJECT_NAME} POST_BUILD
@@ -152,6 +154,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Emscripten")
     target_compile_options(${CMAKE_PROJECT_NAME} PRIVATE ${SFML_EMSCRIPTEN_TARGET_COMPILE_OPTIONS})
     target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE ${LIBS})
     target_link_options(${CMAKE_PROJECT_NAME} PRIVATE ${SFML_EMSCRIPTEN_TARGET_LINK_OPTIONS})
+    set_property(TARGET ${CMAKE_PROJECT_NAME} PROPERTY CXX_STANDARD 20)
   
     add_custom_command(TARGET ${CMAKE_PROJECT_NAME} POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory
@@ -197,6 +200,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "iOS")
     )
 
     set_property(TARGET ${CMAKE_PROJECT_NAME} PROPERTY XCODE_ATTRIBUTE_CLANG_CXX_LIBRARY "libc++")
+    set_property(TARGET ${CMAKE_PROJECT_NAME} PROPERTY CXX_STANDARD 20)
 
     set_target_properties(${CMAKE_PROJECT_NAME} PROPERTIES
     XCODE_ATTRIBUTE_OTHER_LDFLAGS "-framework UIKit -framework Foundation -framework OpenGLES -lobjc -lc++")
@@ -247,6 +251,8 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Android")
     message("SOURCE_FILES: ${SOURCES_FILE} \n")
 
     add_library(${CMAKE_PROJECT_NAME} SHARED ${SOURCES_FILE} ${ANDROID_FILES})
+    
+    set_property(TARGET ${CMAKE_PROJECT_NAME} PROPERTY CXX_STANDARD 20)
   
     target_link_libraries(${CMAKE_PROJECT_NAME} 
           -Wl,--whole-archive sfml-main -Wl,--no-whole-archive
