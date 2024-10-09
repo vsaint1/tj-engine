@@ -7,6 +7,12 @@ namespace tj {
         return instance;
     }
 
+    /**
+     * @brief Load a texture from the assets folder
+     *
+     * @param _name The name of the texture
+     * @param _path The path to the texture file relative to the assets folder
+     */
     void AssetsManager::LoadTexture(const std::string& _name, const std::string& _path) {
 
         if (textures.find(_name) != textures.end()) {
@@ -46,6 +52,11 @@ namespace tj {
         musics.emplace(_name, std::move(music));
     }
 
+    /**
+     * @brief Load a font file from the assets folder
+     * @param _name The name of the font
+     * @param _path The path to the font file relative to the assets folder
+     */
     void AssetsManager::LoadFont(const std::string& _name, const std::string& _path) {
 
         if (textures.find(_name) != textures.end()) {
