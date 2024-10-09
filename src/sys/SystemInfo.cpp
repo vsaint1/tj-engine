@@ -1,51 +1,51 @@
 #include "sys/SystemInfo.h"
 
-// ensure this are valid at runtime.
+// COMMENT: Injected functions means that will be available at RUNTIME based on the device running.
 extern "C" {
-const char* deviceName();
-const char* deviceModel();
-const char* deviceUniqueIdentifier();
-float deviceBatteryLevel();
+const char* DeviceName_Injected();
+const char* DeviceModel_Injected();
+const char* DeviceUniqueIdentifier_Injected();
+float DeviceBatteryLevel_Injected();
 }
 
 
 namespace tj {
 
-    const char* SystemInfo::getDeviceName() {
+    std::string SystemInfo::GetDeviceName() {
 
-        const char* name = deviceName();
+        const char* name = DeviceName_Injected();
 
         if (name == nullptr) {
             return "UNKNOWN_NAME";
         }
 
-        return name;
+        return std::string(name);
     }
 
-    const char* SystemInfo::getDeviceUniqueIdentifier() {
+    std::string SystemInfo::GetDeviceUniqueIdentifier() {
 
-        const char* deviceUID = deviceUniqueIdentifier();
+        const char* deviceUID = DeviceUniqueIdentifier_Injected();
 
         if (deviceUID == nullptr) {
             return "UNKNOWN_DEVICE_UID";
         }
 
-        return deviceUID;
+        return std::string(deviceUID);
     }
 
-    const char* SystemInfo::getDeviceModel() {
-        const char* model = deviceModel();
+    std::string SystemInfo::GetDeviceModel() {
+        const char* model = DeviceModel_Injected();
 
         if (model == nullptr) {
             return "UNKNOWN_DEVICE_MODEL";
         }
 
-        return model;
+        return std::string(model);
     }
 
-    float SystemInfo::getBatteryLevel() {
+    float SystemInfo::GetBatteryLevel() {
 
-        float battery = deviceBatteryLevel();
+        float battery = DeviceBatteryLevel_Injected();
 
         // we dont have permission or running on computer without battery.
         if (isinf(battery)) {

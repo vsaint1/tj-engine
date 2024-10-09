@@ -9,7 +9,7 @@
 
 extern "C" {
 
-const char* deviceName() {
+const char* DeviceName_Injected() {
 
 
     ANativeActivity* activity = sf::getNativeActivity();
@@ -55,7 +55,7 @@ const char* deviceName() {
 }
 
 
-const char* deviceModel() {
+const char* DeviceModel_Injected() {
 
     ANativeActivity* activity = sf::getNativeActivity();
     JavaVM* vm                = activity->vm;
@@ -99,7 +99,7 @@ const char* deviceModel() {
     return nullptr;
 }
 
-const char* deviceUniqueIdentifier() {
+const char* DeviceUniqueIdentifier_Injected() {
     std::stringstream deviceUID;
     deviceUID << "35";
 
@@ -126,7 +126,7 @@ const char* deviceUniqueIdentifier() {
     return deviceUID.str().c_str();
 }
 
-float deviceBatteryLevel() {
+float DeviceBatteryLevel_Injected() {
     char batteryLevel[PROP_VALUE_MAX];
 
     return (float)__system_property_get("battery.level", batteryLevel);

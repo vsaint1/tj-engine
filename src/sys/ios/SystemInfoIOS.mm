@@ -4,24 +4,24 @@
 
 extern "C"{
 
-    const char* deviceName() {
+    const char* DeviceName_Injected() {
         NSString *deviceName = [[UIDevice currentDevice] name];
         return [deviceName UTF8String];
     }
 
-    const char* deviceModel(){
+    const char* DeviceModel_Injected(){
         NSString *deviceModel = [[UIDevice currentDevice] model];
         return [deviceModel UTF8String];
     }
 
-    const char* deviceUniqueIdentifier() {
+    const char* DeviceUniqueIdentifier_Injected() {
         NSUUID *deviceUUID = [[UIDevice currentDevice] identifierForVendor];
         NSString *uuidString = [deviceUUID UUIDString];
         return [uuidString UTF8String];
     }
 
 
-    float deviceBatteryLevel(){
+    float DeviceBatteryLevel_Injected(){
         float deviceBattery = [[UIDevice currentDevice] batteryLevel];
         
         return deviceBattery;

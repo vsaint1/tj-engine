@@ -17,14 +17,14 @@ namespace tj {
         void operator=(const SystemInfo&) = delete;
 
 
-        static const char* getDeviceName();
+        static std::string GetDeviceName();
 
-        static const char* getDeviceModel();
+        static std::string GetDeviceModel();
 
-        static const char* getDeviceUniqueIdentifier();
+        static std::string GetDeviceUniqueIdentifier();
 
         // 0.0 -> 1.0
-        static float getBatteryLevel();
+        static float GetBatteryLevel();
 
 
     private:

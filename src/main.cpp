@@ -31,10 +31,10 @@ int main() {
 
     debug.LogInfo(LOG_CONTEXT_FILE, "Test log info");
 
-    auto deviceModel   = tj::SystemInfo::getDeviceModel();
-    auto deviceName    = tj::SystemInfo::getDeviceName();
-    auto deviceUID     = tj::SystemInfo::getDeviceUniqueIdentifier();
-    auto deviceBattery = tj::SystemInfo::getBatteryLevel();
+    auto deviceModel   = tj::SystemInfo::GetDeviceModel();
+    auto deviceName    = tj::SystemInfo::GetDeviceName();
+    auto deviceUID     = tj::SystemInfo::GetDeviceUniqueIdentifier();
+    auto deviceBattery = tj::SystemInfo::GetBatteryLevel();
 
     debug.LogInfo(LOG_CONTEXT_FILE, "Test %d", sizeof(uintptr_t));
 
@@ -70,7 +70,7 @@ int main() {
     std::string testValue = jsonObject["test"];
     debug.LogError(LOG_CONTEXT_FILE, "Test value: %s", testValue.c_str());
     debug.LogInfo(
-        LOG_CONTEXT_FILE, "Name %s, model %s, uid %s, battery %f", deviceName, deviceModel, deviceUID, deviceBattery);
+        LOG_CONTEXT_FILE, "Name %s, model %s, uid %s, battery %f", deviceName.c_str(), deviceModel.c_str(), deviceUID.c_str(), deviceBattery);
 
     auto windowSize = window.getSize();
     tj::Camera camera(windowSize.x, windowSize.y, window);

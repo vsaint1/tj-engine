@@ -1,23 +1,23 @@
 
 extern "C" {
 
-const char* deviceName() {
+const char* DeviceName_Injected() {
 
     return nullptr;
 }
 
-const char* deviceModel() {
+const char* DeviceModel_Injected() {
 
 
     return "Browser";
 }
 
-const char* deviceUniqueIdentifier() {
+const char* DeviceUniqueIdentifier_Injected() {
 
     return nullptr;
 }
 
-float deviceBatteryLevel() {
+float DeviceBatteryLevel_Injected() {
 
     return -1.0f;
 }
