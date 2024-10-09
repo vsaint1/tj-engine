@@ -36,7 +36,7 @@ int main() {
     auto deviceUID     = tj::SystemInfo::getDeviceUniqueIdentifier();
     auto deviceBattery = tj::SystemInfo::getBatteryLevel();
 
-    debug.LogInfo(LOG_CONTEXT_FILE, "Test {}", sizeof(uintptr_t));
+    debug.LogInfo(LOG_CONTEXT_FILE, "Test %d", sizeof(uintptr_t));
 
     debug.LogInfo(LOG_CONTEXT_FILE, "Random number between (0,100) %d", tj::Random::Range(0, 100));
     debug.LogInfo(LOG_CONTEXT_FILE, "Random number between (12,22) %d", tj::Random::Range(12, 22));
@@ -70,7 +70,7 @@ int main() {
     std::string testValue = jsonObject["test"];
     debug.LogError(LOG_CONTEXT_FILE, "Test value: %s", testValue.c_str());
     debug.LogInfo(
-        LOG_CONTEXT_FILE, "Name %s, model %s, uid %s, battery %s", deviceName, deviceModel, deviceUID, deviceBattery);
+        LOG_CONTEXT_FILE, "Name %s, model %s, uid %s, battery %f", deviceName, deviceModel, deviceUID, deviceBattery);
 
     auto windowSize = window.getSize();
     tj::Camera camera(windowSize.x, windowSize.y, window);
@@ -88,14 +88,13 @@ int main() {
     playerPos.setPosition(10.f, 40.f);
     playerPos.setScale(4.0f, 4.0f);
     sf::Sprite player(assetsManager.GetTexture("player"));
-    
+
     player.setPosition(
         windowSize.x / 2 - player.getGlobalBounds().width / 2, windowSize.y / 2 - player.getGlobalBounds().height / 2);
     player.setScale(6.0f, 6.0f);
 
-    sf::Font font = assetsManager.GetFont("mine_font");
     sf::Text fpsText;
-    fpsText.setFont(font);
+    fpsText.setFont(assetsManager.GetFont("mine_font"));
     fpsText.setCharacterSize(24);
     fpsText.setFillColor(sf::Color::White);
     fpsText.setPosition(10.f, 5.f);
@@ -164,10 +163,7 @@ int main() {
                             + " Y: " + std::to_string(static_cast<int>(player.getPosition().y)));
 
         fps = 1.0f / deltaTime;
-
-#if !defined(__ANDROID__)
         fpsText.setString("FPS: " + std::to_string(static_cast<int>(fps)));
-#endif
 
         // TODO: refactor draw with the camera view
         window.clear(sf::Color::Black);
@@ -179,6 +175,7 @@ int main() {
 
         // TODO: refactor draw without the camera view (fixed view)
         window.setView(window.getDefaultView());
+
         window.draw(fpsText);
         window.draw(playerPos);
 

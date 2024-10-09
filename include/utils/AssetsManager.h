@@ -19,11 +19,11 @@ namespace tj {
         void LoadMusic(const std::string& _name, const std::string& _path);
 
         sf::Texture& GetTexture(const std::string& _name) {
-            return this->textures.at(_name);
+            return *(this->textures.at(_name));
         }
 
         sf::Font& GetFont(const std::string& _name) {
-            return this->fonts.at(_name);
+            return *(this->fonts.at(_name));
         }
 
         sf::Music& GetMusic(const std::string& _name) {
@@ -48,9 +48,9 @@ namespace tj {
     private:
         AssetsManager() = default;
 
-        std::map<std::string, sf::Texture> textures;
+        std::map<std::string, std::unique_ptr<sf::Texture>> textures;
 
-        std::map<std::string, sf::Font> fonts;
+        std::map<std::string, std::unique_ptr<sf::Font>> fonts;
 
         std::map<std::string, std::unique_ptr<sf::Music>> musics;
 

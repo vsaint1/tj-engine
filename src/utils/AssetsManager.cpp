@@ -8,19 +8,19 @@ namespace tj {
     }
 
     void AssetsManager::LoadTexture(const std::string& _name, const std::string& _path) {
-        sf::Texture _texture;
 
         if (textures.find(_name) != textures.end()) {
             LOGGER.LogWarn("Texture with this name %s already created", _name.c_str());
             return;
         }
 
-        if (!_texture.loadFromFile(this->GetAssetsFolder() + _path)) {
+        std::unique_ptr <sf::Texture> texture = std::make_unique<sf::Texture>();
+        if (!texture->loadFromFile(this->GetAssetsFolder() + _path)) {
             LOGGER.LogError("Failed to load texture: %s", _path.c_str());
             return;
         }
 
-        textures.emplace(_name, _texture);
+        textures.emplace(_name, std::move(texture));
     }
 
     /**
@@ -29,7 +29,6 @@ namespace tj {
      * @param _path The path to the music file relative to the assets folder
      */
     void AssetsManager::LoadMusic(const std::string& _name, const std::string& _path) {
-        sf::Music _music;
 
         if (textures.find(_name) != textures.end()) {
             LOGGER.LogWarn("Sound with this name %s already loaded", _name.c_str());
@@ -48,28 +47,28 @@ namespace tj {
     }
 
     void AssetsManager::LoadFont(const std::string& _name, const std::string& _path) {
-        sf::Font _font;
 
         if (textures.find(_name) != textures.end()) {
             LOGGER.LogWarn("Font with this name %s already loaded", _name.c_str());
             return;
         }
 
-        if (!_font.loadFromFile(this->GetAssetsFolder() + _path)) {
+        std::unique_ptr<sf::Font> font = std::make_unique<sf::Font>();
+
+        if (!font->loadFromFile(this->GetAssetsFolder() + _path)) {
             LOGGER.LogError("Failed to load font: %s", _path.c_str());
             return;
         }
 
-        fonts.emplace(_name, _font);
+        fonts.emplace(_name, std::move(font));
     }
 
 
-    
     /**
      * @brief Gets the assets folder path based on the current platform.
-     * 
+     *
      * @return The assets folder path.
-     * 
+     *
      * @details
      * - Mobile: base path
      * - WebGL:  /

@@ -129,6 +129,6 @@ const char* deviceUniqueIdentifier() {
 float deviceBatteryLevel() {
     char batteryLevel[PROP_VALUE_MAX];
 
-    return __system_property_get("battery.level", batteryLevel);
+    return (float)__system_property_get("battery.level", batteryLevel);
 }
 }
