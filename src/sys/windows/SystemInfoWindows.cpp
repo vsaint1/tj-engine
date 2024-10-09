@@ -4,7 +4,7 @@
 
 extern "C" {
 
-const char* deviceName() {
+const char* DeviceName_Injected() {
     static char computerName[256];
     DWORD size = sizeof(computerName);
 
@@ -15,7 +15,7 @@ const char* deviceName() {
     return nullptr;
 }
 
-const char* deviceModel() {
+const char* DeviceModel_Injected() {
 
     static char model[128];
     OSVERSIONINFO osvi;
@@ -31,7 +31,7 @@ const char* deviceModel() {
     return nullptr;
 }
 
-const char* deviceUniqueIdentifier() {
+const char* DeviceUniqueIdentifier_Injected() {
     static char deviceUID[128];
     HW_PROFILE_INFO hwProfInfo;
 
@@ -45,9 +45,9 @@ const char* deviceUniqueIdentifier() {
     return nullptr;
 }
 
-float deviceBatteryLevel() {
+float DeviceBatteryLevel_Injected() {
     SYSTEM_POWER_STATUS sps;
-    
+
     if (GetSystemPowerStatus(&sps)) {
         if (sps.BatteryLifePercent != 255) {
             return static_cast<float>(sps.BatteryLifePercent) / 100.0f;
