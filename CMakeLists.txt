@@ -12,6 +12,9 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 project (${APP_NAME} VERSION ${APP_VERSION} LANGUAGES CXX)
 
+if (NOT EXISTS ${CMAKE_SOURCE_DIR}/dependencies/SFML)
+    message(FATAL_ERROR "dependencies/SFML, extract the libraries/dependencies.zip folder to dependencies/SFML")
+endif()
 
 if(NOT CMAKE_SYSTEM_NAME STREQUAL "iOS" AND NOT CMAKE_SYSTEM_NAME STREQUAL "Emscripten")
     add_subdirectory(dependencies/SFML) # on iOS we don't need this, already pre-compiled on SFML-IOS folder
