@@ -2,21 +2,21 @@
 
 namespace tj {
 
-    AssetsManager& AssetsManager::getInstance() {
+    AssetsManager& AssetsManager::GetInstance() {
         static AssetsManager instance;
         return instance;
     }
 
-    void AssetsManager::loadTexture(const std::string& _name, const std::string& _path) {
+    void AssetsManager::LoadTexture(const std::string& _name, const std::string& _path) {
         sf::Texture _texture;
 
         if (textures.find(_name) != textures.end()) {
-            LOGGER.logWarn("Texture with this name %s already created", _name.c_str());
+            LOGGER.LogWarn("Texture with this name %s already created", _name.c_str());
             return;
         }
 
-        if (!_texture.loadFromFile(this->getAssetsFolder() + _path)) {
-            LOGGER.logError("Failed to load texture: %s", _path.c_str());
+        if (!_texture.loadFromFile(this->GetAssetsFolder() + _path)) {
+            LOGGER.LogError("Failed to load texture: %s", _path.c_str());
             return;
         }
 
@@ -28,35 +28,35 @@ namespace tj {
      * @param _name The name of the music
      * @param _path The path to the music file relative to the assets folder
      */
-    void AssetsManager::loadMusic(const std::string& _name, const std::string& _path) {
+    void AssetsManager::LoadMusic(const std::string& _name, const std::string& _path) {
         sf::Music _music;
 
         if (textures.find(_name) != textures.end()) {
-            LOGGER.logWarn("Sound with this name %s already loaded", _name.c_str());
+            LOGGER.LogWarn("Sound with this name %s already loaded", _name.c_str());
             return;
         }
 
         // COMMENT: We need to store dynamically allocated Music because sf::Music is not copiable
         std::unique_ptr<sf::Music> music = std::make_unique<sf::Music>();
 
-        if (!music->openFromFile(this->getAssetsFolder() + _path)) {
-            LOGGER.logError("Failed to load sound: %s", _path.c_str());
+        if (!music->openFromFile(this->GetAssetsFolder() + _path)) {
+            LOGGER.LogError("Failed to load sound: %s", _path.c_str());
             return;
         }
 
         musics.emplace(_name, std::move(music));
     }
 
-    void AssetsManager::loadFont(const std::string& _name, const std::string& _path) {
+    void AssetsManager::LoadFont(const std::string& _name, const std::string& _path) {
         sf::Font _font;
 
         if (textures.find(_name) != textures.end()) {
-            LOGGER.logWarn("Font with this name %s already loaded", _name.c_str());
+            LOGGER.LogWarn("Font with this name %s already loaded", _name.c_str());
             return;
         }
 
-        if (!_font.loadFromFile(this->getAssetsFolder() + _path)) {
-            LOGGER.logError("Failed to load font: %s", _path.c_str());
+        if (!_font.loadFromFile(this->GetAssetsFolder() + _path)) {
+            LOGGER.LogError("Failed to load font: %s", _path.c_str());
             return;
         }
 
@@ -76,17 +76,17 @@ namespace tj {
      * - Desktop: assets/
      * - Other:  /assets/
      */
-    std::string AssetsManager::getAssetsFolder() {
+    std::string AssetsManager::GetAssetsFolder() {
 
-        if (tj::PlatformUtility::isMobile()) {
+        if (tj::PlatformUtility::IsMobile()) {
             return "";
         }
 
-        if (tj::PlatformUtility::isWebGL()) {
+        if (tj::PlatformUtility::IsWebGL()) {
             return "/";
         }
 
-        if (tj::PlatformUtility::isDesktop()) {
+        if (tj::PlatformUtility::IsDesktop()) {
             return "assets/";
         }
 

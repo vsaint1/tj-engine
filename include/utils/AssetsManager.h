@@ -8,45 +8,46 @@ namespace tj {
     class AssetsManager {
 
     public:
-        AssetsManager()              = default;
         void operator=(const Debug&) = delete;
 
-        static AssetsManager& getInstance();
+        static AssetsManager& GetInstance();
 
-        void loadTexture(const std::string& _name, const std::string& _path);
+        void LoadTexture(const std::string& _name, const std::string& _path);
 
-        void loadFont(const std::string& _name, const std::string& _path);
+        void LoadFont(const std::string& _name, const std::string& _path);
 
-        void loadMusic(const std::string& _name, const std::string& _path);
+        void LoadMusic(const std::string& _name, const std::string& _path);
 
-        sf::Texture& getTexture(const std::string& _name) {
+        sf::Texture& GetTexture(const std::string& _name) {
             return this->textures.at(_name);
         }
 
-        sf::Font& getFont(const std::string& _name) {
+        sf::Font& GetFont(const std::string& _name) {
             return this->fonts.at(_name);
         }
 
-        sf::Music& getMusic(const std::string& _name) {
+        sf::Music& GetMusic(const std::string& _name) {
 
             return *(this->musics.at(_name));
         }
 
-        void removeTexture(const std::string& _name) {
+        void RemoveTexture(const std::string& _name) {
             this->textures.erase(_name);
         }
 
-        void removeFont(const std::string& _name) {
+        void RemoveFont(const std::string& _name) {
             this->fonts.erase(_name);
         }
 
-        void removeMusic(const std::string& _name) {
+        void RemoveMusic(const std::string& _name) {
             this->musics.erase(_name);
         }
 
-        std::string getAssetsFolder();
+        std::string GetAssetsFolder();
 
     private:
+        AssetsManager() = default;
+
         std::map<std::string, sf::Texture> textures;
 
         std::map<std::string, sf::Font> fonts;
@@ -55,7 +56,7 @@ namespace tj {
 
         static AssetsManager* instance;
 
-        tj::Debug& LOGGER = tj::Debug::geInstance();
+        tj::Debug& LOGGER = tj::Debug::GetInstance();
     };
 
 }; // namespace tj

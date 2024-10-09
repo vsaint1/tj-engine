@@ -13,7 +13,7 @@
 
 // TODO: refactor to a class EngineCore
 int main() {
-    tj::Random::seed();
+    tj::Random::Seed();
 
 #if defined(_WIN32) || defined(__EMSCRIPTEN__)
     sf::RenderWindow window(sf::VideoMode(1280, 720), "TJ - Game", sf::Style::Close);
@@ -24,50 +24,36 @@ int main() {
     window.setFramerateLimit(60);
     window.setVerticalSyncEnabled(true);
 
-    auto& assetsManager = tj::AssetsManager::getInstance();
-    auto& debug         = tj::Debug::geInstance();
-    debug.setEnabled(true);
-
-    sf::Font fontt;
-
-    if (!fontt.loadFromFile("mine_font.ttf")) {
-        debug.logError(LOG_CONTEXT_FILE, "Failed to load font");
-    }
+    auto& assetsManager = tj::AssetsManager::GetInstance();
+    auto& debug         = tj::Debug::GetInstance();
+    debug.SetEnabled(true);
 
 
-    sf::Text playerPos;
-
-    playerPos.setFont(fontt);
-
-    playerPos.setCharacterSize(24);
-    playerPos.setPosition(10.f, 40.f);
-    playerPos.setScale(4.0f,4.0f);
-
-    debug.logInfo(LOG_CONTEXT_FILE, "Test log info");
+    debug.LogInfo(LOG_CONTEXT_FILE, "Test log info");
 
     auto deviceModel   = tj::SystemInfo::getDeviceModel();
     auto deviceName    = tj::SystemInfo::getDeviceName();
     auto deviceUID     = tj::SystemInfo::getDeviceUniqueIdentifier();
     auto deviceBattery = tj::SystemInfo::getBatteryLevel();
 
-    debug.logInfo(LOG_CONTEXT_FILE, "Test %d", sizeof(uintptr_t));
+    debug.LogInfo(LOG_CONTEXT_FILE, "Test {}", sizeof(uintptr_t));
 
-    debug.logInfo(LOG_CONTEXT_FILE, "Random number between (0,100) %d", tj::Random::range(0, 100));
-    debug.logInfo(LOG_CONTEXT_FILE, "Random number between (12,22) %d", tj::Random::range(12, 22));
+    debug.LogInfo(LOG_CONTEXT_FILE, "Random number between (0,100) %d", tj::Random::Range(0, 100));
+    debug.LogInfo(LOG_CONTEXT_FILE, "Random number between (12,22) %d", tj::Random::Range(12, 22));
 
     sf::FileInputStream fileStream;
-    if (!fileStream.open(assetsManager.getAssetsFolder() + "test.json")) {
-        debug.logError(LOG_CONTEXT_FILE, "Failed to open file '%s/test.json'", assetsManager.getAssetsFolder().c_str());
+    if (!fileStream.open(assetsManager.GetAssetsFolder() + "test.json")) {
+        debug.LogError(LOG_CONTEXT_FILE, "Failed to open file '%s/test.json'", assetsManager.GetAssetsFolder().c_str());
     }
 
     sf::Int64 fileSize = fileStream.getSize();
     if (fileSize <= 0) {
-        debug.logError(LOG_CONTEXT_FILE, "File has no content.");
+        debug.LogError(LOG_CONTEXT_FILE, "File has no content.");
     }
 
     std::vector<char> fileContent(fileSize);
     if (fileStream.read(fileContent.data(), fileSize) != fileSize) {
-        debug.logError(LOG_CONTEXT_FILE, "Error while reading file.");
+        debug.LogError(LOG_CONTEXT_FILE, "Error while reading file.");
     }
 
     std::string jsonData(fileContent.data(), fileSize);
@@ -76,30 +62,38 @@ int main() {
     try {
         jsonObject = nlohmann::json::parse(jsonData);
     } catch (const nlohmann::json::parse_error& e) {
-        debug.logError("JSON parsing error, exception %s", e.what());
+        debug.LogError("JSON parsing error, exception %s", e.what());
     }
 
     auto jObject = jsonObject.dump(4);
-    debug.logWarn(LOG_CONTEXT_FILE, "JSON data: %s", jObject.c_str());
+    debug.LogWarn(LOG_CONTEXT_FILE, "JSON data: %s", jObject.c_str());
     std::string testValue = jsonObject["test"];
-    debug.logError(LOG_CONTEXT_FILE, "Test value: %s", testValue.c_str());
-    debug.logInfo(
-        LOG_CONTEXT_FILE, "Name %s, model %s, uid %s, battery %f", deviceName, deviceModel, deviceUID, deviceBattery);
+    debug.LogError(LOG_CONTEXT_FILE, "Test value: %s", testValue.c_str());
+    debug.LogInfo(
+        LOG_CONTEXT_FILE, "Name %s, model %s, uid %s, battery %s", deviceName, deviceModel, deviceUID, deviceBattery);
 
     auto windowSize = window.getSize();
     tj::Camera camera(windowSize.x, windowSize.y, window);
-    camera.setDebugCamera(true);
+    camera.SetDebugCamera(true);
 
-    assetsManager.loadTexture("player", "player.png");
-    assetsManager.loadFont("mine_font", "mine_font.ttf");
-    assetsManager.loadMusic("time_for_adventure", "time_for_adventure.mp3");
+    assetsManager.LoadTexture("player", "player.png");
+    assetsManager.LoadFont("mine_font", "mine_font.ttf");
+    assetsManager.LoadMusic("time_for_adventure", "time_for_adventure.mp3");
 
-    sf::Sprite player(assetsManager.getTexture("player"));
+    sf::Text playerPos;
+
+    playerPos.setFont(assetsManager.GetFont("mine_font"));
+
+    playerPos.setCharacterSize(24);
+    playerPos.setPosition(10.f, 40.f);
+    playerPos.setScale(4.0f, 4.0f);
+    sf::Sprite player(assetsManager.GetTexture("player"));
+    
     player.setPosition(
         windowSize.x / 2 - player.getGlobalBounds().width / 2, windowSize.y / 2 - player.getGlobalBounds().height / 2);
     player.setScale(6.0f, 6.0f);
 
-    sf::Font font = assetsManager.getFont("mine_font");
+    sf::Font font = assetsManager.GetFont("mine_font");
     sf::Text fpsText;
     fpsText.setFont(font);
     fpsText.setCharacterSize(24);
@@ -111,7 +105,7 @@ int main() {
 
     const float moveSpeed = 500.0f;
 
-    auto& music = assetsManager.getMusic("time_for_adventure");
+    auto& music = assetsManager.GetMusic("time_for_adventure");
     music.setLoop(true);
     music.play();
     music.setVolume(20.0f);
@@ -128,16 +122,16 @@ int main() {
 
             if (event.type == sf::Event::TouchBegan || event.type == sf::Event::TouchMoved) {
                 sf::Vector2i touchPosition(event.touch.x, event.touch.y);
-                sf::Vector2i touchWorldPosition = camera.screenToWorld(window, touchPosition);
+                sf::Vector2i touchWorldPosition = camera.ScreenToWorldPoint(window, touchPosition);
 
-                debug.logInfo(LOG_CONTEXT_FILE, "Touch (%i,%i)", touchWorldPosition.x, touchWorldPosition.y);
+                debug.LogInfo(LOG_CONTEXT_FILE, "Touch (%i,%i)", touchWorldPosition.x, touchWorldPosition.y);
                 player.setPosition(touchWorldPosition.x - player.getGlobalBounds().width / 2,
                     touchWorldPosition.y - player.getGlobalBounds().height / 2);
             }
 
             if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
                 sf::Vector2i screenPosition     = sf::Mouse::getPosition(window);
-                sf::Vector2i mouseWorldPosition = camera.screenToWorld(window, screenPosition);
+                sf::Vector2i mouseWorldPosition = camera.ScreenToWorldPoint(window, screenPosition);
                 player.setPosition(mouseWorldPosition.x - player.getGlobalBounds().width / 2,
                     mouseWorldPosition.y - player.getGlobalBounds().height / 2);
             }
@@ -177,10 +171,10 @@ int main() {
 
         // TODO: refactor draw with the camera view
         window.clear(sf::Color::Black);
-        camera.follow(player.getPosition(), deltaTime);
-        camera.update(deltaTime);
+        camera.Follow(player.getPosition(), deltaTime);
+        camera.Update(deltaTime);
 
-        camera.draw(window);
+        camera.Draw(window);
         window.draw(player);
 
         // TODO: refactor draw without the camera view (fixed view)

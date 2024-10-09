@@ -3,37 +3,37 @@
 
 namespace tj {
 
-    Debug& Debug::geInstance() {
+    Debug& Debug::GetInstance() {
         static Debug instance;
         return instance;
     }
 
-    void Debug::logInfo(const char* _context, const char* _format, ...) {
+    void Debug::LogInfo(const char* _context, const char* _format, ...) {
 
         va_list args;
         va_start(args, _format);
-        this->log(_context, _format, args, ELogLevel::ELOG_INFO);
+        this->Log(_context, _format, args, ELogLevel::ELOG_INFO);
         va_end(args);
     }
 
-    void Debug::logWarn(const char* _context, const char* _format, ...) {
+    void Debug::LogWarn(const char* _context, const char* _format, ...) {
 
         va_list args;
         va_start(args, _format);
-        this->log(_context, _format, args, ELogLevel::ELOG_WARN);
+        this->Log(_context, _format, args, ELogLevel::ELOG_WARN);
         va_end(args);
     }
 
-    void Debug::logError(const char* _context, const char* _format, ...) {
+    void Debug::LogError(const char* _context, const char* _format, ...) {
 
         va_list args;
         va_start(args, _format);
-        this->log(_context, _format, args, ELogLevel::ELOG_ERROR);
+        this->Log(_context, _format, args, ELogLevel::ELOG_ERROR);
         va_end(args);
     }
 
     // TODO: we write to disk the logs
-    void Debug::log(const char* _context, const char* _format, va_list _args, ELogLevel _level) {
+    void Debug::Log(const char* _context, const char* _format, va_list _args, ELogLevel _level) {
 
         
         if (!bEnabled) {

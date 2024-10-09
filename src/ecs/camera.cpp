@@ -1,14 +1,14 @@
 #include "ecs/camera.h"
 namespace tj {
 
-    void Camera::follow(const sf::Vector2f& targetPosition, float _deltaTime) {
+    void Camera::Follow(const sf::Vector2f& targetPosition, float _deltaTime) {
         sf::Vector2f currentPosition = view.getCenter();
-        sf::Vector2f newPosition     = tj::Mathf::lerp(currentPosition, targetPosition, 0.3f);
+        sf::Vector2f newPosition     = tj::Mathf::Lerp(currentPosition, targetPosition, 0.3f);
         view.setCenter(newPosition);
     }
 
 
-    void Camera::update(float _deltaTime) {
+    void Camera::Update(float _deltaTime) {
 
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q)) {
             view.zoom(1.1f);
@@ -25,7 +25,7 @@ namespace tj {
     }
 
 
-    void Camera::draw(sf::RenderWindow& _window) {
+    void Camera::Draw(sf::RenderWindow& _window) {
         _window.setView(view);
 
         if (bDrawCamera) {
@@ -42,7 +42,7 @@ namespace tj {
         }
     }
 
-    sf::Vector2i Camera::screenToWorld(const sf::RenderWindow& _window, const sf::Vector2i& _screenPosition) {
+    sf::Vector2i Camera::ScreenToWorldPoint(const sf::RenderWindow& _window, const sf::Vector2i& _screenPosition) {
 
         sf::Vector2f worldPos = _window.mapPixelToCoords(_screenPosition, view);
 

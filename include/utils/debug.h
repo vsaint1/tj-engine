@@ -9,33 +9,36 @@ namespace tj {
 
     class Debug {
     public:
-        Debug()                      = default;
+
         void operator=(const Debug&) = delete;
 
-        static Debug& geInstance();
+        static Debug& GetInstance();
 
-        void logInfo(const char* _context, const char* _format, ...);
+        void LogInfo(const char* _context, const char* _format, ...);
 
-        void logWarn(const char* _context, const char* _format, ...);
+        void LogWarn(const char* _context, const char* _format, ...);
 
-        void logError(const char* _context , const char* _format, ...);
+        void LogError(const char* _context, const char* _format, ...);
 
-        void setEnabled(bool _enabled) {
+
+        void SetEnabled(bool _enabled) {
             bEnabled = _enabled;
         }
 
-        void setSaveToDisk(bool _enabled) {
+        void SetSaveToDisk(bool _enabled) {
             bSaveToDisk = _enabled;
         }
 
     private:
+        Debug() = default;
+
         sf::Mutex mutex;
         static Debug* instance;
         ELogLevel logLevel;
         bool bEnabled;
         bool bSaveToDisk = true;
 
-        void log(const char* _context, const char* _format, va_list _args, ELogLevel _level);
+        void Log(const char* _context, const char* _format, va_list _args, ELogLevel _level);
     };
 
 }; // namespace tj

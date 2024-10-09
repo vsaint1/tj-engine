@@ -5,7 +5,7 @@
 namespace tj {
 
 
-    EPlatform PlatformUtility::platform() {
+    EPlatform PlatformUtility::GetPlatform() {
 
 #if defined(_WIN32)
         return EPlatform::EPLAT_WINDOWS;
@@ -20,8 +20,8 @@ namespace tj {
 #endif
     }
 
-    std::string PlatformUtility::plaftorm() {
-        switch (platform()) {
+    std::string PlatformUtility::Platform() {
+        switch (GetPlatform()) {
         case EPlatform::EPLAT_WINDOWS:
             return "Windows";
         case EPlatform::EPLAT_ANDROID:
@@ -35,10 +35,10 @@ namespace tj {
         }
     }
 
-    sf::FloatRect PlatformUtility::getSafeAreaView(const sf::Vector2i _windowSize) {
+    sf::FloatRect PlatformUtility::GetSafeAreaView(const sf::Vector2i _windowSize) {
 
 
-        float MOBILE_PADDING = isMobile() ? 20.0f : 0.0f;
+        float MOBILE_PADDING = IsMobile() ? 20.0f : 0.0f;
         float left           = MOBILE_PADDING;
         float top            = MOBILE_PADDING;
         float width          = _windowSize.x - 2 * MOBILE_PADDING;

@@ -13,31 +13,31 @@ namespace tj {
 
         PlatformUtility(const PlatformUtility&) = delete;
 
-        static EPlatform platform();
+        static EPlatform GetPlatform();
 
-        static std::string plaftorm();
+        static std::string Platform();
 
-        static bool isMobile() {
-            return platform() == EPlatform::EPLAT_IOS || platform() == EPlatform::EPLAT_ANDROID;
+        static bool IsMobile() {
+            return GetPlatform() == EPlatform::EPLAT_IOS || GetPlatform() == EPlatform::EPLAT_ANDROID;
         }
 
-        static bool isDesktop() {
-            return platform() == EPlatform::EPLAT_WINDOWS;
+        static bool IsDesktop() {
+            return GetPlatform() == EPlatform::EPLAT_WINDOWS;
         }
 
-        static bool isWebGL() {
-            return platform() == EPlatform::EPLAT_WEBGL;
+        static bool IsWebGL() {
+            return GetPlatform() == EPlatform::EPLAT_WEBGL;
         }
 
-        static bool isAndroid() {
-            return platform() == EPlatform::EPLAT_ANDROID ? true : false;
+        static bool IsAndroid() {
+            return GetPlatform() == EPlatform::EPLAT_ANDROID ? true : false;
         }
 
-        static bool isIOS() {
-            return platform() == EPlatform::EPLAT_IOS ? true : false;
+        static bool IsIOS() {
+            return GetPlatform() == EPlatform::EPLAT_IOS ? true : false;
         }
 
-        static sf::FloatRect getSafeAreaView(const sf::Vector2i _windowSize);
+        static sf::FloatRect GetSafeAreaView(const sf::Vector2i _windowSize);
     };
 } // namespace tj
 

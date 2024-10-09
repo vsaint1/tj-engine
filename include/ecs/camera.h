@@ -14,29 +14,29 @@ namespace tj {
 
         Camera(float _width, float _height, sf::RenderWindow& _window);
 
-        void follow(const sf::Vector2f& targetPosition, float _deltaTime);
+        void Follow(const sf::Vector2f& targetPosition, float _deltaTime);
 
-        void zoom(float _factor) {
+        void Zoom(float _factor) {
             view.zoom(_factor);
         }
 
-        void update(float _deltaTime);
+        void Update(float _deltaTime);
 
-        void draw(sf::RenderWindow& _window);
+        void Draw(sf::RenderWindow& _window);
 
-        sf::View getView() const {
+        sf::View GetCameraView() const {
             return view;
         }
 
-        sf::Vector2f getCenter(){
+        sf::Vector2f GetCameraCenter(){
             return view.getCenter();
         }
 
-        void setDebugCamera(bool _draw) {
+        void SetDebugCamera(bool _draw) {
             bDrawCamera = _draw;
         }
 
-        sf::Vector2i screenToWorld(const sf::RenderWindow& _window, const sf::Vector2i& _screenPosition);
+        sf::Vector2i ScreenToWorldPoint(const sf::RenderWindow& _window, const sf::Vector2i& _screenPosition);
 
     private:
         sf::View view;
