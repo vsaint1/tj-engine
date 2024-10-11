@@ -48,6 +48,8 @@
 
 #include "utils/Debug.h"
 
-
+#define TJ_LOG_INFO(format, ...) tj::Debug::GetInstance().LogInfo(LOG_CONTEXT_FILE, format, ##__VA_ARGS__)
+#define TJ_LOG_WARN(format, ...) tj::Debug::GetInstance().LogWarn(LOG_CONTEXT_FILE, format, ##__VA_ARGS__)
+#define TJ_LOG_ERROR(format, ...) tj::Debug::GetInstance().LogError(LOG_CONTEXT_FILE, format, ##__VA_ARGS__)
 
 #endif // PCH_H

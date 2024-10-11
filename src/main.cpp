@@ -1,4 +1,4 @@
-#include "ecs/Camera.h"
+#include "ecs/camera.h"
 #include "math/Mathf.h"
 #include "math/Random.h"
 #include "sys/SystemInfo.h"
@@ -9,6 +9,8 @@
 #ifdef SFML_SYSTEM_IOS
 #include <SFML/Main.hpp>
 #endif
+
+namespace fs = std::filesystem;
 
 
 // TODO: refactor to a class EngineCore
@@ -26,55 +28,59 @@ int main() {
 
     auto& assetsManager = tj::AssetsManager::GetInstance();
     auto& debug         = tj::Debug::GetInstance();
-    debug.SetEnabled(true);
 
-
-    debug.LogInfo(LOG_CONTEXT_FILE, "Test log info");
+    debug.SetSaveToDisk(false);
+    // debug.SetEnabled(false); // COMMENT: By default debug is enabled
 
     auto deviceModel   = tj::SystemInfo::GetDeviceModel();
     auto deviceName    = tj::SystemInfo::GetDeviceName();
     auto deviceUID     = tj::SystemInfo::GetDeviceUniqueIdentifier();
     auto deviceBattery = tj::SystemInfo::GetBatteryLevel();
 
-    debug.LogInfo(LOG_CONTEXT_FILE, "Test %d", sizeof(uintptr_t));
+    TJ_LOG_INFO("Test log info");
 
-    debug.LogInfo(LOG_CONTEXT_FILE, "Random number between (0,100) %d", tj::Random::Range(0, 100));
-    debug.LogInfo(LOG_CONTEXT_FILE, "Random number between (12,22) %d", tj::Random::Range(12, 22));
+    TJ_LOG_INFO("Random number between (0,100) %d", tj::Random::Range(0, 100));
+    TJ_LOG_INFO("Random number between (12,22) %d", tj::Random::Range(12, 22));
 
     sf::FileInputStream fileStream;
     if (!fileStream.open(assetsManager.GetAssetsFolder() + "test.json")) {
-        debug.LogError(LOG_CONTEXT_FILE, "Failed to open file '%s/test.json'", assetsManager.GetAssetsFolder().c_str());
+        TJ_LOG_ERROR("Failed to open file '%s/test.json'", assetsManager.GetAssetsFolder().c_str());
     }
 
     sf::Int64 fileSize = fileStream.getSize();
     if (fileSize <= 0) {
-        debug.LogError(LOG_CONTEXT_FILE, "File has no content.");
+        TJ_LOG_ERROR("File has no content.");
     }
 
     std::vector<char> fileContent(fileSize);
+
     if (fileStream.read(fileContent.data(), fileSize) != fileSize) {
-        debug.LogError(LOG_CONTEXT_FILE, "Error while reading file.");
+        TJ_LOG_ERROR("Error while reading file.");
     }
 
-    std::string jsonData(fileContent.data(), fileSize);
+    auto data = fileContent.data();
+
+    std::string jsonData(data);
 
     nlohmann::json jsonObject;
+
     try {
         jsonObject = nlohmann::json::parse(jsonData);
     } catch (const nlohmann::json::parse_error& e) {
-        debug.LogError("JSON parsing error, exception %s", e.what());
+        TJ_LOG_ERROR("JSON parsing error, exception %s", e.what());
     }
 
     auto jObject = jsonObject.dump(4);
-    debug.LogWarn(LOG_CONTEXT_FILE, "JSON data: %s", jObject.c_str());
+    TJ_LOG_WARN("JSON data: %s", jObject.c_str());
     std::string testValue = jsonObject["test"];
-    debug.LogError(LOG_CONTEXT_FILE, "Test value: %s", testValue.c_str());
-    debug.LogInfo(
-        LOG_CONTEXT_FILE, "Name %s, model %s, uid %s, battery %f", deviceName.c_str(), deviceModel.c_str(), deviceUID.c_str(), deviceBattery);
+    TJ_LOG_INFO("Name %s, model %s, uid %s, battery %f", deviceName.c_str(), deviceModel.c_str(), deviceUID.c_str(),
+        deviceBattery);
+
 
     auto windowSize = window.getSize();
     tj::Camera camera(windowSize.x, windowSize.y, window);
     camera.SetDebugCamera(true);
+
 
     assetsManager.LoadTexture("player", "player.png");
     assetsManager.LoadFont("mine_font", "mine_font.ttf");
@@ -95,7 +101,16 @@ int main() {
 
     sf::Text fpsText;
     fpsText.setFont(assetsManager.GetFont("mine_font"));
+    auto a = tj::PlatformUtility::IsMobile();
+
+#ifdef SFML_SYSTEM_IOS || SFML_SYSTEM_ANDROID // COMMENT: just testing
+    fpsText.setCharacterSize(12);
+    playerPos.setCharacterSize(12);
+#else
     fpsText.setCharacterSize(24);
+    playerPos.setCharacterSize(24);
+#endif
+
     fpsText.setFillColor(sf::Color::White);
     fpsText.setPosition(10.f, 5.f);
 
@@ -117,24 +132,23 @@ int main() {
             if (event.type == sf::Event::Closed) {
                 window.close();
             }
-
-
-            if (event.type == sf::Event::TouchBegan || event.type == sf::Event::TouchMoved) {
-                sf::Vector2i touchPosition(event.touch.x, event.touch.y);
-                sf::Vector2i touchWorldPosition = camera.ScreenToWorldPoint(window, touchPosition);
-
-                debug.LogInfo(LOG_CONTEXT_FILE, "Touch (%i,%i)", touchWorldPosition.x, touchWorldPosition.y);
-                player.setPosition(touchWorldPosition.x - player.getGlobalBounds().width / 2,
-                    touchWorldPosition.y - player.getGlobalBounds().height / 2);
-            }
-
-            if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
-                sf::Vector2i screenPosition     = sf::Mouse::getPosition(window);
-                sf::Vector2i mouseWorldPosition = camera.ScreenToWorldPoint(window, screenPosition);
-                player.setPosition(mouseWorldPosition.x - player.getGlobalBounds().width / 2,
-                    mouseWorldPosition.y - player.getGlobalBounds().height / 2);
-            }
         }
+        if (event.type == sf::Event::TouchBegan || event.type == sf::Event::TouchMoved) {
+            sf::Vector2i touchPosition(event.touch.x, event.touch.y);
+            sf::Vector2i touchWorldPosition = camera.ScreenToWorldPoint(window, touchPosition);
+
+            TJ_LOG_INFO(LOG_CONTEXT_FILE, "Touch (%i,%i)", touchWorldPosition.x, touchWorldPosition.y);
+            player.setPosition(touchWorldPosition.x - player.getGlobalBounds().width / 2,
+                touchWorldPosition.y - player.getGlobalBounds().height / 2);
+        }
+
+        if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+            sf::Vector2i screenPosition     = sf::Mouse::getPosition(window);
+            sf::Vector2i mouseWorldPosition = camera.ScreenToWorldPoint(window, screenPosition);
+            player.setPosition(mouseWorldPosition.x - player.getGlobalBounds().width / 2,
+                mouseWorldPosition.y - player.getGlobalBounds().height / 2);
+        }
+
 
         sf::Time elapsedTime = clock.restart();
         float deltaTime      = elapsedTime.asSeconds();
@@ -181,6 +195,5 @@ int main() {
 
         window.display();
     }
-
     return 0;
 }

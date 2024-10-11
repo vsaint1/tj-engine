@@ -89,9 +89,7 @@ gradle assembleDebug
 1. Generating the `*.xcodeproj`
 
 ```sh
-mkdir build && cd build
-
-cmake .. -G "Xcode" -DCMAKE_SYSTEM_NAME="iOS"
+cmake --preset=ios-xcode
 
 open ProjectName.xcodeproj
 

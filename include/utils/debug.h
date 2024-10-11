@@ -35,12 +35,14 @@ namespace tj {
         sf::Mutex mutex;
         static Debug* instance;
         ELogLevel logLevel;
-        bool bEnabled;
-        bool bSaveToDisk = true;
+        bool bEnabled = true;
+        bool bSaveToDisk = false;
 
         void Log(const char* _context, const char* _format, va_list _args, ELogLevel _level);
     };
 
 }; // namespace tj
+
+
 
 #endif // LOGGER_HPP

@@ -37,6 +37,10 @@ namespace tj {
             return GetPlatform() == EPlatform::EPLAT_IOS ? true : false;
         }
 
+        static bool is64Bits() {
+            return sizeof(void*) == 8;
+        }
+
         static sf::FloatRect GetSafeAreaView(const sf::Vector2i _windowSize);
     };
 } // namespace tj

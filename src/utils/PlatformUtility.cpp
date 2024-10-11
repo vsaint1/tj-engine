@@ -7,16 +7,19 @@ namespace tj {
 
     EPlatform PlatformUtility::GetPlatform() {
 
+// COMMENT: Our target priority is (Windows, Android, iOS, WebGL), focusing on `MOBILE`
 #if defined(_WIN32)
         return EPlatform::EPLAT_WINDOWS;
-#elif __IPHONEOS__
+#elif TARGET_OS_IPHONE 
         return EPlatform::EPLAT_IOS;
+#elif TARGET_OS_MAC
+     return EPlatform::EPLAT_UNKNOWN; // TODO: Create Mac platform (not target priority)
 #elif __ANDROID__
         return EPlatform::EPLAT_ANDROID;
 #elif __EMSCRIPTEN__
         return EPlatform::EPLAT_WEBGL;
 #else
-        return EPlatform::EPLAT_UNKNOWN;
+        return EPlatform::EPLAT_UNKNOWN; 
 #endif
     }
 
@@ -34,6 +37,7 @@ namespace tj {
             return "Unknown";
         }
     }
+
 
     sf::FloatRect PlatformUtility::GetSafeAreaView(const sf::Vector2i _windowSize) {
 
