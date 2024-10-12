@@ -40,8 +40,6 @@ int main() {
 #ifdef _WIN32
     ImGui::SFML::Init(window);
 
-    imguiThemes::green();
-
     ImGuiIO& io = ImGui::GetIO();
     (void) io;
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
