@@ -3,8 +3,7 @@
 #include "math/Random.h"
 #include "sys/SystemInfo.h"
 #include "utils/AssetsManager.h"
-
-#include "utils/Json.hpp"
+#include "utils/FileHandler.h"
 
 #ifdef SFML_SYSTEM_IOS
 #include <SFML/Main.hpp>
@@ -42,37 +41,23 @@ int main() {
     TJ_LOG_INFO("Random number between (0,100) %d", tj::Random::Range(0, 100));
     TJ_LOG_INFO("Random number between (12,22) %d", tj::Random::Range(12, 22));
 
-    sf::FileInputStream fileStream;
-    if (!fileStream.open(assetsManager.GetAssetsFolder() + "test.json")) {
-        TJ_LOG_ERROR("Failed to open file '%s/test.json'", assetsManager.GetAssetsFolder().c_str());
-    }
-
-    sf::Int64 fileSize = fileStream.getSize();
-    if (fileSize <= 0) {
-        TJ_LOG_ERROR("File has no content.");
-    }
-
-    std::vector<char> fileContent(fileSize);
-
-    if (fileStream.read(fileContent.data(), fileSize) != fileSize) {
-        TJ_LOG_ERROR("Error while reading file.");
-    }
-
-    auto data = fileContent.data();
-
-    std::string jsonData(data);
-
-    nlohmann::json jsonObject;
-
-    try {
-        jsonObject = nlohmann::json::parse(jsonData);
-    } catch (const nlohmann::json::parse_error& e) {
-        TJ_LOG_ERROR("JSON parsing error, exception %s", e.what());
-    }
+    tj::FileHandler testJson("test.json");
+    tj::FileHandler testXml("test.xml");
+    auto jsonObject = testJson.ReadJson();
 
     auto jObject = jsonObject.dump(4);
+
+    tj::FileHandler::SaveFileToDisk("map.json", jObject);
+
     TJ_LOG_WARN("JSON data: %s", jObject.c_str());
     std::string testValue = jsonObject["test"];
+
+    auto xml = testXml.ReadXml();
+    tinyxml2::XMLPrinter xmlPrinter;
+    xml->Print(&xmlPrinter);
+
+    TJ_LOG_INFO("XML data: %s", xmlPrinter.CStr());
+
     TJ_LOG_INFO("Name %s, model %s, uid %s, battery %f", deviceName.c_str(), deviceModel.c_str(), deviceUID.c_str(),
         deviceBattery);
 
@@ -103,7 +88,7 @@ int main() {
     fpsText.setFont(assetsManager.GetFont("mine_font"));
     auto a = tj::PlatformUtility::IsMobile();
 
-#ifdef SFML_SYSTEM_IOS || SFML_SYSTEM_ANDROID // COMMENT: just testing
+#ifdef SFML_SYSTEM_ANDROID // COMMENT: just testing
     fpsText.setCharacterSize(12);
     playerPos.setCharacterSize(12);
 #else
