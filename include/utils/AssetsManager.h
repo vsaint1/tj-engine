@@ -31,6 +31,20 @@ namespace tj {
             return *(this->musics.at(_name));
         }
 
+        std::map<std::string, std::unique_ptr<sf::Texture>>& GetTextures() {
+
+            return this->textures;
+        }
+
+        std::map<std::string, std::unique_ptr<sf::Font>>& GetFonts() {
+            return this->fonts;
+        }
+
+        std::map<std::string, std::unique_ptr<sf::Music>>& GetMusics() {
+            return this->musics;
+        }
+
+
         void RemoveTexture(const std::string& _name) {
             this->textures.erase(_name);
         }
@@ -44,6 +58,7 @@ namespace tj {
         }
 
         std::string GetAssetsFolder();
+
 
     private:
         AssetsManager() = default;

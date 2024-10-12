@@ -34,8 +34,6 @@ namespace tj {
 
     // TODO: we write to disk the logs
     void Debug::Log(const char* _context, const char* _format, va_list _args, ELogLevel _level) {
-
-        
         if (!bEnabled) {
             return;
         }
@@ -51,7 +49,14 @@ namespace tj {
         strftime(timeStr, sizeof(timeStr), "%Y-%m-%d %H:%M:%S", timeinfo);
 
         char formatted_message[1024];
-        snprintf(formatted_message, sizeof(formatted_message), "[%s][%s] - %s", timeStr, _context, _format);
+        snprintf(formatted_message, sizeof(formatted_message), "[%s][%s] - ", timeStr, _context);
+
+        va_list args_copy;
+        va_copy(args_copy, _args);
+
+        vsnprintf(formatted_message + strlen(formatted_message), sizeof(formatted_message) - strlen(formatted_message),
+            _format, args_copy);
+        va_end(args_copy);
 
 #ifdef __ANDROID__
         int androidLogLevel;
@@ -86,12 +91,14 @@ namespace tj {
         vprintf(formatted_message, _args);
         printf("%s\n", COLOR_RESET);
 
-        va_end(_args);
+        if (this->logBuffer.size() > 10000u) {
+            this->logBuffer.clear();
+        }
+
+        this->logBuffer.emplace_back(std::string(formatted_message));
 #endif
+
+        va_end(_args);
     }
-
-
-
-
 
 } // namespace tj

@@ -96,7 +96,13 @@
         "execution": "cpp",
         "print": "cpp",
         "string_view": "cpp",
-        "variant": "cpp"
+        "variant": "cpp",
+        "condition_variable": "cpp",
+        "future": "cpp",
+        "numbers": "cpp",
+        "regex": "cpp",
+        "typeindex": "cpp",
+        "unordered_set": "cpp"
     },
     "java.configuration.updateBuildConfiguration": "interactive"
 }

@@ -9,10 +9,7 @@
 #include <SFML/Main.hpp>
 #endif
 
-namespace fs = std::filesystem;
 
-
-// TODO: refactor to a class EngineCore
 int main() {
     tj::Random::Seed();
 
@@ -22,8 +19,8 @@ int main() {
     sf::RenderWindow window(sf::VideoMode::getDesktopMode(), "TJ - Game", sf::Style::Close);
 #endif
 
-    window.setFramerateLimit(60);
-    window.setVerticalSyncEnabled(true);
+    // window.setFramerateLimit(60);
+    window.setVerticalSyncEnabled(false);
 
     auto& assetsManager = tj::AssetsManager::GetInstance();
     auto& debug         = tj::Debug::GetInstance();
@@ -40,145 +37,143 @@ int main() {
 
     TJ_LOG_INFO("Random number between (0,100) %d", tj::Random::Range(0, 100));
     TJ_LOG_INFO("Random number between (12,22) %d", tj::Random::Range(12, 22));
+#ifdef _WIN32
+    ImGui::SFML::Init(window);
 
-    tj::FileHandler testJson("test.json");
-    tj::FileHandler testXml("test.xml");
-    auto jsonObject = testJson.ReadJson();
+    imguiThemes::green();
 
-    auto jObject = jsonObject.dump(4);
+    ImGuiIO& io = ImGui::GetIO();
+    (void) io;
+    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+    io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+    io.FontGlobalScale = 2.f;
+    io.IniFilename     = nullptr;
 
-    tj::FileHandler::SaveFileToDisk("map.json", jObject);
-
-    TJ_LOG_WARN("JSON data: %s", jObject.c_str());
-    std::string testValue = jsonObject["test"];
-
-    auto xml = testXml.ReadXml();
-    tinyxml2::XMLPrinter xmlPrinter;
-    xml->Print(&xmlPrinter);
-
-    TJ_LOG_INFO("XML data: %s", xmlPrinter.CStr());
-
-    TJ_LOG_INFO("Name %s, model %s, uid %s, battery %f", deviceName.c_str(), deviceModel.c_str(), deviceUID.c_str(),
-        deviceBattery);
-
-
-    auto windowSize = window.getSize();
-    tj::Camera camera(windowSize.x, windowSize.y, window);
-    camera.SetDebugCamera(true);
-
-
-    assetsManager.LoadTexture("player", "player.png");
-    assetsManager.LoadFont("mine_font", "mine_font.ttf");
-    assetsManager.LoadMusic("time_for_adventure", "time_for_adventure.mp3");
-
-    sf::Text playerPos;
-
-    playerPos.setFont(assetsManager.GetFont("mine_font"));
-
-    playerPos.setCharacterSize(24);
-    playerPos.setPosition(10.f, 40.f);
-    playerPos.setScale(4.0f, 4.0f);
-    sf::Sprite player(assetsManager.GetTexture("player"));
-
-    player.setPosition(
-        windowSize.x / 2 - player.getGlobalBounds().width / 2, windowSize.y / 2 - player.getGlobalBounds().height / 2);
-    player.setScale(6.0f, 6.0f);
-
-    sf::Text fpsText;
-    fpsText.setFont(assetsManager.GetFont("mine_font"));
-    auto a = tj::PlatformUtility::IsMobile();
-
-#ifdef SFML_SYSTEM_ANDROID // COMMENT: just testing
-    fpsText.setCharacterSize(12);
-    playerPos.setCharacterSize(12);
-#else
-    fpsText.setCharacterSize(24);
-    playerPos.setCharacterSize(24);
+    ImGuiStyle& style                 = ImGui::GetStyle();
+    style.Colors[ImGuiCol_WindowBg].w = 0.5f;
 #endif
 
-    fpsText.setFillColor(sf::Color::White);
-    fpsText.setPosition(10.f, 5.f);
+    sf::CircleShape shape(100.f);
+    shape.setFillColor(sf::Color::Green);
+    assetsManager.LoadFont("mine_font", "mine_font.ttf");
+    assetsManager.LoadFont("mine_font", "mine_font.ttf");
+    assetsManager.LoadMusic("time_for_adventure", "time_for_adventure.mp3");
+    assetsManager.LoadTexture("player", "player.png");
+    assetsManager.LoadTexture("skeleton_spirte", "skeleton_spirte.png"); // ERROR JUST FOR TESTING
+    assetsManager.LoadTexture("skeleton_sprite", "skeleton_sprite.png");
+
+    sf::Text randomText;
+    randomText.setFont(assetsManager.GetFont("mine_font"));
+    randomText.setCharacterSize(16);
+    randomText.setString("Hello world!!!");
 
     sf::Clock clock;
     float fps = 0.0f;
 
-    const float moveSpeed = 500.0f;
-
-    auto& music = assetsManager.GetMusic("time_for_adventure");
-    music.setLoop(true);
-    music.play();
-    music.setVolume(20.0f);
+    // Setup docking
+    bool show_project = true;
+    bool show_console = true;
 
     while (window.isOpen()) {
-
-
         sf::Event event;
         while (window.pollEvent(event)) {
+#ifdef _WIN32
+            ImGui::SFML::ProcessEvent(window, event);
+#endif
+
             if (event.type == sf::Event::Closed) {
                 window.close();
             }
-        }
-        if (event.type == sf::Event::TouchBegan || event.type == sf::Event::TouchMoved) {
-            sf::Vector2i touchPosition(event.touch.x, event.touch.y);
-            sf::Vector2i touchWorldPosition = camera.ScreenToWorldPoint(window, touchPosition);
 
-            TJ_LOG_INFO(LOG_CONTEXT_FILE, "Touch (%i,%i)", touchWorldPosition.x, touchWorldPosition.y);
-            player.setPosition(touchWorldPosition.x - player.getGlobalBounds().width / 2,
-                touchWorldPosition.y - player.getGlobalBounds().height / 2);
+            if (event.type == sf::Event::Resized) {
+                sf::FloatRect visibleArea(0, 0, event.size.width, event.size.height);
+                window.setView(sf::View(visibleArea));
+            }
         }
 
-        if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
-            sf::Vector2i screenPosition     = sf::Mouse::getPosition(window);
-            sf::Vector2i mouseWorldPosition = camera.ScreenToWorldPoint(window, screenPosition);
-            player.setPosition(mouseWorldPosition.x - player.getGlobalBounds().width / 2,
-                mouseWorldPosition.y - player.getGlobalBounds().height / 2);
+        sf::Time deltaTime     = clock.restart();
+        float deltaTimeSeconds = deltaTime.asSeconds();
+        deltaTimeSeconds       = std::clamp(deltaTimeSeconds, 0.f, 1.f);
+        fps                    = 1.0f / deltaTimeSeconds;
+
+#ifdef _WIN32
+        ImGui::SFML::Update(window, deltaTime);
+
+        ImGui::PushStyleColor(ImGuiCol_WindowBg, {});
+        ImGui::PushStyleColor(ImGuiCol_DockingEmptyBg, {});
+        ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
+        ImGui::PopStyleColor(2);
+
+
+        ImGui::SetNextWindowDockID(ImGui::GetID("DockBottom"), ImGuiCond_Once);
+        ImGui::SetNextWindowPos(ImVec2(0, window.getSize().y - 300));
+        ImGui::SetNextWindowSize(ImVec2(window.getSize().x, 300));
+
+        ImGui::Begin("Content");
+
+        if (ImGui::BeginTabBar("Tabs")) {
+            if (ImGui::BeginTabItem("Assets")) {
+
+                ImGui::SeparatorText("Textures");
+                for (auto& texture : assetsManager.GetTextures()) {
+                    ImGui::Text("%s", texture.first.c_str());
+                }
+
+                ImGui::SeparatorText("Fonts");
+                for (auto& font : assetsManager.GetFonts()) {
+                    ImGui::Text("%s", font.first.c_str());
+                }
+
+                ImGui::SeparatorText("Musics");
+                for (auto& music : assetsManager.GetMusics()) {
+                    ImGui::Text("%s", music.first.c_str());
+                }
+
+                ImGui::EndTabItem();
+            }
+
+            if (ImGui::BeginTabItem("Console")) {
+                ImGui::Text("Quantity %d", debug.GetLogBuffer().size());
+
+                for (auto& log : debug.GetLogBuffer()) {
+                    ImGui::Text(log.c_str());
+                }
+
+                ImGui::EndTabItem();
+            }
+
+            ImGui::EndTabBar();
         }
 
+        ImGui::End();
 
-        sf::Time elapsedTime = clock.restart();
-        float deltaTime      = elapsedTime.asSeconds();
+        ImGui::Begin("Debug");
+        ImGui::SeparatorText("Game");
+        ImGui::Text("DeltaTime: %f", deltaTimeSeconds);
+        ImGui::Text("FPS: %f", fps);
 
-        sf::Vector2f velocity(0, 0);
+        ImGui::SeparatorText("Device");
+        ImGui::Text("Device Model: %s", deviceModel.c_str());
+        ImGui::Text("Device Name: %s", deviceName.c_str());
+        ImGui::Text("Device UniqueID: %s", deviceUID.c_str());
+        ImGui::Text("Device Battery: %f", deviceBattery);
+        ImGui::End();
+#endif
 
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
-            velocity.y -= moveSpeed * deltaTime;
-        }
+        window.clear();
+        window.draw(shape);
+        window.draw(randomText);
 
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
-            velocity.y += moveSpeed * deltaTime;
-        }
-
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
-            velocity.x -= moveSpeed * deltaTime;
-        }
-
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
-            velocity.x += moveSpeed * deltaTime;
-        }
-
-        player.move(velocity);
-
-        playerPos.setString("X: " + std::to_string(static_cast<int>(player.getPosition().x))
-                            + " Y: " + std::to_string(static_cast<int>(player.getPosition().y)));
-
-        fps = 1.0f / deltaTime;
-        fpsText.setString("FPS: " + std::to_string(static_cast<int>(fps)));
-
-        // TODO: refactor draw with the camera view
-        window.clear(sf::Color::Black);
-        camera.Follow(player.getPosition(), deltaTime);
-        camera.Update(deltaTime);
-
-        camera.Draw(window);
-        window.draw(player);
-
-        // TODO: refactor draw without the camera view (fixed view)
-        window.setView(window.getDefaultView());
-
-        window.draw(fpsText);
-        window.draw(playerPos);
+#ifdef _WIN32
+        ImGui::SFML::Render(window);
+#endif
 
         window.display();
     }
+
+#ifdef _WIN32
+    ImGui::SFML::Shutdown();
+#endif
+
     return 0;
 }

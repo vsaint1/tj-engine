@@ -4,25 +4,25 @@
 
 // STD LIBS
 #include <cstdarg>
+#include <ctime>
+#include <fstream>
 #include <functional>
+#include <iomanip>
 #include <iostream>
 #include <map>
 #include <memory>
 #include <mutex>
+#include <stack>
 #include <string>
 #include <unordered_map>
 #include <vector>
-#include <stack>
-#include <ctime>
-#include <iomanip>
-#include <fstream>
-
+#include <filesystem>
 
 // SFML LIBS
+#include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>
 #include <SFML/Network.hpp>
 #include <SFML/System.hpp>
-#include <SFML/Audio.hpp>
 
 // ANSI COLOR CODES (https://en.wikipedia.org/wiki/ANSI_escape_code)
 #if defined(_WIN32) || defined(__ANDROID__)
@@ -44,12 +44,18 @@
 #define LOG_TAG "[TJLOG]"
 #endif
 
-#define LOG_CONTEXT_FILE (std::string(__FILE__) + ":" + std::to_string(__LINE__)).c_str() 
+#define LOG_CONTEXT_FILE (std::filesystem::path(__FILE__).filename().string() + ":" + std::to_string(__LINE__)).c_str()
 
 #include "utils/Debug.h"
 
-#define TJ_LOG_INFO(format, ...) tj::Debug::GetInstance().LogInfo(LOG_CONTEXT_FILE, format, ##__VA_ARGS__)
-#define TJ_LOG_WARN(format, ...) tj::Debug::GetInstance().LogWarn(LOG_CONTEXT_FILE, format, ##__VA_ARGS__)
+#define TJ_LOG_INFO(format, ...)  tj::Debug::GetInstance().LogInfo(LOG_CONTEXT_FILE, format, ##__VA_ARGS__)
+#define TJ_LOG_WARN(format, ...)  tj::Debug::GetInstance().LogWarn(LOG_CONTEXT_FILE, format, ##__VA_ARGS__)
 #define TJ_LOG_ERROR(format, ...) tj::Debug::GetInstance().LogError(LOG_CONTEXT_FILE, format, ##__VA_ARGS__)
+
+#ifdef _WIN32
+#include "imgui-SFML.h"
+#include "imgui.h"
+#include "imguiThemes.h"
+#endif
 
 #endif // PCH_H

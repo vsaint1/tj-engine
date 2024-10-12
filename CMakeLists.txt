@@ -10,6 +10,20 @@ set(DEPLOYMENT_TARGET 13.0)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+if(MSVC) 
+   
+    add_compile_options(/arch:AVX2) 
+
+endif()
+
+set(BUILD_SHARED_LIBS ON CACHE BOOL "Build SFML as static libraries" FORCE)
+
+if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+    set(IMGUI_DIR "${CMAKE_CURRENT_SOURCE_DIR}/dependencies/imgui-docking/imgui")
+    add_subdirectory(dependencies/imgui-docking)
+    add_subdirectory(dependencies/imgui-sfml-2.6.x)
+endif()
+
 project (${APP_NAME} VERSION ${APP_VERSION} LANGUAGES CXX)
 
 if (NOT EXISTS ${CMAKE_SOURCE_DIR}/dependencies/SFML)
@@ -17,7 +31,9 @@ if (NOT EXISTS ${CMAKE_SOURCE_DIR}/dependencies/SFML)
 endif()
 
 if(NOT CMAKE_SYSTEM_NAME STREQUAL "iOS" AND NOT CMAKE_SYSTEM_NAME STREQUAL "Emscripten")
-    add_subdirectory(dependencies/SFML) # on iOS we don't need this, already pre-compiled on SFML-IOS folder
+    # on iOS we don't need this, already pre-compiled on SFML-IOS folder
+    add_subdirectory(dependencies/SFML) 
+    
 endif()
 
 
@@ -41,13 +57,15 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "iOS")
 elseif(CMAKE_SYSTEM_NAME STREQUAL "Emscripten")
     set(LIBS sfml-system sfml-window sfml-graphics sfml-network sfml-audio -lfreetype -logg -lvorbis -lz)
 else()
-    set(LIBS sfml-main sfml-graphics sfml-window sfml-system sfml-audio sfml-network Advapi32)
+    set(LIBS sfml-main sfml-graphics sfml-window sfml-system sfml-audio sfml-network Advapi32 imgui ImGui-SFML::ImGui-SFML)
 endif()
 
 set(DIST_DIR ${CMAKE_SOURCE_DIR}/dist)
 
 
 if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
+    
+
 
     file(GLOB_RECURSE WIN_FILES "src/sys/windows/*.cpp")
 
@@ -57,14 +75,16 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
 
     set(OUTPUT_DIR ${DIST_DIR}/windows/$<CONFIG>)
     set_property(TARGET ${CMAKE_PROJECT_NAME} PROPERTY CXX_STANDARD 20)
+	set_target_properties("${CMAKE_PROJECT_NAME}" PROPERTIES LINK_FLAGS "/SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup") # COMMENT: remove console on windows
 
-
+    if(BUILD_SHARED_LIBS)
      add_custom_command(TARGET ${CMAKE_PROJECT_NAME} POST_BUILD
          COMMAND ${CMAKE_COMMAND} -E make_directory ${OUTPUT_DIR}
          COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:${CMAKE_PROJECT_NAME}> ${OUTPUT_DIR}
          COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_RUNTIME_DLLS:${CMAKE_PROJECT_NAME}> ${OUTPUT_DIR}
          COMMAND_EXPAND_LISTS
          COMMENT "Building windows distributables \n")
+    endif()
 
     add_custom_command(TARGET ${CMAKE_PROJECT_NAME} POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_directory

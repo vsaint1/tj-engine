@@ -9,7 +9,6 @@ namespace tj {
 
     class Debug {
     public:
-
         void operator=(const Debug&) = delete;
 
         static Debug& GetInstance();
@@ -29,20 +28,24 @@ namespace tj {
             bSaveToDisk = _enabled;
         }
 
+        std::vector<std::string>& GetLogBuffer() {
+            return this->logBuffer;
+        }
+
     private:
         Debug() = default;
 
         sf::Mutex mutex;
         static Debug* instance;
         ELogLevel logLevel;
-        bool bEnabled = true;
+        bool bEnabled    = true;
         bool bSaveToDisk = false;
+        std::vector<std::string> logBuffer;
 
         void Log(const char* _context, const char* _format, va_list _args, ELogLevel _level);
     };
 
 }; // namespace tj
-
 
 
 #endif // LOGGER_HPP
