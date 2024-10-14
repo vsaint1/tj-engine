@@ -74,7 +74,8 @@ namespace tj {
             }
 
             if (event.type == sf::Event::Resized) {
-                this->window->setView(sf::View(sf::FloatRect(0, 0, event.size.width, event.size.height)));
+                this->window->setView(
+                    sf::View(sf::FloatRect(0, 0, (float) event.size.width, (float) event.size.height)));
             }
 
             for (auto& [id, gObject] : this->gameObjects) {
@@ -86,7 +87,7 @@ namespace tj {
 
     void Engine::Run() {
         sf::Clock clock;
-        float accumulator     = 0.0f;
+        float accumulator           = 0.0f;
         const float DELTA_TIME_STEP = 1.0f / MAX_FRAMERATE;
 
         while (this->window->isOpen()) {
