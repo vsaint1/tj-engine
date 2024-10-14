@@ -4,7 +4,7 @@
 namespace tj {
 
 
-    Engine::Engine(const std::string& _title, sf::Uint8 _fps, bool _bVsync) {
+    Engine::Engine(const std::string& _title, bool _bVsync, sf::Uint8 _fps) {
 
 // COMMENT: we use `windows/osx` for `development`, our focus is mobile/webgl
 #if defined(_WIN32) || defined(__EMSCRIPTEN__)
@@ -24,7 +24,11 @@ namespace tj {
         this->frameRate = _fps;
         this->bVsync    = _bVsync;
 
-        _window->setFramerateLimit(_fps);
+        if (this->bVsync) {
+
+            _window->setFramerateLimit(_fps);
+        }
+
         _window->setVerticalSyncEnabled(bVsync);
 
 
@@ -81,27 +85,35 @@ namespace tj {
     }
 
     void Engine::Run() {
-
         sf::Clock clock;
-
-        sf::Time time = clock.getElapsedTime();
-
+        float accumulator     = 0.0f;
+        const float DELTA_TIME_STEP = 1.0f / MAX_FRAMERATE;
 
         while (this->window->isOpen()) {
-            time           = clock.getElapsedTime();
-            auto dtClamped = tj::Mathf::Clamp(time.asSeconds(), 0.0f, 0.1f);
+            sf::Time elapsedTime = clock.restart();
+            float deltaTime      = elapsedTime.asSeconds();
 
-            this->Update(dtClamped);
+            if (deltaTime > 0.1f) {
+                deltaTime = 0.1f;
+            }
+
+            accumulator += deltaTime;
+
+            while (accumulator >= DELTA_TIME_STEP) {
+                this->Update(DELTA_TIME_STEP);
+                accumulator -= DELTA_TIME_STEP;
+            }
 
             this->Draw(*this->window);
 
-            // sf::sleep(sf::milliseconds(16));
+            float fps = 1.0f / deltaTime;
         }
     }
+
     void Engine::AddGameObject(std::shared_ptr<GameObject>& _gameObject) {
 
         sf::Uint32 _id = nextId;
-        nextId++; 
+        nextId++;
 
         _gameObject->SetId(_id);
 

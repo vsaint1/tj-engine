@@ -7,6 +7,8 @@
 #include "sys/SystemInfo.h"
 #include "utils/AssetsManager.h"
 
+const float MAX_FRAMERATE = 60.f;
+
 // TODO: REFACTOR AND MAKE VIRTUAL
 class GameObject {
 
@@ -54,7 +56,7 @@ namespace tj {
 
     class TJ_API Engine {
     public:
-        Engine(const std::string& _title, sf::Uint8 _fps = 60, bool _bVsync = true);
+        Engine(const std::string& _title,  bool _bVsync = true,sf::Uint8 _fps = 60);
 
         void Start();
 
