@@ -52,10 +52,14 @@
 #define TJ_LOG_WARN(format, ...)  tj::Debug::GetInstance().LogWarn(LOG_CONTEXT_FILE, format, ##__VA_ARGS__)
 #define TJ_LOG_ERROR(format, ...) tj::Debug::GetInstance().LogError(LOG_CONTEXT_FILE, format, ##__VA_ARGS__)
 
-#ifdef _WIN32
-#include "imgui-SFML.h"
-#include "imgui.h"
-#include "imguiThemes.h"
+
+
+#ifdef _WIN64 
+    #define TJ_API __declspec(dllexport)
+#elif __APPLE__ || __linux__
+    #define TJ_API __attribute__((visibility("default")))
+#else 
+#define TJ_API
 #endif
 
 #endif // PCH_H

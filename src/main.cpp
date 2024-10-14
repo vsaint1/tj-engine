@@ -9,17 +9,16 @@
 #include <SFML/Main.hpp>
 #endif
 
-
 int main() {
     tj::Random::Seed();
 
 #if defined(_WIN32) || defined(__EMSCRIPTEN__)
-    sf::RenderWindow window(sf::VideoMode(1280, 720), "TJ - Game", sf::Style::Close);
+    sf::RenderWindow window(sf::VideoMode(1280, 720), "TJ - Game", sf::Style::Default);
 #else
-    sf::RenderWindow window(sf::VideoMode::getDesktopMode(), "TJ - Game", sf::Style::Close);
+    sf::RenderWindow window(sf::VideoMode::getDesktopMode(), "TJ - Game", sf::Style::Default);
 #endif
 
-    // window.setFramerateLimit(60);
+    window.setFramerateLimit(60);
     window.setVerticalSyncEnabled(false);
 
     auto& assetsManager = tj::AssetsManager::GetInstance();
@@ -37,19 +36,7 @@ int main() {
 
     TJ_LOG_INFO("Random number between (0,100) %d", tj::Random::Range(0, 100));
     TJ_LOG_INFO("Random number between (12,22) %d", tj::Random::Range(12, 22));
-#ifdef _WIN32
-    ImGui::SFML::Init(window);
 
-    ImGuiIO& io = ImGui::GetIO();
-    (void) io;
-    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
-    io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-    io.FontGlobalScale = 2.f;
-    io.IniFilename     = nullptr;
-
-    ImGuiStyle& style                 = ImGui::GetStyle();
-    style.Colors[ImGuiCol_WindowBg].w = 0.5f;
-#endif
 
     sf::CircleShape shape(100.f);
     shape.setFillColor(sf::Color::Green);
@@ -62,22 +49,17 @@ int main() {
 
     sf::Text randomText;
     randomText.setFont(assetsManager.GetFont("mine_font"));
-    randomText.setCharacterSize(16);
-    randomText.setString("Hello world!!!");
+    randomText.setCharacterSize(32);
+    randomText.setString("Hello world!");
+
 
     sf::Clock clock;
     float fps = 0.0f;
 
-    // Setup docking
-    bool show_project = true;
-    bool show_console = true;
 
     while (window.isOpen()) {
         sf::Event event;
         while (window.pollEvent(event)) {
-#ifdef _WIN32
-            ImGui::SFML::ProcessEvent(window, event);
-#endif
 
             if (event.type == sf::Event::Closed) {
                 window.close();
@@ -91,87 +73,18 @@ int main() {
 
         sf::Time deltaTime     = clock.restart();
         float deltaTimeSeconds = deltaTime.asSeconds();
-        deltaTimeSeconds       = std::clamp(deltaTimeSeconds, 0.f, 1.f);
+        deltaTimeSeconds       = tj::Mathf::Clamp(deltaTimeSeconds, 0.0f, 0.1f);
         fps                    = 1.0f / deltaTimeSeconds;
 
-#ifdef _WIN32
-        ImGui::SFML::Update(window, deltaTime);
-
-        ImGui::PushStyleColor(ImGuiCol_WindowBg, {});
-        ImGui::PushStyleColor(ImGuiCol_DockingEmptyBg, {});
-        ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
-        ImGui::PopStyleColor(2);
-
-
-        ImGui::SetNextWindowDockID(ImGui::GetID("DockBottom"), ImGuiCond_Once);
-        ImGui::SetNextWindowPos(ImVec2(0, window.getSize().y - 300));
-        ImGui::SetNextWindowSize(ImVec2(window.getSize().x, 300));
-
-        ImGui::Begin("Content");
-
-        if (ImGui::BeginTabBar("Tabs")) {
-            if (ImGui::BeginTabItem("Assets")) {
-
-                ImGui::SeparatorText("Textures");
-                for (auto& texture : assetsManager.GetTextures()) {
-                    ImGui::Text("%s", texture.first.c_str());
-                }
-
-                ImGui::SeparatorText("Fonts");
-                for (auto& font : assetsManager.GetFonts()) {
-                    ImGui::Text("%s", font.first.c_str());
-                }
-
-                ImGui::SeparatorText("Musics");
-                for (auto& music : assetsManager.GetMusics()) {
-                    ImGui::Text("%s", music.first.c_str());
-                }
-
-                ImGui::EndTabItem();
-            }
-
-            if (ImGui::BeginTabItem("Console")) {
-                ImGui::Text("Quantity %d", debug.GetLogBuffer().size());
-
-                for (auto& log : debug.GetLogBuffer()) {
-                    ImGui::Text(log.c_str());
-                }
-
-                ImGui::EndTabItem();
-            }
-
-            ImGui::EndTabBar();
-        }
-
-        ImGui::End();
-
-        ImGui::Begin("Debug");
-        ImGui::SeparatorText("Game");
-        ImGui::Text("DeltaTime: %f", deltaTimeSeconds);
-        ImGui::Text("FPS: %f", fps);
-
-        ImGui::SeparatorText("Device");
-        ImGui::Text("Device Model: %s", deviceModel.c_str());
-        ImGui::Text("Device Name: %s", deviceName.c_str());
-        ImGui::Text("Device UniqueID: %s", deviceUID.c_str());
-        ImGui::Text("Device Battery: %f", deviceBattery);
-        ImGui::End();
-#endif
 
         window.clear();
         window.draw(shape);
         window.draw(randomText);
 
-#ifdef _WIN32
-        ImGui::SFML::Render(window);
-#endif
 
         window.display();
     }
 
-#ifdef _WIN32
-    ImGui::SFML::Shutdown();
-#endif
 
     return 0;
 }
