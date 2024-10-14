@@ -11,9 +11,7 @@
 class GameObject {
 
 public:
-    GameObject(const std::string& _objName) : name(_objName) {
-        this->id = tj::Random::GenerateId();
-    }
+    GameObject(const std::string& _objName) : name(_objName){}
 
     void Start() {
         TJ_LOG_INFO("starting %s", this->name.c_str());
