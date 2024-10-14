@@ -52,7 +52,7 @@ namespace tj {
 
         this->window->setView(this->window->getDefaultView());
 
-        for (auto& gObject : this->gameObjects) {
+        for (auto& [id, gObject] : this->gameObjects) {
 
             gObject->Draw(*this->window);
         }
@@ -73,7 +73,8 @@ namespace tj {
                 this->window->setView(sf::View(sf::FloatRect(0, 0, event.size.width, event.size.height)));
             }
 
-            for (auto& gObject : this->gameObjects) {
+            for (auto& [id, gObject] : this->gameObjects) {
+
                 gObject->Update(_deltaTime);
             }
         }
@@ -97,6 +98,16 @@ namespace tj {
             // sf::sleep(sf::milliseconds(16));
         }
     }
+    void Engine::AddGameObject(std::shared_ptr<GameObject>& _gameObject) {
+
+        sf::Uint32 _id = nextId;
+        nextId++; 
+
+        _gameObject->SetId(_id);
+
+        this->gameObjects.emplace(_id, _gameObject);
+    }
+
 
     void Engine::Destroy() {
         this->window->close();

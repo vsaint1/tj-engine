@@ -2,6 +2,7 @@
 #define ENGINE_H
 
 #include "math/Mathf.h"
+#include "math/Random.h"
 #include "pch.h"
 #include "sys/SystemInfo.h"
 #include "utils/AssetsManager.h"
@@ -10,28 +11,43 @@
 class GameObject {
 
 public:
-    GameObject(const std::string& _objName) : name(_objName) {}
+    GameObject(const std::string& _objName) : name(_objName) {
+        this->id = tj::Random::GenerateId();
+    }
 
     void Start() {
         TJ_LOG_INFO("starting %s", this->name.c_str());
     }
 
     void Update(float _deltaTime) {
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
-            TJ_LOG_INFO("updating %s", this->name.c_str());
-        }
+        TJ_LOG_INFO("updating object with id: %d", this->id);
     }
 
     void Draw(sf::RenderTarget& _target) {
 
-        TJ_LOG_INFO("drawing %s", this->name.c_str());
+        TJ_LOG_INFO("drawing object with id: %d", this->id);
     }
 
     void Destroy() {
-        TJ_LOG_INFO("destroying %s", this->name.c_str());
+        TJ_LOG_INFO("destroying object with id: %d", this->id);
+
+        this->bPendingDestroy = true;
+    }
+
+    bool IsPendingDestroy() {
+        return this->bPendingDestroy;
+    }
+
+    void SetId(sf::Uint32 _id) {
+        this->id = _id;
+    }
+
+    sf::Uint32 GetId() {
+        return this->id;
     }
 
 private:
+    sf::Uint32 id;
     std::string name;
     bool bPendingDestroy = false;
 };
@@ -48,9 +64,7 @@ namespace tj {
 
         void Draw(sf::RenderTarget& _target);
 
-        void AddGameObject(std::shared_ptr<GameObject>& _gameObject) {
-            this->gameObjects.emplace_back(_gameObject);
-        }
+        void AddGameObject(std::shared_ptr<GameObject>& _gameObject);
 
         void Destroy();
 
@@ -60,7 +74,7 @@ namespace tj {
             return *this->window;
         }
 
-        std::vector<std::shared_ptr<GameObject>>& GetGameObjects() {
+        std::map<sf::Uint32, std::shared_ptr<GameObject>>& GetGameObjects() {
             return this->gameObjects;
         }
 
@@ -84,9 +98,9 @@ namespace tj {
         bool bVsync;
         sf::Uint8 frameRate;
         std::unique_ptr<sf::RenderWindow> window;
-        std::vector<std::shared_ptr<GameObject>> gameObjects;
-
-        tj::Debug& debug = tj::Debug::GetInstance();
+        std::map<sf::Uint32, std::shared_ptr<GameObject>> gameObjects;
+        sf::Uint32 nextId = 1;
+        tj::Debug& debug  = tj::Debug::GetInstance();
     };
 
 } // namespace tj
