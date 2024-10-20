@@ -56,10 +56,20 @@ namespace tj {
 
         this->window->setView(this->window->getDefaultView());
 
-        for (auto& [id, gObject] : this->gameObjects) {
+        // for (auto& [id, gObject] : this->gameObjects) {
 
-            gObject->Draw(*this->window);
+        //     gObject->Draw(*this->window);
+        // }
+
+        for (auto& scene : this->sceneManager.GetScenes()){
+
+            if (scene.second->IsActiveScene()) {
+                for (auto& [id, gObject] : scene.second->GetGameObjects()) {
+                    gObject->Draw(_target);
+                }
+            }
         }
+
 
         this->window->display();
     }
@@ -78,9 +88,13 @@ namespace tj {
                     sf::View(sf::FloatRect(0, 0, (float) event.size.width, (float) event.size.height)));
             }
 
-            for (auto& [id, gObject] : this->gameObjects) {
+            for (auto& scene : this->sceneManager.GetScenes()) {
 
-                gObject->Update(_deltaTime);
+                if (scene.second->IsActiveScene()) {
+                    for (auto& [id, gObject] : scene.second->GetGameObjects()) {
+                        gObject->Update(_deltaTime);
+                    }
+                }
             }
         }
     }
@@ -109,16 +123,6 @@ namespace tj {
 
             float fps = 1.0f / deltaTime;
         }
-    }
-
-    void Engine::AddGameObject(std::shared_ptr<GameObject>& _gameObject) {
-
-        sf::Uint32 _id = nextId;
-        nextId++;
-
-        _gameObject->SetId(_id);
-
-        this->gameObjects.emplace(_id, _gameObject);
     }
 
 

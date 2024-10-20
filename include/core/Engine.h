@@ -2,55 +2,11 @@
 #define ENGINE_H
 
 #include "math/Mathf.h"
-#include "math/Random.h"
-#include "pch.h"
+#include "SceneManager.h"
 #include "sys/SystemInfo.h"
 #include "utils/AssetsManager.h"
 
 const float MAX_FRAMERATE = 60.f;
-
-// TODO: REFACTOR AND MAKE VIRTUAL
-class GameObject {
-
-public:
-    GameObject(const std::string& _objName) : name(_objName){}
-
-    void Start() {
-        TJ_LOG_INFO("starting %s", this->name.c_str());
-    }
-
-    void Update(float _deltaTime) {
-        TJ_LOG_INFO("updating object with id: %d", this->id);
-    }
-
-    void Draw(sf::RenderTarget& _target) {
-
-        TJ_LOG_INFO("drawing object with id: %d", this->id);
-    }
-
-    void Destroy() {
-        TJ_LOG_INFO("destroying object with id: %d", this->id);
-
-        this->bPendingDestroy = true;
-    }
-
-    bool IsPendingDestroy() {
-        return this->bPendingDestroy;
-    }
-
-    void SetId(sf::Uint32 _id) {
-        this->id = _id;
-    }
-
-    sf::Uint32 GetId() {
-        return this->id;
-    }
-
-private:
-    sf::Uint32 id;
-    std::string name;
-    bool bPendingDestroy = false;
-};
 
 namespace tj {
 
@@ -64,8 +20,6 @@ namespace tj {
 
         void Draw(sf::RenderTarget& _target);
 
-        void AddGameObject(std::shared_ptr<GameObject>& _gameObject);
-
         void Destroy();
 
         void Run();
@@ -74,9 +28,6 @@ namespace tj {
             return *this->window;
         }
 
-        std::map<sf::Uint32, std::shared_ptr<GameObject>>& GetGameObjects() {
-            return this->gameObjects;
-        }
 
         sf::Uint8 GetFrameRate() {
             return this->frameRate;
@@ -90,6 +41,10 @@ namespace tj {
             this->frameRate = _frameRate;
         }
 
+        tj::SceneManager& GetSceneManager() {
+            return this->sceneManager;
+        }
+        
 
     private:
         Engine(Engine const& other)            = delete;
@@ -98,9 +53,10 @@ namespace tj {
         bool bVsync;
         sf::Uint8 frameRate;
         std::unique_ptr<sf::RenderWindow> window;
-        std::map<sf::Uint32, std::shared_ptr<GameObject>> gameObjects;
-        sf::Uint32 nextId = 1;
+   
         tj::Debug& debug  = tj::Debug::GetInstance();
+
+        tj::SceneManager&  sceneManager = tj::SceneManager::GetInstance();
     };
 
 } // namespace tj

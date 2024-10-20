@@ -1,4 +1,6 @@
 #include "core/Engine.h"
+#include "core/Scene.h"
+#include "core/SceneManager.h"
 #include "ecs/camera.h"
 #include "math/Random.h"
 #include "utils/FileHandler.h"
@@ -11,15 +13,21 @@ int main() {
 
     tj::Random::Seed();
 
-    tj::Engine engine("TJ - FW <0.0.1>");
+    auto engine = std::make_unique<tj::Engine>("TJ - FW <0.0.1>");
 
     auto playerObj = std::make_shared<GameObject>("player");
     auto entityObj = std::make_shared<GameObject>("entity");
 
-    engine.AddGameObject(playerObj);
-    engine.AddGameObject(entityObj);
+    auto mainScene = std::make_unique<tj::Scene>("main_scene");
 
-    engine.Run();
+    mainScene->AddGameObject(playerObj);
+    mainScene->AddGameObject(entityObj);
+
+    engine->GetSceneManager().AddScene(mainScene);
+
+    engine->GetSceneManager().SetEnabled("main_scened", true);
+    
+    engine->Run();
 
     return 0;
 }
