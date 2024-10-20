@@ -56,11 +56,7 @@ namespace tj {
 
         this->window->setView(this->window->getDefaultView());
 
-        // for (auto& [id, gObject] : this->gameObjects) {
-
-        //     gObject->Draw(*this->window);
-        // }
-
+ 
         for (auto& scene : this->sceneManager.GetScenes()){
 
             if (scene.second->IsActiveScene()) {

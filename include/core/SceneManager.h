@@ -34,7 +34,7 @@ namespace tj {
         SceneManager(const SceneManager& other)            = delete;
         SceneManager& operator=(const SceneManager& other) = delete;
         std::map<std::string, std::unique_ptr<Scene>> scenes;
-        std::string activeScene;
+        std::string activeScene = "main_scene";
     };
 
 

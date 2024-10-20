@@ -3,21 +3,26 @@
 namespace tj {
 
     void SceneManager::SetEnabled(const std::string& _name, bool _bEnable) {
+        
         if (this->scenes.find(_name) == this->scenes.end()) {
             TJ_LOG_ERROR("Couldn't find scene with name: %s", _name.c_str());
         }
 
-        if (this->activeScene == _name) {
-            return;
-        }
+        if (this->scenes.find(_name) != this->scenes.end()) {
 
-        if (this->scenes.find(this->activeScene) != this->scenes.end()) {
+
+            this->scenes.find(this->activeScene)->second->SetActiveScene(false);
+            
+            TJ_LOG_INFO("Disabling scene: %s", this->activeScene.c_str());
+
             this->activeScene = _name;
-            this->scenes.find(this->activeScene)->second->SetActiveScene(_bEnable);
+
+            this->scenes.find(_name)->second->SetActiveScene(_bEnable);
             const char* status = _bEnable ? "Enabled" : "Disabled";
             TJ_LOG_INFO("%s scene: %s", status, this->activeScene.c_str());
         }
     }
+
     void SceneManager::AddScene(std::unique_ptr<Scene>& _scene) {
 
         if (_scene->GetName() == "main_scene") {

@@ -25,8 +25,13 @@ int main() {
 
     engine->GetSceneManager().AddScene(mainScene);
 
-    engine->GetSceneManager().SetEnabled("main_scened", true);
-    
+    engine->GetSceneManager().SetEnabled("main_scene", false);
+
+    // COMMENT: this is for testing only, enabling and disabling scenes (this `freezes` the main thread)
+    sf::sleep(sf::seconds(10));
+
+    engine->GetSceneManager().SetEnabled("main_scene", true);
+
     engine->Run();
 
     return 0;
