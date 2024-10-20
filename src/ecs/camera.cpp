@@ -1,4 +1,4 @@
-#include "ecs/camera.h"
+#include "components/camera.h"
 namespace tj {
 
     void Camera::Follow(const sf::Vector2f& targetPosition, float _deltaTime) {

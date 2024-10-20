@@ -1,7 +1,6 @@
 #include "core/Engine.h"
 #include "core/Scene.h"
 #include "core/SceneManager.h"
-#include "ecs/camera.h"
 #include "math/Random.h"
 #include "utils/FileHandler.h"
 

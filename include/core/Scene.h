@@ -1,7 +1,7 @@
 #ifndef SCENE_H
 #define SCENE_H
 
-#include "ecs/GameObject.h"
+#include "components/GameObject.h"
 #include "math/Random.h"
 
 namespace tj {
