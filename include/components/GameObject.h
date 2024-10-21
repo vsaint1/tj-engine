@@ -1,12 +1,12 @@
 #ifndef GAMEOBJECT_H
 #define GAMEOBJECT_H
 
-#include "pch.h"
+#include "Component.h"
 
-class GameObject {
+class GameObject : public tj::IComponent {
 
 public:
-    GameObject(const std::string& _objName) : name(_objName){}
+    GameObject(const std::string& _objName) : name(_objName) {}
 
     virtual void Start() {
         TJ_LOG_INFO("starting %s", this->name.c_str());
