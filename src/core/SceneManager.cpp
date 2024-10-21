@@ -2,7 +2,7 @@
 
 namespace tj {
 
-    void SceneManager::SetEnabled(const std::string& _name, bool _bEnable) {
+    void SceneManager::ChangeScene(const std::string& _name, bool _bEnable) {
         
         if (this->scenes.find(_name) == this->scenes.end()) {
             TJ_LOG_ERROR("Couldn't find scene with name: %s", _name.c_str());

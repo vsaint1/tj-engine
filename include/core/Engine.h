@@ -1,8 +1,8 @@
 #ifndef ENGINE_H
 #define ENGINE_H
 
-#include "math/Mathf.h"
 #include "SceneManager.h"
+#include "math/Mathf.h"
 #include "sys/SystemInfo.h"
 #include "utils/AssetsManager.h"
 
@@ -12,7 +12,7 @@ namespace tj {
 
     class TJ_API Engine {
     public:
-        Engine(const std::string& _title,  bool _bVsync = true,sf::Uint8 _fps = 60);
+        Engine(const std::string& _title, bool _bVsync = true, sf::Uint8 _fps = 60);
 
         void Start();
 
@@ -44,7 +44,12 @@ namespace tj {
         tj::SceneManager& GetSceneManager() {
             return this->sceneManager;
         }
-        
+
+        void ChangeScene(const std::string& _newScene) {
+            this->sceneManager.ChangeScene(_newScene, true);
+            this->Start();
+
+        }
 
     private:
         Engine(Engine const& other)            = delete;
@@ -53,10 +58,10 @@ namespace tj {
         bool bVsync;
         sf::Uint8 frameRate;
         std::unique_ptr<sf::RenderWindow> window;
-   
-        tj::Debug& debug  = tj::Debug::GetInstance();
 
-        tj::SceneManager&  sceneManager = tj::SceneManager::GetInstance();
+        tj::Debug& debug = tj::Debug::GetInstance();
+
+        tj::SceneManager& sceneManager = tj::SceneManager::GetInstance();
     };
 
 } // namespace tj

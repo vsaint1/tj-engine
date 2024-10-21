@@ -36,8 +36,10 @@ namespace tj {
     }
 
     void Engine::Start() {
-        // COMMENT: initialize here all the `modules`
-        auto& _assetsManager = tj::AssetsManager::GetInstance();
+        /*
+        COMMENT: initialize here all the `modules`.
+        TODO: refactor this to Engine::Init()
+        */  
 
         auto _deviceModel   = tj::SystemInfo::GetDeviceModel();
         auto _deviceName    = tj::SystemInfo::GetDeviceName();
@@ -48,6 +50,20 @@ namespace tj {
         TJ_LOG_INFO("Device name: %s", _deviceName.c_str());
         TJ_LOG_INFO("Device UID: %s", _deviceUID.c_str());
         TJ_LOG_INFO("Battery level: %f", _deviceBattery);
+
+        for (auto& scene : this->sceneManager.GetScenes()) {
+
+            TJ_LOG_INFO("Active scene %s",scene.second->GetName().c_str());
+
+            if (scene.second->IsActiveScene()) {
+                for (auto& [id, gObject] : scene.second->GetGameObjects()) {
+                    for (auto& [name, component] : gObject->GetComponents()) {
+                        component->Start();
+                    }
+                }
+            }
+        }
+
     }
 
     void Engine::Draw(sf::RenderTarget& _target) {
@@ -56,12 +72,13 @@ namespace tj {
 
         this->window->setView(this->window->getDefaultView());
 
- 
-        for (auto& scene : this->sceneManager.GetScenes()){
+        for (auto& scene : this->sceneManager.GetScenes()) {
 
             if (scene.second->IsActiveScene()) {
                 for (auto& [id, gObject] : scene.second->GetGameObjects()) {
-                    gObject->Draw(_target);
+                    for (auto& [name, component] : gObject->GetComponents()) {
+                        component->Draw(_target);
+                    }
                 }
             }
         }
@@ -88,7 +105,9 @@ namespace tj {
 
                 if (scene.second->IsActiveScene()) {
                     for (auto& [id, gObject] : scene.second->GetGameObjects()) {
-                        gObject->Update(_deltaTime);
+                        for (auto& [name, component] : gObject->GetComponents()) {
+                            component->Update(_deltaTime);
+                        }
                     }
                 }
             }

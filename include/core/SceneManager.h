@@ -16,7 +16,7 @@ namespace tj {
 
         void AddScene(std::unique_ptr<Scene>& _scene);
 
-        void SetEnabled(const std::string& _name, bool _bEnable);
+        void ChangeScene(const std::string& _name, bool _bEnable);
 
         void RemoveScene(const std::string& _name);
 
