@@ -3,7 +3,7 @@
 
 #include "Component.h"
 
-class GameObject {
+class GameObject : public tj::IComponent {
 
 public:
     GameObject(const std::string& _objName) : name(_objName) {}
@@ -36,31 +36,41 @@ public:
     template <typename T>
     std::shared_ptr<T> GetComponent() {
 
-        for (auto& component : components) {
-
-            auto dynComponent = std::dynamic_pointer_cast<T>(component);
-
-            if (dynComponent) {
-                return dynComponent;
-            }
+        auto it = components.find(typeid(T).name());
+        if (it != components.end()) {
+            return std::dynamic_pointer_cast<T>(it->second);
         }
 
         TJ_LOG_ERROR("Couldn't find component of type: %s", typeid(T).name());
-
         return nullptr;
     }
 
     template <typename T>
     bool HasComponent() {
-        return components.contains(typeid(T).name());
+        return components.find(typeid(T).name()) != components.end();
     }
 
     std::unordered_map<std::string, std::shared_ptr<tj::IComponent>>& GetComponents() {
         return this->components;
     }
 
+    void Start() override {
+        TJ_LOG_INFO("GameObject->Start called GameObject(%s:%d) ", this->name.c_str(), this->id);
+    }
+
+    void Update(float _deltaTime) override {
+        TJ_LOG_INFO("GameObject->Update called GameObject(%s:%d) ", this->name.c_str(), this->id);
+        
+    }
+
+    void Draw(sf::RenderTarget& _target) override {
+        TJ_LOG_INFO("GameObject->Draw called GameObject(%s:%d) ", this->name.c_str(), this->id);
+        
+    }
+
+protected:
     void Destroy() {
-        TJ_LOG_INFO("Destroying GameObject(%s:%d) ", this->name.c_str(), this->id);
+        TJ_LOG_INFO("GameObject->Destroy called GameObject(%s:%d) ", this->name.c_str(), this->id);
 
         this->bPendingDestroy = true;
     }
