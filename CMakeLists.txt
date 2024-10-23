@@ -31,7 +31,6 @@ list(FILTER SOURCES_FILE EXCLUDE REGEX "src/sys/android/.*")
 list(FILTER SOURCES_FILE EXCLUDE REGEX "src/sys/web/.*")
 message(STATUS "Filtered source files: ${SOURCES_FILE} \n")
 
-include_directories(${CMAKE_SOURCE_DIR}/include)
 
 set(ASSETS_FOLDER ${CMAKE_SOURCE_DIR}/assets)
 
@@ -60,6 +59,7 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
 
     add_executable(${CMAKE_PROJECT_NAME} ${SOURCES_FILE} ${WIN_FILES}  ${CMAKE_SOURCE_DIR}/settings/windows/icon.rc)
 
+    target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE ${CMAKE_SOURCE_DIR}/include)
     target_link_libraries(${CMAKE_PROJECT_NAME} ${LIBS})
 
     set(OUTPUT_DIR ${DIST_DIR}/windows/$<CONFIG>)
@@ -163,6 +163,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Emscripten")
 
     add_executable (${CMAKE_PROJECT_NAME} ${SOURCES_FILE} ${WEB_FILES})
 
+    target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE ${CMAKE_SOURCE_DIR}/include)
     target_compile_options(${CMAKE_PROJECT_NAME} PRIVATE ${SFML_EMSCRIPTEN_TARGET_COMPILE_OPTIONS})
     target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE ${LIBS})
     target_link_options(${CMAKE_PROJECT_NAME} PRIVATE ${SFML_EMSCRIPTEN_TARGET_LINK_OPTIONS})
@@ -220,6 +221,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "iOS")
     add_custom_command(TARGET ${CMAKE_PROJECT_NAME} POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E echo "Test command")
 
+    target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE ${CMAKE_SOURCE_DIR}/include)
     target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE ${LIBS} stdc++ -Wall ${UIKIT} ${FOUNDATION} ${OPENGLES} objc)
 
     set_target_properties(${CMAKE_PROJECT_NAME} PROPERTIES
@@ -265,7 +267,8 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Android")
     add_library(${CMAKE_PROJECT_NAME} SHARED ${SOURCES_FILE} ${ANDROID_FILES})
     
     set_property(TARGET ${CMAKE_PROJECT_NAME} PROPERTY CXX_STANDARD 20)
-  
+
+    target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE ${CMAKE_SOURCE_DIR}/include)
     target_link_libraries(${CMAKE_PROJECT_NAME} 
           -Wl,--whole-archive sfml-main -Wl,--no-whole-archive
           android log GLESv2 EGL ${LIBS} openal)
