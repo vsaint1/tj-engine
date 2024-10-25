@@ -83,7 +83,7 @@ public:
         this->spriteData.sprite.setRotation(_angle);
     }
 
-    void Draw(sf::RenderTarget& _target) {
+    void Draw(sf::RenderTarget& _target) override {
         _target.draw(this->spriteData.sprite);
     }
 

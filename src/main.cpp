@@ -54,6 +54,7 @@ public:
     }
 
 protected:
+    // COMMENT: this is optional
     std::shared_ptr<SpriteComponent> spriteComponent;
 
 private:
