@@ -45,6 +45,7 @@ public:
             this->spriteComponent->SetPosition(sf::Vector2f(
                 this->spriteComponent->GetPosition().x, this->spriteComponent->GetPosition().y + _deltaTime * speed));
         }
+
     }
 
     void Draw(sf::RenderTarget& _target) override {
@@ -89,7 +90,10 @@ int main() {
 
     tj::Random::Seed();
 
-    auto engine = std::make_unique<tj::Engine>("TJ - FW <0.0.1>");
+
+    auto& engine = tj::Engine::GetInstance();
+
+    engine.Create("TJ - FW <0.0.1>");
 
     auto playerObj = std::make_shared<Player>();
 
@@ -105,17 +109,18 @@ int main() {
     mainScene->AddGameObject(entityObj);
     mainScene->AddGameObject(playerObj);
 
-    engine->GetSceneManager().AddScene(mainScene);
+    engine.GetSceneManager().AddScene(mainScene);
 
-    // engine->ChangeScene("test_scene");
+    engine.ChangeScene("test_scene");
 
     // COMMENT: this is for testing only, enabling and disabling scenes (this `freezes` the main thread)
-    // sf::sleep(sf::seconds(10));
+    sf::sleep(sf::seconds(1));
 
-    engine->ChangeScene("main_scene");
+    engine.ChangeScene("main_scene");
 
 
-    engine->Run();
+
+    engine.Run();
 
 
     return 0;
