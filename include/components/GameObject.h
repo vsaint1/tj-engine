@@ -3,7 +3,7 @@
 
 #include "Component.h"
 
-class GameObject : public tj::IComponent {
+class GameObject {
 
 public:
     GameObject(const std::string& _objName) : name(_objName) {}
@@ -21,15 +21,16 @@ public:
     }
 
     template <typename T, typename... TArgs>
-    void AddComponent(TArgs&&... args) {
+    std::shared_ptr<T>& AddComponent(TArgs&&... args) {
         std::shared_ptr<T> component = std::make_shared<T>(std::forward<TArgs>(args)...);
 
         if (HasComponent<T>()) {
             TJ_LOG_ERROR("Component(%s) already added to GameObject(%s)", typeid(T).name(), this->name.c_str());
-            return;
+            return component;
         }
 
         components.emplace(typeid(T).name(), component);
+        return component;
     }
 
 
@@ -54,19 +55,11 @@ public:
         return this->components;
     }
 
-    void Start() override {
-        TJ_LOG_INFO("GameObject->Start called GameObject(%s:%d) ", this->name.c_str(), this->id);
-    }
+    virtual void Start() = 0;
 
-    void Update(float _deltaTime) override {
-        TJ_LOG_INFO("GameObject->Update called GameObject(%s:%d) ", this->name.c_str(), this->id);
-        
-    }
+    virtual void Update(float _deltaTime) = 0;
 
-    void Draw(sf::RenderTarget& _target) override {
-        TJ_LOG_INFO("GameObject->Draw called GameObject(%s:%d) ", this->name.c_str(), this->id);
-        
-    }
+    virtual void Draw(sf::RenderTarget& _target) = 0;
 
 protected:
     void Destroy() {

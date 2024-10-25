@@ -17,7 +17,21 @@ namespace tj {
             TJ_LOG_INFO("Scene with name: %s created", _name.c_str());
         }
 
-        void AddGameObject(std::shared_ptr<GameObject>& _gameObject);
+        template <typename T>
+        void AddGameObject(std::shared_ptr<T>& _gameObject) {
+            static_assert(std::is_base_of<GameObject, T>::value, "T must inherit from GameObject");
+            
+            if (this == nullptr) {
+                TJ_LOG_ERROR("Attempted to call AddGameObject on a null Scene");
+                return;
+            }
+
+            nextId++;
+            gameObjects[nextId] = _gameObject;
+            TJ_LOG_INFO("Added GameObject with id: %d, to the scene %s", nextId, this->name.c_str());
+
+            _gameObject->SetId(nextId);
+        }
 
         void RemoveGameObject(sf::Uint32 _id);
 

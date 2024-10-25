@@ -57,9 +57,10 @@ namespace tj {
 
             if (scene.second->IsActiveScene()) {
                 for (auto& [id, gObject] : scene.second->GetGameObjects()) {
-                    for (auto& [name, component] : gObject->GetComponents()) {
-                        component->Start();
-                    }
+                    // for (auto& [name, component] : gObject->GetComponents()) {
+                    //     component->Start();
+                    // }
+                    gObject->Start();
                 }
             }
         }
@@ -76,9 +77,10 @@ namespace tj {
 
             if (scene.second->IsActiveScene()) {
                 for (auto& [id, gObject] : scene.second->GetGameObjects()) {
-                    for (auto& [name, component] : gObject->GetComponents()) {
-                        component->Draw(_target);
-                    }
+                    // for (auto& [name, component] : gObject->GetComponents()) {
+                    //     component->Draw(_target);
+                    // }
+                    gObject->Draw(_target);
                 }
             }
         }
@@ -105,9 +107,10 @@ namespace tj {
 
                 if (scene.second->IsActiveScene()) {
                     for (auto& [id, gObject] : scene.second->GetGameObjects()) {
-                        for (auto& [name, component] : gObject->GetComponents()) {
-                            component->Update(_deltaTime);
-                        }
+                        // for (auto& [name, component] : gObject->GetComponents()) {
+                        //     component->Update(_deltaTime);
+                        // }
+                        gObject->Update(_deltaTime);
                     }
                 }
             }
@@ -127,12 +130,12 @@ namespace tj {
                 deltaTime = 0.1f;
             }
 
-            accumulator += deltaTime;
+            // accumulator += deltaTime;
 
-            while (accumulator >= DELTA_TIME_STEP) {
-                this->Update(DELTA_TIME_STEP);
-                accumulator -= DELTA_TIME_STEP;
-            }
+            // while (accumulator >= DELTA_TIME_STEP) {
+                this->Update(deltaTime);
+            //     accumulator -= DELTA_TIME_STEP;
+            // }
 
             this->Draw(*this->window);
 

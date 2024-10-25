@@ -3,19 +3,7 @@
 
 namespace tj {
 
-    void Scene::AddGameObject(std::shared_ptr<GameObject>& _gameObject) {
 
-        if (this == nullptr) {
-            TJ_LOG_ERROR("Attempted to call AddGameObject on a null Scene");
-            return;
-        }
-
-        nextId++;
-        gameObjects[nextId] = _gameObject;
-        TJ_LOG_INFO("Added GameObject with id: %d, to the scene %s", nextId, this->name.c_str());
-
-        _gameObject->SetId(nextId);
-    }
 
     void Scene::RemoveGameObject(sf::Uint32 _id) {
 
