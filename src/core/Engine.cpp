@@ -4,7 +4,7 @@
 namespace tj {
 
 
-    Engine::Engine(const std::string& _title, bool _bVsync, sf::Uint8 _fps) {
+    bool Engine::Create(const std::string& _title, bool _bVsync, sf::Uint8 _fps) {
 
 // COMMENT: we use `windows/osx` for `development`, our focus is mobile/webgl
 #if defined(_WIN32) || defined(__EMSCRIPTEN__)
@@ -19,6 +19,7 @@ namespace tj {
 
         if (!_window->isOpen()) {
             TJ_LOG_ERROR("Failed to create window");
+            return false;
         }
 
         this->frameRate = _fps;
@@ -33,13 +34,15 @@ namespace tj {
 
 
         this->window = std::move(_window);
+
+        return true;
     }
 
     void Engine::Start() {
         /*
         COMMENT: initialize here all the `modules`.
         TODO: refactor this to Engine::Init()
-        */  
+        */
 
         auto _deviceModel   = tj::SystemInfo::GetDeviceModel();
         auto _deviceName    = tj::SystemInfo::GetDeviceName();
@@ -53,7 +56,7 @@ namespace tj {
 
         for (auto& scene : this->sceneManager.GetScenes()) {
 
-            TJ_LOG_INFO("Active scene %s",scene.second->GetName().c_str());
+            TJ_LOG_INFO("Active scene %s", scene.second->GetName().c_str());
 
             if (scene.second->IsActiveScene()) {
                 for (auto& [id, gObject] : scene.second->GetGameObjects()) {
@@ -64,7 +67,6 @@ namespace tj {
                 }
             }
         }
-
     }
 
     void Engine::Draw(sf::RenderTarget& _target) {
@@ -133,7 +135,7 @@ namespace tj {
             // accumulator += deltaTime;
 
             // while (accumulator >= DELTA_TIME_STEP) {
-                this->Update(deltaTime);
+            this->Update(deltaTime);
             //     accumulator -= DELTA_TIME_STEP;
             // }
 
