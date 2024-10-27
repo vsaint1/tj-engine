@@ -105,21 +105,18 @@ int main() {
 
     auto testScene = std::make_unique<tj::Scene>("test_scene");
 
-    TJ_LOG_INFO("Player components %d", playerObj->GetComponents().size());
 
     mainScene->AddGameObject(entityObj);
     mainScene->AddGameObject(playerObj);
 
     engine.GetSceneManager().AddScene(mainScene);
 
-    engine.ChangeScene("test_scene");
+    // engine.ChangeScene("test_scene");
 
     // COMMENT: this is for testing only, enabling and disabling scenes (this `freezes` the main thread)
-    sf::sleep(sf::seconds(1));
+    // sf::sleep(sf::seconds(1));
 
     engine.ChangeScene("main_scene");
-
-
 
     engine.Run();
 

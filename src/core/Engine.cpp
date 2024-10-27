@@ -132,12 +132,12 @@ namespace tj {
                 deltaTime = 0.1f;
             }
 
-            // accumulator += deltaTime;
+            accumulator += deltaTime;
 
-            // while (accumulator >= DELTA_TIME_STEP) {
+            while (accumulator >= DELTA_TIME_STEP) {
             this->Update(deltaTime);
-            //     accumulator -= DELTA_TIME_STEP;
-            // }
+                accumulator -= DELTA_TIME_STEP;
+            }
 
             this->Draw(*this->window);
 
